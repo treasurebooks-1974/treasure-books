@@ -2,45 +2,30 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Treasure Books - Final Dashboard</title>
+    <title>Treasure Books - Upgraded</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
         .container { max-width: 1100px; margin: auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
-        h1 { color: #1a73e8; text-align: center; text-transform: uppercase; margin-bottom: 10px; }
-        
-        .committee-info { text-align: center; background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #eee; display: flex; justify-content: space-around; flex-wrap: wrap; }
+        h1 { color: #1a73e8; text-align: center; text-transform: uppercase; }
+        .committee-info { text-align: center; background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #eee; display: flex; justify-content: space-around; }
         .name-val { color: #1a73e8; font-weight: bold; }
-        .edit-link { margin-left: 10px; font-size: 12px; cursor: pointer; color: #d35400; background:none; border:none; text-decoration: underline; font-weight: bold; }
-
-        /* Entry Form */
         .entry-section { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 2px solid #eef2f7; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
-        input:focus, select:focus { border-color: #1a73e8; }
-        .btn-save { background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-save:hover { background: #1557b0; }
-
-        /* Stats & Summary */
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
+        .btn-save { background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
-        .card { padding: 20px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card { padding: 20px; border-radius: 10px; color: white; text-align: center; }
         .bg-blue { background: #1a73e8; } .bg-red { background: #d93025; } .bg-green { background: #1e8e3e; }
-        
-        .year-selector { background: #fff8e1; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; border: 1px solid #ffe082; }
-        .year-selector select { font-weight: bold; padding: 5px 15px; border-radius: 5px; }
-
-        /* Tabs & Tables */
         .tabs { display: flex; cursor: pointer; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
-        .tab { padding: 12px 25px; font-weight: bold; color: #777; transition: 0.3s; }
-        .tab.active { border-bottom: 3px solid #1a73e8; color: #1a73e8; background: #f1f3f4; border-radius: 5px 5px 0 0; }
+        .tab { padding: 12px 25px; font-weight: bold; color: #777; }
+        .tab.active { border-bottom: 3px solid #1a73e8; color: #1a73e8; }
         .content { display: none; } .content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #eee; padding: 14px; text-align: left; }
-        th { background: #f1f3f4; color: #555; }
-        tr:hover { background: #fafafa; }
-
-        .btn-excel { background: #1e8e3e; color: white; float: right; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
-        .btn-excel:hover { background: #156d2f; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        .btn-edit { background: #f39c12; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+        .btn-del { background: #d33; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; }
+        .btn-excel { background: #1e8e3e; color: white; float: right; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -49,95 +34,67 @@
     <h1>TREASURE BOOKS</h1>
     
     <div class="committee-info">
-        <div>Treasurer: <span id="tName" class="name-val">Ravi Kumar</span> <button class="edit-link" onclick="editMember('tName', 'treasurer_name')">Edit</button></div>
-        <div>Assistant Treasurer: <span id="atName" class="name-val">Suresh Singh</span> <button class="edit-link" onclick="editMember('atName', 'asst_treasurer_name')">Edit</button></div>
+        <div>Treasurer: <span id="tName" class="name-val">Ravi Kumar</span></div>
+        <div>Assistant Treasurer: <span id="atName" class="name-val">Suresh Singh</span></div>
     </div>
 
     <div class="entry-section">
+        <h3 id="formTitle">New Entry</h3>
         <div class="form-grid">
+            <input type="hidden" id="editIndex" value="-1">
             <select id="eType" onchange="handleFormChange()">
                 <option value="donation">Donation</option>
                 <option value="expense">Expenditure</option>
             </select>
             <input type="date" id="eDate">
             <input type="text" id="eName" placeholder="Donor Name">
-            
             <select id="eOcc">
-                <option value="">Select Occupation</option>
+                <option value="">Occupation</option>
                 <option value="Teacher">Teacher</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Engineer">Engineer</option>
                 <option value="Businessman">Businessman</option>
                 <option value="Farmer">Farmer</option>
-                <option value="Student">Student</option>
-                <option value="Housewife">Housewife</option>
-                <option value="Government Employee">Govt. Employee</option>
-                <option value="Private Job">Private Job</option>
                 <option value="Other">Other</option>
             </select>
-
             <input type="number" id="eAmount" placeholder="Amount ₹">
-            <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+            <button class="btn-save" id="saveBtn" onclick="saveEntry()">Save Entry</button>
         </div>
     </div>
 
-    <div class="year-selector">
-        <label>🔍 <b>Check History Year:</b> </label>
-        <select id="yearFilter" onchange="loadView()"></select>
-    </div>
-
     <div class="stats">
-        <div class="card bg-blue">Total Collection<br><h2 id="sumIn">₹0</h2></div>
-        <div class="card bg-red">Total Expense<br><h2 id="sumOut">₹0</h2></div>
+        <div class="card bg-blue">Collection<br><h2 id="sumIn">₹0</h2></div>
+        <div class="card bg-red">Expense<br><h2 id="sumOut">₹0</h2></div>
         <div class="card bg-green">Balance<br><h2 id="sumBal">₹0</h2></div>
     </div>
 
-    <button class="btn-excel" onclick="exportToExcel()">Download Excel Report</button>
+    <button class="btn-excel" onclick="exportToExcel()">Download Excel</button>
 
     <div class="tabs">
-        <div class="tab active" onclick="switchTab(event, 'viewDon')">Donation Sheet</div>
-        <div class="tab" onclick="switchTab(event, 'viewExp')">Expenditure Sheet</div>
+        <div class="tab active" onclick="switchTab(event, 'viewDon')">Donations</div>
+        <div class="tab" onclick="switchTab(event, 'viewExp')">Expenditures</div>
     </div>
 
     <div id="viewDon" class="content active">
         <table>
-            <thead><tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount (₹)</th></tr></thead>
+            <thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Amount (₹)</th><th>Actions</th></tr></thead>
             <tbody id="bodyDon"></tbody>
         </table>
     </div>
 
     <div id="viewExp" class="content">
         <table>
-            <thead><tr><th>Date</th><th>Expenditure Detail</th><th>Amount (₹)</th></tr></thead>
+            <thead><tr><th>Sl.No</th><th>Date</th><th>Detail</th><th>Amount (₹)</th><th>Actions</th></tr></thead>
             <tbody id="bodyExp"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // Local Storage se data lana
     let db = JSON.parse(localStorage.getItem('tb_master_db')) || { dons: [], exps: [] };
 
     function handleFormChange() {
         const type = document.getElementById('eType').value;
-        const nameInput = document.getElementById('eName');
-        const occSelect = document.getElementById('eOcc');
-
-        if(type === 'donation') {
-            nameInput.placeholder = "Donor Name";
-            occSelect.style.display = "inline-block";
-        } else {
-            nameInput.placeholder = "Expenditure Detail";
-            occSelect.style.display = "none";
-        }
-    }
-
-    function editMember(elementId, storageKey) {
-        let val = prompt("Enter Name:", document.getElementById(elementId).innerText);
-        if(val) {
-            document.getElementById(elementId).innerText = val;
-            localStorage.setItem(storageKey, val);
-        }
+        document.getElementById('eName').placeholder = (type === 'donation') ? "Donor Name" : "Expenditure Detail";
+        document.getElementById('eOcc').style.display = (type === 'donation') ? "inline-block" : "none";
     }
 
     function saveEntry() {
@@ -146,51 +103,82 @@
         const name = document.getElementById('eName').value;
         const occ = document.getElementById('eOcc').value;
         const amt = parseFloat(document.getElementById('eAmount').value);
+        const editIdx = parseInt(document.getElementById('editIndex').value);
 
-        if(!date || !name || isNaN(amt)) { alert("Please fill all details correctly!"); return; }
+        if(!date || !name || isNaN(amt)) { alert("Detail sahi bharein!"); return; }
 
-        const year = new Date(date).getFullYear();
-        const data = { date, name, occ: (type==='donation'?occ:'-'), amt, year };
+        const entry = { date, name, occ, amt, year: new Date(date).getFullYear() };
 
-        if(type === 'donation') db.dons.push(data);
-        else db.exps.push(data);
+        if(editIdx === -1) {
+            if(type === 'donation') db.dons.push(entry);
+            else db.exps.push(entry);
+        } else {
+            if(type === 'donation') db.dons[editIdx] = entry;
+            else db.exps[editIdx] = entry;
+            resetEditState();
+        }
 
         localStorage.setItem('tb_master_db', JSON.stringify(db));
-        alert("Success! Entry Saved.");
         loadView();
+        clearForm();
+    }
+
+    function resetEditState() {
+        document.getElementById('editIndex').value = "-1";
+        document.getElementById('saveBtn').innerText = "Save Entry";
+        document.getElementById('formTitle').innerText = "New Entry";
+        document.getElementById('eType').disabled = false;
+    }
+
+    function clearForm() {
         document.getElementById('eName').value = '';
         document.getElementById('eAmount').value = '';
     }
 
-    function buildYearDropdown() {
-        const sel = document.getElementById('yearFilter');
-        for (let y = 2024; y <= 2050; y++) {
-            let opt = document.createElement('option');
-            opt.value = y; opt.text = "Year " + y;
-            if(y === new Date().getFullYear()) opt.selected = true;
-            sel.appendChild(opt);
+    function triggerEdit(type, index) {
+        const item = (type === 'don') ? db.dons[index] : db.exps[index];
+        document.getElementById('eType').value = (type === 'don') ? 'donation' : 'expense';
+        document.getElementById('eType').disabled = true;
+        document.getElementById('eDate').value = item.date;
+        document.getElementById('eName').value = item.name;
+        document.getElementById('eAmount').value = item.amt;
+        document.getElementById('editIndex').value = index;
+        document.getElementById('saveBtn').innerText = "Update Entry";
+        document.getElementById('formTitle').innerText = "Editing Sl. No " + (index+1);
+        handleFormChange();
+    }
+
+    function deleteEntry(type, index) {
+        if(confirm("Kya aap ise delete karna chahte hain?")) {
+            if(type === 'don') db.dons.splice(index, 1);
+            else db.exps.splice(index, 1);
+            localStorage.setItem('tb_master_db', JSON.stringify(db));
+            loadView();
         }
     }
 
     function loadView() {
-        const fYear = document.getElementById('yearFilter').value;
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0;
         bDon.innerHTML = ''; bExp.innerHTML = '';
 
-        db.dons.filter(x => x.year == fYear).forEach(x => {
-            bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+        db.dons.forEach((x, i) => {
+            bDon.innerHTML += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+                <td><button class="btn-edit" onclick="triggerEdit('don', ${i})">Edit</button>
+                <button class="btn-del" onclick="deleteEntry('don', ${i})">Del</button></td></tr>`;
             tIn += x.amt;
         });
 
-        db.exps.filter(x => x.year == fYear).forEach(x => {
-            bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+        db.exps.forEach((x, i) => {
+            bExp.innerHTML += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+                <td><button class="btn-edit" onclick="triggerEdit('exp', ${i})">Edit</button>
+                <button class="btn-del" onclick="deleteEntry('exp', ${i})">Del</button></td></tr>`;
             tOut += x.amt;
         });
 
-        document.getElementById('sumIn').innerText = '₹' + tIn.toLocaleString();
-        document.getElementById('sumOut').innerText = '₹' + tOut.toLocaleString();
-        document.getElementById('sumBal').innerText = '₹' + (tIn - tOut).toLocaleString();
+        document.getElementById('sumIn').innerText = '₹' + tIn;
+        document.getElementById('sumOut').innerText = '₹' + tOut;
+        document.getElementById('sumBal').innerText = '₹' + (tIn - tOut);
     }
 
     function switchTab(e, id) {
@@ -201,69 +189,13 @@
     }
 
     function exportToExcel() {
-    const y = document.getElementById('yearFilter').value;
-    const tName = document.getElementById('tName').innerText;
-    const atName = document.getElementById('atName').innerText;
-    
-    // Data nikalna
-    const donData = db.dons.filter(x => x.year == y);
-    const expData = db.exps.filter(x => x.year == y);
+        const ws = XLSX.utils.json_to_sheet([...db.dons, ...db.exps]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Report");
+        XLSX.writeFile(wb, "TreasureBooks_Report.xlsx");
+    }
 
-    let tIn = 0, tOut = 0;
-    donData.forEach(x => tIn += x.amt);
-    expData.forEach(x => tOut += x.amt);
-
-    // 1. Heading aur Summary Section
-    const reportHeader = [
-        ["TREASURE BOOKS - FINANCIAL REPORT"],
-        ["Year:", y],
-        ["Treasurer:", tName],
-        ["Assistant Treasurer:", atName],
-        [""],
-        ["SUMMARY"],
-        ["Total Collection:", "₹" + tIn.toLocaleString()],
-        ["Total Expenditure:", "₹" + tOut.toLocaleString()],
-        ["Net Balance:", "₹" + (tIn - tOut).toLocaleString()],
-        [""],
-        ["DONATION DETAILS"]
-    ];
-
-    // 2. Donation Table Header aur Data
-    reportHeader.push(["Date", "Donor Name", "Occupation", "Amount"]);
-    donData.forEach(item => {
-        reportHeader.push([item.date, item.name, item.occ, item.amt]);
-    });
-
-    reportHeader.push([""]);
-    reportHeader.push(["EXPENDITURE DETAILS"]);
-    reportHeader.push(["Date", "Detail", "Type", "Amount"]);
-    
-    // 3. Expenditure Data
-    expData.forEach(item => {
-        reportHeader.push([item.date, item.name, "Expense", item.amt]);
-    });
-
-    // Excel Workbook Banana
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(reportHeader);
-
-    // Sheet ki width set karna taaki saaf dikhe
-    ws['!cols'] = [{wch:15}, {wch:25}, {wch:20}, {wch:15}];
-
-    XLSX.utils.book_append_sheet(wb, ws, "Financial Report " + y);
-    
-    // Download File
-    XLSX.writeFile(wb, `Treasure_Books_Official_Report_${y}.xlsx`);
-}
-
-    window.onload = function() {
-        if(localStorage.getItem('treasurer_name')) document.getElementById('tName').innerText = localStorage.getItem('treasurer_name');
-        if(localStorage.getItem('asst_treasurer_name')) document.getElementById('atName').innerText = localStorage.getItem('asst_treasurer_name');
-        document.getElementById('eDate').valueAsDate = new Date();
-        buildYearDropdown();
-        handleFormChange();
-        loadView();
-    };
+    window.onload = loadView;
 </script>
 </body>
 </html>
