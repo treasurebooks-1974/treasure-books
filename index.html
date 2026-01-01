@@ -66,31 +66,36 @@
             
             <select id="eOcc" onchange="checkExService()">
                 <option value="">Select Occupation</option>
-                <option value="Teacher">Teacher (Shikshak)</option>
+                <option value="Teacher">Teacher</option>
                 <option value="Police">Police</option>
                 <option value="Doctor">Doctor</option>
                 <option value="Engineer">Engineer</option>
+                <option value="Govt Service">Govt Service</option>
+                <option value="Private Service">Private Service</option>
                 <option value="Businessman">Businessman</option>
-                <option value="Farmer">Farmer (Kisan)</option>
-                <option value="Govt Service">Govt. Service</option>
-                <option value="Private Job">Private Job</option>
-                <option value="Ex-Service">Ex-Service</option>
+                <option value="Farmer">Farmer</option>
                 <option value="Social Worker">Social Worker</option>
                 <option value="Student">Student</option>
+                <option value="Ex-Service">Ex-Service</option>
                 <option value="Other">Other</option>
             </select>
 
             <select id="eSubOcc">
-                <option value="">Select Branch</option>
+                <option value="">Select Department</option>
                 <option value="Army">Army</option>
                 <option value="Navy">Navy</option>
                 <option value="Air Force">Air Force</option>
+                <option value="Police">Police</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Engineer">Engineer</option>
                 <option value="BSF">BSF</option>
                 <option value="CRPF">CRPF</option>
                 <option value="CISF">CISF</option>
-                <option value="Police">Police</option>
                 <option value="Railway">Railway</option>
-                <option value="Other Govt">Other Govt Job</option>
+                <option value="Govt Service">Govt Service</option>
+                <option value="Private Service">Private Service</option>
+                <option value="Social Worker">Social Worker</option>
             </select>
 
             <input type="number" id="eAmount" placeholder="Amount ₹">
@@ -208,4 +213,106 @@
         document.getElementById('eName').value = item.name;
         
         if(item.occ.includes("Ex-Service")) {
-            document.getElementById('
+            document.getElementById('eOcc').value = "Ex-Service";
+            let branch = item.occ.replace("Ex-Service (", "").replace(")", "");
+            document.getElementById('eSubOcc').value = branch;
+        } else {
+            document.getElementById('eOcc').value = item.occ;
+        }
+        
+        document.getElementById('eAmount').value = item.amt;
+        document.getElementById('editKey').value = key;
+        document.getElementById('saveBtn').innerText = "Update Data";
+        handleFormChange();
+        window.scrollTo(0,0);
+    }
+
+    function deleteEntry(type, key) {
+        if(confirm("Delete karein?")) {
+            const path = (type === 'don') ? 'donations/' : 'expenses/';
+            dbRef.ref(path + key).remove();
+        }
+    }
+
+    function loadView() {
+        const fYear = document.getElementById('yearFilter').value;
+        let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
+        let tIn = 0, tOut = 0, cDon = 1, cExp = 1;
+        bDon.innerHTML = ''; bExp.innerHTML = '';
+
+        for(let key in currentData.donations) {
+            let x = currentData.donations[key];
+            if(x.year == fYear) {
+                bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
+                <td><button class="btn-edit" onclick="triggerEdit('don', '${key}')">Edit</button>
+                <button class="btn-del" onclick="deleteEntry('don', '${key}')">Del</button></td></tr>`;
+                tIn += x.amt;
+            }
+        }
+
+        for(let key in currentData.expenses) {
+            let x = currentData.expenses[key];
+            if(x.year == fYear) {
+                bExp.innerHTML += `<tr><td>${cExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
+                <td><button class="btn-edit" onclick="triggerEdit('exp', '${key}')">Edit</button>
+                <button class="btn-del" onclick="deleteEntry('exp', '${key}')">Del</button></td></tr>`;
+                tOut += x.amt;
+            }
+        }
+
+        document.getElementById('sumIn').innerText = '₹' + tIn.toLocaleString();
+        document.getElementById('sumOut').innerText = '₹' + tOut.toLocaleString();
+        document.getElementById('sumBal').innerText = '₹' + (tIn - tOut).toLocaleString();
+    }
+
+    dbRef.ref().on('value', (snapshot) => {
+        const val = snapshot.val();
+        if(val) {
+            currentData.donations = val.donations || {};
+            currentData.expenses = val.expenses || {};
+            document.getElementById('tName').innerText = val.config?.tName || "Ravi Kumar";
+            document.getElementById('atName').innerText = val.config?.atName || "Suresh Singh";
+            loadView();
+        }
+    });
+
+    function clearInputs() { 
+        document.getElementById('eName').value = ''; 
+        document.getElementById('eAmount').value = ''; 
+        document.getElementById('eSubOcc').style.display = 'none';
+    }
+
+    function buildYearDropdown() {
+        const sel = document.getElementById('yearFilter');
+        for (let y = 2024; y <= 2050; y++) {
+            let opt = document.createElement('option');
+            opt.value = y; opt.text = "Year " + y;
+            if(y === new Date().getFullYear()) opt.selected = true;
+            sel.appendChild(opt);
+        }
+    }
+
+    function switchTab(e, id) {
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
+    }
+
+    function exportToExcel() {
+        const y = document.getElementById('yearFilter').value;
+        const report = [["Sl.No", "Date", "Name", "Occupation", "Amount (₹)"]];
+        Object.values(currentData.donations).filter(x=>x.year==y).forEach((x,i)=>report.push([i+1, x.date, x.name, x.occ, x.amt]));
+        const ws = XLSX.utils.aoa_to_sheet(report);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Financial Report");
+        XLSX.writeFile(wb, `Treasure_Report_${y}.xlsx`);
+    }
+
+    window.onload = function() {
+        buildYearDropdown();
+        handleFormChange();
+        document.getElementById('eDate').valueAsDate = new Date();
+    };
+</script>
+</body>
+</html>
