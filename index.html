@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Treasure Books - Cloud Sync Master</title>
+    <title>Treasure Books - Cloud Master</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -39,8 +39,8 @@
     <h1>TREASURE BOOKS ☁️</h1>
     
     <div class="committee-info">
-        <div>Treasurer: <span id="tName" class="name-val">Ravi Kumar</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
-        <div>Assistant Treasurer: <span id="atName" class="name-val">Suresh Singh</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
+        <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
+        <div>Assistant Treasurer: <span id="atName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
     </div>
 
     <div class="entry-section">
@@ -100,7 +100,6 @@
 </div>
 
 <script>
-    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -123,9 +122,7 @@
 
     function editMember(elementId, field) {
         let val = prompt("Naya Naam Likhein:", document.getElementById(elementId).innerText);
-        if(val) {
-            dbRef.ref('config/' + field).set(val);
-        }
+        if(val) dbRef.ref('config/' + field).set(val);
     }
 
     function saveEntry() {
@@ -141,9 +138,8 @@
         const entry = { date, name, occ: (type==='donation'?occ:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
 
-        if(editKey === "") {
-            dbRef.ref(path).push(entry);
-        } else {
+        if(editKey === "") dbRef.ref(path).push(entry);
+        else {
             dbRef.ref(path + editKey).set(entry);
             resetEditState();
         }
@@ -188,7 +184,7 @@
         for(let key in currentData.donations) {
             let x = currentData.donations[key];
             if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt}</td>
+                bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td><button class="btn-edit" onclick="triggerEdit('don', '${key}')">Edit</button>
                 <button class="btn-del" onclick="deleteEntry('don', '${key}')">Del</button></td></tr>`;
                 tIn += x.amt;
@@ -198,7 +194,7 @@
         for(let key in currentData.expenses) {
             let x = currentData.expenses[key];
             if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${cExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+                bExp.innerHTML += `<tr><td>${cExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td><button class="btn-edit" onclick="triggerEdit('exp', '${key}')">Edit</button>
                 <button class="btn-del" onclick="deleteEntry('exp', '${key}')">Del</button></td></tr>`;
                 tOut += x.amt;
@@ -239,11 +235,11 @@
 
     function exportToExcel() {
         const y = document.getElementById('yearFilter').value;
-        const report = [["Sl.No", "Date", "Name", "Occupation", "Amount (₹)"]];
+        const report = [["TREASURE BOOKS REPORT - " + y], ["Sl.No", "Date", "Name", "Occupation", "Amount (₹)"]];
         Object.values(currentData.donations).filter(x=>x.year==y).forEach((x,i)=>report.push([i+1, x.date, x.name, x.occ, x.amt]));
         const ws = XLSX.utils.aoa_to_sheet(report);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Cloud Report");
+        XLSX.utils.book_append_sheet(wb, ws, "Financial Report");
         XLSX.writeFile(wb, `Treasure_Books_Report_${y}.xlsx`);
     }
 
