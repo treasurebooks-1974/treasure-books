@@ -49,46 +49,47 @@
 
         #eSubOcc { display: none; }
         
-        /* Receipt Hidden by default */
-        #receiptBox { display: none; }
+        /* Elements for Print Management */
+        #receiptPrintArea { display: none; }
+        .print-header { display: none; }
 
-        /* PROFESSIONAL PRINT STYLING */
         @media print {
             body { background: white; padding: 0; }
-            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
             .no-print, .entry-section, .action-btns, .tabs, .year-selector, .edit-link, .btn-edit, .btn-del, .btn-receipt { display: none !important; }
+            .container { box-shadow: none; border: none; width: 100% !important; max-width: 100% !important; margin: 0; padding: 10px; }
             
-            /* Show active tab only */
-            .tab-content { display: none !important; }
-            .tab-content.active { display: block !important; }
-            
-            /* Summary styling for print */
-            .stats { display: flex !important; justify-content: space-around; border: 2px solid #eee; border-radius: 10px; padding: 10px; color: black !important; margin-bottom: 20px;}
-            .card { color: black !important; background: none !important; border: 1px solid #ddd; flex: 1; margin: 5px; }
-            .card h2 { margin: 5px 0; color: var(--primary); }
-            
-            table { font-size: 12px; width: 100%; }
-            th { background: #eee !important; color: black !important; border: 1px solid #000; }
-            td { border: 1px solid #000; }
+            /* Report Print Mode */
+            body.printing-report .tab-content { display: none !important; }
+            body.printing-report .tab-content.active { display: block !important; }
+            body.printing-report .print-header { display: block !important; text-align: center; margin-bottom: 20px; }
+            body.printing-report .stats { display: flex !important; justify-content: space-around; margin-bottom: 20px; }
+            body.printing-report .card { background: none !important; border: 1px solid #333 !important; color: #000 !important; flex: 1; margin: 0 5px; }
+            body.printing-report .card h2 { color: #000 !important; font-size: 16px; margin: 5px 0; }
+            body.printing-report th { background: #ddd !important; color: #000 !important; border: 1px solid #000; }
+            body.printing-report td { border: 1px solid #000; }
 
-            /* Professional Receipt Print */
-            #receiptBox { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
-            #receiptBox * { visibility: visible; }
-            .container { display: none !important; } /* Hide dashboard when printing receipt */
+            /* Receipt Print Mode */
+            body.printing-receipt .container { display: none !important; }
+            body.printing-receipt #receiptPrintArea { display: block !important; position: absolute; top: 0; left: 0; width: 100%; }
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
-<div class="container no-print">
-    <h1>TREASURE BOOKS <span style="color:var(--secondary)">PRO</span></h1>
+<div class="container">
+    <h1 class="no-print">TREASURE BOOKS <span style="color:var(--secondary)">PRO</span></h1>
     
-    <div class="committee-info">
-        <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
-        <div>Asst. Treasurer: <span id="atName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
+    <div class="print-header">
+        <h2 id="reportTitle" style="color:var(--primary); text-transform: uppercase;"></h2>
+        <hr>
     </div>
 
-    <div class="entry-section">
+    <div class="committee-info">
+        <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link no-print" onclick="editMember('tName', 'tName')">Edit</button></div>
+        <div>Asst. Treasurer: <span id="atName" class="name-val">Loading...</span> <button class="edit-link no-print" onclick="editMember('atName', 'atName')">Edit</button></div>
+    </div>
+
+    <div class="entry-section no-print">
         <h3 id="formTitle" style="color:var(--primary)">Nayi Cloud Entry</h3>
         <div class="form-grid">
             <input type="hidden" id="editKey" value="">
@@ -123,7 +124,7 @@
         </div>
     </div>
 
-    <div class="year-selector">
+    <div class="year-selector no-print">
         <label>🔍 <b>Data History Year:</b> </label>
         <select id="yearFilter" onchange="loadView()"></select>
     </div>
@@ -134,18 +135,17 @@
         <div class="card bg-green">Balance<br><h2 id="sumBal">₹0</h2></div>
     </div>
 
-    <div class="action-btns">
-        <button class="btn-print" onclick="window.print()">Print Report</button>
+    <div class="action-btns no-print">
+        <button class="btn-print" onclick="triggerPrintReport()">Print Report</button>
         <button class="btn-excel" onclick="exportToExcel()">Download Excel</button>
     </div>
 
-    <div class="tabs">
+    <div class="tabs no-print">
         <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATION SHEET</div>
         <div class="tab" id="tabExp" onclick="switchTab('viewExp')">EXPENDITURE SHEET</div>
     </div>
 
     <div id="viewDon" class="tab-content active">
-        <h3 class="show-on-print" style="display:none; text-align:center; color:var(--primary); margin-top:20px;">DONATION REPORT</h3>
         <table>
             <thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
             <tbody id="bodyDon"></tbody>
@@ -153,7 +153,6 @@
     </div>
 
     <div id="viewExp" class="tab-content">
-        <h3 class="show-on-print" style="display:none; text-align:center; color:var(--primary); margin-top:20px;">EXPENDITURE REPORT</h3>
         <table>
             <thead><tr><th>Sl.No</th><th>Date</th><th>Expenditure Detail</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
             <tbody id="bodyExp"></tbody>
@@ -161,30 +160,20 @@
     </div>
 </div>
 
-<div id="receiptBox">
-    <div style="border: 8px double var(--primary); padding: 40px; text-align: center; width: 550px; margin: 50px auto; background: #fff;">
-        <h1 style="color:var(--primary); margin:0; letter-spacing: 3px;">DONATION RECEIPT</h1>
-        <p style="border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 10px; font-weight:bold;">TREASURE BOOKS OFFICIAL</p>
-        
+<div id="receiptPrintArea">
+    <div style="border: 8px double var(--primary); padding: 40px; text-align: center; width: 600px; margin: auto; background: #fff;">
+        <h1 style="color:var(--primary); margin:0;">DONATION RECEIPT</h1>
+        <p style="border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 10px;"><b>TREASURE BOOKS OFFICIAL</b></p>
         <div style="text-align: left; margin-top: 30px; line-height: 2.2; font-size: 18px;">
-            <p><b>Receipt Date:</b> <span id="rDate" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
-            <p><b>Donor Name:</b> <span id="rName" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
-            <p><b>Occupation:</b> <span id="rOcc" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
-            <p><b>Amount Received:</b> <span id="rAmt" style="font-size: 24px; color: var(--primary); font-weight:bold; background: #f0f0f0; padding: 5px 20px; border-radius: 5px;"></span></p>
+            <p><b>Date:</b> <span id="rDate"></span></p>
+            <p><b>Donor Name:</b> <span id="rName"></span></p>
+            <p><b>Occupation:</b> <span id="rOcc"></span></p>
+            <p><b>Amount Received:</b> <span id="rAmt" style="font-size: 24px; font-weight: bold; background: #f0f0f0; padding: 5px 15px; border-radius: 5px;"></span></p>
         </div>
-        
         <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="text-align:center;">
-                <p style="margin:0;">_______________________</p>
-                <p style="margin:0; font-weight:bold;">Treasurer Signature</p>
-            </div>
-            <div style="text-align:center;">
-                <p style="margin:0;">_______________________</p>
-                <p style="margin:0; font-weight:bold;">Donor Signature</p>
-            </div>
+            <div style="text-align:center;"><p>_______________________</p><p>Treasurer Signature</p></div>
+            <div style="text-align:center;"><p>_______________________</p><p>Donor Signature</p></div>
         </div>
-        
-        <p style="margin-top:40px; font-size: 12px; color: #777;">Thank you for your generous contribution!</p>
     </div>
 </div>
 
@@ -202,14 +191,38 @@
     firebase.initializeApp(firebaseConfig);
     const dbRef = firebase.database();
     let currentData = { donations: {}, expenses: {} };
+    let activeTab = 'viewDon';
 
     function switchTab(tabId) {
+        activeTab = tabId;
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         if(tabId === 'viewDon') document.getElementById('tabDon').classList.add('active');
         else document.getElementById('tabExp').classList.add('active');
     }
+
+    function triggerPrintReport() {
+        document.getElementById('mainBody').className = 'printing-report';
+        const title = activeTab === 'viewDon' ? "DONATION SHEET REPORT" : "EXPENDITURE SHEET REPORT";
+        document.getElementById('reportTitle').innerText = title;
+        window.print();
+    }
+
+    function triggerReceipt(key) {
+        document.getElementById('mainBody').className = 'printing-receipt';
+        const item = currentData.donations[key];
+        document.getElementById('rDate').innerText = item.date;
+        document.getElementById('rName').innerText = item.name;
+        document.getElementById('rOcc').innerText = item.occ;
+        document.getElementById('rAmt').innerText = "₹" + item.amt.toLocaleString();
+        window.print();
+    }
+
+    // Window focus se body class reset (Printing ke baad vapas normal karne ke liye)
+    window.onafterprint = function() {
+        document.getElementById('mainBody').className = '';
+    };
 
     function checkExService() {
         const occ = document.getElementById('eOcc').value;
@@ -224,15 +237,6 @@
         checkExService();
     }
 
-    function printReceipt(key) {
-        const item = currentData.donations[key];
-        document.getElementById('rDate').innerText = item.date;
-        document.getElementById('rName').innerText = item.name;
-        document.getElementById('rOcc').innerText = item.occ;
-        document.getElementById('rAmt').innerText = "₹" + item.amt.toLocaleString();
-        window.print();
-    }
-
     function saveEntry() {
         const type = document.getElementById('eType').value;
         const date = document.getElementById('eDate').value;
@@ -242,7 +246,7 @@
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
 
-        if(!date || !name || isNaN(amt)) { alert("Fill all details!"); return; }
+        if(!date || !name || isNaN(amt)) { alert("Fill Details!"); return; }
 
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
@@ -257,7 +261,6 @@
         document.getElementById('editKey').value = "";
         document.getElementById('saveBtn').innerText = "Save Data";
         document.getElementById('eType').disabled = false;
-        document.getElementById('formTitle').innerText = "Nayi Entry (Cloud)";
     }
 
     function triggerEdit(type, key) {
@@ -287,7 +290,7 @@
             let x = currentData.donations[key];
             if(x.year == fYear) {
                 bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="no-print"><button class="btn-receipt" onclick="printReceipt('${key}')">Receipt</button>
+                <td class="no-print"><button class="btn-receipt" onclick="triggerReceipt('${key}')">Receipt</button>
                 <button class="btn-edit" onclick="triggerEdit('don', '${key}')">Edit</button>
                 <button class="btn-del" onclick="deleteEntry('don', '${key}')">Del</button></td></tr>`;
                 tIn += x.amt;
