@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Treasure Books - Advanced Cloud Sync</title>
+    <title>Treasure Books - Final Cloud Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -30,8 +30,17 @@
         th { background: #f1f3f4; }
         .btn-edit { background: #f39c12; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-right: 5px; font-size: 12px; }
         .btn-del { background: #d33; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-excel { background: #1e8e3e; color: white; float: right; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; }
-        #subOccContainer { display: none; }
+        .btn-excel { background: #1e8e3e; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; margin-left: 10px; }
+        .btn-print { background: #555; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .action-btns { text-align: right; margin-bottom: 15px; }
+        #eSubOcc { display: none; }
+
+        @media print {
+            .entry-section, .btn-edit, .btn-del, .action-btns, .year-selector, .edit-link, .tabs { display: none !important; }
+            .container { box-shadow: none; border: none; }
+            body { background: white; padding: 0; }
+            .content { display: block !important; }
+        }
     </style>
 </head>
 <body>
@@ -57,12 +66,17 @@
             
             <select id="eOcc" onchange="checkExService()">
                 <option value="">Select Occupation</option>
-                <option value="Teacher">Teacher</option>
+                <option value="Teacher">Teacher (Shikshak)</option>
+                <option value="Police">Police</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Engineer">Engineer</option>
                 <option value="Businessman">Businessman</option>
-                <option value="Farmer">Farmer</option>
-                <option value="Social Worker">Social Worker</option>
-                <option value="Service">Service</option>
+                <option value="Farmer">Farmer (Kisan)</option>
+                <option value="Govt Service">Govt. Service</option>
+                <option value="Private Job">Private Job</option>
                 <option value="Ex-Service">Ex-Service</option>
+                <option value="Social Worker">Social Worker</option>
+                <option value="Student">Student</option>
                 <option value="Other">Other</option>
             </select>
 
@@ -73,7 +87,10 @@
                 <option value="Air Force">Air Force</option>
                 <option value="BSF">BSF</option>
                 <option value="CRPF">CRPF</option>
+                <option value="CISF">CISF</option>
                 <option value="Police">Police</option>
+                <option value="Railway">Railway</option>
+                <option value="Other Govt">Other Govt Job</option>
             </select>
 
             <input type="number" id="eAmount" placeholder="Amount ₹">
@@ -92,7 +109,10 @@
         <div class="card bg-green">Balance<br><h2 id="sumBal">₹0</h2></div>
     </div>
 
-    <button class="btn-excel" onclick="exportToExcel()">Download Official Report</button>
+    <div class="action-btns">
+        <button class="btn-print" onclick="window.print()">Print Report</button>
+        <button class="btn-excel" onclick="exportToExcel()">Download Excel</button>
+    </div>
 
     <div class="tabs">
         <div class="tab active" onclick="switchTab(event, 'viewDon')">Donation Sheet</div>
@@ -132,12 +152,8 @@
     function checkExService() {
         const occ = document.getElementById('eOcc').value;
         const subOcc = document.getElementById('eSubOcc');
-        if(occ === "Ex-Service") {
-            subOcc.style.display = "inline-block";
-        } else {
-            subOcc.style.display = "none";
-            subOcc.value = "";
-        }
+        subOcc.style.display = (occ === "Ex-Service") ? "inline-block" : "none";
+        if(occ !== "Ex-Service") subOcc.value = "";
     }
 
     function handleFormChange() {
@@ -163,11 +179,8 @@
 
         if(!date || !name || isNaN(amt)) { alert("Poori detail bharein!"); return; }
 
-        // Agar Ex-Service hai toh dono ko jod dena (Ex-Service Army)
         let finalOcc = occ;
-        if(occ === "Ex-Service" && subOcc !== "") {
-            finalOcc = "Ex-Service (" + subOcc + ")";
-        }
+        if(occ === "Ex-Service" && subOcc !== "") finalOcc = "Ex-Service (" + subOcc + ")";
 
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
@@ -194,108 +207,5 @@
         document.getElementById('eDate').value = item.date;
         document.getElementById('eName').value = item.name;
         
-        // Edit karte waqt occupation check
         if(item.occ.includes("Ex-Service")) {
-            document.getElementById('eOcc').value = "Ex-Service";
-            let branch = item.occ.replace("Ex-Service (", "").replace(")", "");
-            document.getElementById('eSubOcc').value = branch;
-        } else {
-            document.getElementById('eOcc').value = item.occ;
-        }
-        
-        document.getElementById('eAmount').value = item.amt;
-        document.getElementById('editKey').value = key;
-        document.getElementById('saveBtn').innerText = "Update Cloud Data";
-        handleFormChange();
-        window.scrollTo(0,0);
-    }
-
-    function deleteEntry(type, key) {
-        if(confirm("Kya aap ise delete karna chahte hain?")) {
-            const path = (type === 'don') ? 'donations/' : 'expenses/';
-            dbRef.ref(path + key).remove();
-        }
-    }
-
-    function loadView() {
-        const fYear = document.getElementById('yearFilter').value;
-        let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
-        let tIn = 0, tOut = 0, cDon = 1, cExp = 1;
-        bDon.innerHTML = ''; bExp.innerHTML = '';
-
-        for(let key in currentData.donations) {
-            let x = currentData.donations[key];
-            if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td><button class="btn-edit" onclick="triggerEdit('don', '${key}')">Edit</button>
-                <button class="btn-del" onclick="deleteEntry('don', '${key}')">Del</button></td></tr>`;
-                tIn += x.amt;
-            }
-        }
-
-        for(let key in currentData.expenses) {
-            let x = currentData.expenses[key];
-            if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${cExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td><button class="btn-edit" onclick="triggerEdit('exp', '${key}')">Edit</button>
-                <button class="btn-del" onclick="deleteEntry('exp', '${key}')">Del</button></td></tr>`;
-                tOut += x.amt;
-            }
-        }
-
-        document.getElementById('sumIn').innerText = '₹' + tIn.toLocaleString();
-        document.getElementById('sumOut').innerText = '₹' + tOut.toLocaleString();
-        document.getElementById('sumBal').innerText = '₹' + (tIn - tOut).toLocaleString();
-    }
-
-    dbRef.ref().on('value', (snapshot) => {
-        const val = snapshot.val();
-        if(val) {
-            currentData.donations = val.donations || {};
-            currentData.expenses = val.expenses || {};
-            document.getElementById('tName').innerText = val.config?.tName || "Ravi Kumar";
-            document.getElementById('atName').innerText = val.config?.atName || "Suresh Singh";
-            loadView();
-        }
-    });
-
-    function clearInputs() { 
-        document.getElementById('eName').value = ''; 
-        document.getElementById('eAmount').value = ''; 
-        document.getElementById('eSubOcc').style.display = 'none';
-    }
-
-    function buildYearDropdown() {
-        const sel = document.getElementById('yearFilter');
-        for (let y = 2024; y <= 2050; y++) {
-            let opt = document.createElement('option');
-            opt.value = y; opt.text = "Year " + y;
-            if(y === new Date().getFullYear()) opt.selected = true;
-            sel.appendChild(opt);
-        }
-    }
-
-    function switchTab(e, id) {
-        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
-    }
-
-    function exportToExcel() {
-        const y = document.getElementById('yearFilter').value;
-        const report = [["Sl.No", "Date", "Name", "Occupation", "Amount (₹)"]];
-        Object.values(currentData.donations).filter(x=>x.year==y).forEach((x,i)=>report.push([i+1, x.date, x.name, x.occ, x.amt]));
-        const ws = XLSX.utils.aoa_to_sheet(report);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Financial Report");
-        XLSX.writeFile(wb, `Treasure_Report_${y}.xlsx`);
-    }
-
-    window.onload = function() {
-        buildYearDropdown();
-        handleFormChange();
-        document.getElementById('eDate').valueAsDate = new Date();
-    };
-</script>
-</body>
-</html>
+            document.getElementById('
