@@ -48,6 +48,8 @@
         .btn-del { background: #ff5252; color: white; }
 
         #eSubOcc { display: none; }
+        
+        /* Receipt Hidden by default */
         #receiptBox { display: none; }
 
         /* PROFESSIONAL PRINT STYLING */
@@ -55,33 +57,39 @@
             body { background: white; padding: 0; }
             .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
             .no-print, .entry-section, .action-btns, .tabs, .year-selector, .edit-link, .btn-edit, .btn-del, .btn-receipt { display: none !important; }
+            
+            /* Show active tab only */
             .tab-content { display: none !important; }
             .tab-content.active { display: block !important; }
-            .stats { display: flex !important; justify-content: space-around; border: 2px solid #eee; border-radius: 10px; padding: 10px; color: black !important; }
+            
+            /* Summary styling for print */
+            .stats { display: flex !important; justify-content: space-around; border: 2px solid #eee; border-radius: 10px; padding: 10px; color: black !important; margin-bottom: 20px;}
             .card { color: black !important; background: none !important; border: 1px solid #ddd; flex: 1; margin: 5px; }
             .card h2 { margin: 5px 0; color: var(--primary); }
-            table { font-size: 12px; }
-            th { background: #eee !important; color: black !important; }
+            
+            table { font-size: 12px; width: 100%; }
+            th { background: #eee !important; color: black !important; border: 1px solid #000; }
+            td { border: 1px solid #000; }
+
+            /* Professional Receipt Print */
+            #receiptBox { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            #receiptBox * { visibility: visible; }
+            .container { display: none !important; } /* Hide dashboard when printing receipt */
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1 class="no-print">TREASURE BOOKS <span style="color:var(--secondary)">PRO</span></h1>
+<div class="container no-print">
+    <h1>TREASURE BOOKS <span style="color:var(--secondary)">PRO</span></h1>
     
-    <div style="text-align:center; display:none;" class="show-on-print">
-        <h2 style="margin:0;">TREASURE BOOKS - FINANCIAL REPORT</h2>
-        <hr>
-    </div>
-
     <div class="committee-info">
         <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
         <div>Asst. Treasurer: <span id="atName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
     </div>
 
-    <div class="entry-section no-print">
-        <h3 id="formTitle" style="color:var(--primary)">Nayi Entry (Cloud)</h3>
+    <div class="entry-section">
+        <h3 id="formTitle" style="color:var(--primary)">Nayi Cloud Entry</h3>
         <div class="form-grid">
             <input type="hidden" id="editKey" value="">
             <select id="eType" onchange="handleFormChange()">
@@ -115,7 +123,7 @@
         </div>
     </div>
 
-    <div class="year-selector no-print">
+    <div class="year-selector">
         <label>🔍 <b>Data History Year:</b> </label>
         <select id="yearFilter" onchange="loadView()"></select>
     </div>
@@ -126,18 +134,18 @@
         <div class="card bg-green">Balance<br><h2 id="sumBal">₹0</h2></div>
     </div>
 
-    <div class="action-btns no-print">
+    <div class="action-btns">
         <button class="btn-print" onclick="window.print()">Print Report</button>
         <button class="btn-excel" onclick="exportToExcel()">Download Excel</button>
     </div>
 
-    <div class="tabs no-print">
+    <div class="tabs">
         <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATION SHEET</div>
         <div class="tab" id="tabExp" onclick="switchTab('viewExp')">EXPENDITURE SHEET</div>
     </div>
 
     <div id="viewDon" class="tab-content active">
-        <h3 class="show-on-print" style="display:none; text-align:center;">Donation Details</h3>
+        <h3 class="show-on-print" style="display:none; text-align:center; color:var(--primary); margin-top:20px;">DONATION REPORT</h3>
         <table>
             <thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
             <tbody id="bodyDon"></tbody>
@@ -145,7 +153,7 @@
     </div>
 
     <div id="viewExp" class="tab-content">
-        <h3 class="show-on-print" style="display:none; text-align:center;">Expenditure Details</h3>
+        <h3 class="show-on-print" style="display:none; text-align:center; color:var(--primary); margin-top:20px;">EXPENDITURE REPORT</h3>
         <table>
             <thead><tr><th>Sl.No</th><th>Date</th><th>Expenditure Detail</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
             <tbody id="bodyExp"></tbody>
@@ -154,17 +162,29 @@
 </div>
 
 <div id="receiptBox">
-    <div style="border: 5px double var(--primary); padding: 25px; text-align: center; width: 450px; margin: auto;">
-        <h2 style="color:var(--primary); margin:0;">DONATION RECEIPT</h2>
-        <div style="text-align: left; margin-top: 15px; line-height: 1.8;">
-            <p><b>Date:</b> <span id="rDate"></span></p>
-            <p><b>Donor:</b> <span id="rName"></span></p>
-            <p><b>Occupation:</b> <span id="rOcc"></span></p>
-            <p><b>Amount:</b> <span id="rAmt" style="font-size: 18px; font-weight: bold;"></span></p>
+    <div style="border: 8px double var(--primary); padding: 40px; text-align: center; width: 550px; margin: 50px auto; background: #fff;">
+        <h1 style="color:var(--primary); margin:0; letter-spacing: 3px;">DONATION RECEIPT</h1>
+        <p style="border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 10px; font-weight:bold;">TREASURE BOOKS OFFICIAL</p>
+        
+        <div style="text-align: left; margin-top: 30px; line-height: 2.2; font-size: 18px;">
+            <p><b>Receipt Date:</b> <span id="rDate" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
+            <p><b>Donor Name:</b> <span id="rName" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
+            <p><b>Occupation:</b> <span id="rOcc" style="border-bottom: 1px dashed #333; padding: 0 10px;"></span></p>
+            <p><b>Amount Received:</b> <span id="rAmt" style="font-size: 24px; color: var(--primary); font-weight:bold; background: #f0f0f0; padding: 5px 20px; border-radius: 5px;"></span></p>
         </div>
-        <div style="margin-top: 30px; display: flex; justify-content: space-between;">
-            <p>Treasurer</p><p>Donor Sign</p>
+        
+        <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align:center;">
+                <p style="margin:0;">_______________________</p>
+                <p style="margin:0; font-weight:bold;">Treasurer Signature</p>
+            </div>
+            <div style="text-align:center;">
+                <p style="margin:0;">_______________________</p>
+                <p style="margin:0; font-weight:bold;">Donor Signature</p>
+            </div>
         </div>
+        
+        <p style="margin-top:40px; font-size: 12px; color: #777;">Thank you for your generous contribution!</p>
     </div>
 </div>
 
