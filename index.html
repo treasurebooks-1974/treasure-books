@@ -2,103 +2,85 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Treasure Books - Professional Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Books - Mobile Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --primary: #1a237e; --secondary: #c5a059; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); padding: 20px; color: #333; }
-        .container { max-width: 1100px; margin: auto; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-top: 8px solid var(--primary); }
-        h1 { color: var(--primary); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
-        .committee-info { text-align: center; background: #e8eaf6; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #c5cae9; display: flex; justify-content: space-around; flex-wrap: wrap; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 10px; color: #333; margin: 0; }
+        .container { max-width: 100%; margin: auto; background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 6px solid var(--primary); }
+        h1 { color: var(--primary); text-align: center; font-size: 22px; text-transform: uppercase; }
+        
+        .committee-info { text-align: center; background: #e8eaf6; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; }
         .name-val { color: var(--primary); font-weight: bold; }
-        .edit-link { margin-left: 8px; font-size: 11px; cursor: pointer; color: #d32f2f; background:none; border:none; text-decoration: underline; }
-        .entry-section { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #e8eaf6; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-        input, select { padding: 12px; border: 1px solid #ced4da; border-radius: 8px; outline: none; }
-        .btn-save { background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; padding: 12px; }
+        .edit-link { margin-left: 5px; color: #d32f2f; cursor: pointer; background:none; border:none; text-decoration: underline; font-size: 11px; }
+
+        .entry-section { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .form-grid { display: flex; flex-direction: column; gap: 10px; }
+        input, select { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        .btn-save { background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; padding: 15px; font-size: 16px; }
+
+        .stats { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 20px; }
+        .card { padding: 15px; border-radius: 12px; color: white; text-align: center; }
+        .bg-blue { background: #1a237e; } .bg-red { background: #b71c1c; } .bg-green { background: #1b5e20; }
         
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
-        .card { padding: 20px; border-radius: 15px; color: white; text-align: center; font-weight: bold; }
-        .bg-blue { background: linear-gradient(135deg, #1a237e, #3949ab); }
-        .bg-red { background: linear-gradient(135deg, #b71c1c, #e53935); }
-        .bg-green { background: linear-gradient(135deg, #1b5e20, #43a047); }
-        
-        .year-selector { background: #fffde7; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 1px solid #fff9c4; }
-        .tabs { display: flex; cursor: pointer; border-bottom: 2px solid #e0e0e0; margin-bottom: 20px; background: #f8f9fa; border-radius: 10px 10px 0 0; }
-        .tab { flex: 1; text-align: center; padding: 15px; font-weight: bold; color: #9e9e9e; transition: 0.3s; border-bottom: 4px solid transparent; }
-        .tab.active { border-bottom: 4px solid var(--secondary); color: var(--primary); background: #fff; }
-        
-        .tab-content { display: none; }
+        .action-btns { text-align: center; margin-bottom: 15px; }
+        .btn-print { background: #455a64; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+
+        .tabs { display: flex; cursor: pointer; border-bottom: 2px solid #ddd; margin-bottom: 15px; }
+        .tab { flex: 1; text-align: center; padding: 12px 5px; font-size: 12px; font-weight: bold; color: #777; border-bottom: 3px solid transparent; }
+        .tab.active { border-bottom: 3px solid var(--secondary); color: var(--primary); background: #f9f9f9; }
+
+        .tab-content { display: none; overflow-x: auto; }
         .tab-content.active { display: block; }
-        
-        table { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 400px; }
+        th, td { border: 1px solid #eee; padding: 10px 5px; text-align: left; }
         th { background: var(--primary); color: white; }
-        tr:nth-child(even) { background: #f9f9f9; }
-        
-        .action-btns { text-align: right; margin-bottom: 15px; }
-        .btn-excel, .btn-print { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px; color: white; }
-        .btn-excel { background: #2e7d32; } .btn-print { background: #455a64; }
-        
-        .btn-receipt, .btn-edit, .btn-del { padding: 6px 10px; border-radius: 5px; cursor: pointer; font-size: 11px; border: none; margin-right: 2px; }
+
         .btn-receipt { background: var(--secondary); color: white; }
-        .btn-edit { background: #fbc02d; color: black; }
+        .btn-edit { background: #fbc02d; color: #000; }
         .btn-del { background: #ff5252; color: white; }
+        .row-btns { display: flex; gap: 4px; border: none !important; }
+        .row-btns button { border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; }
 
         #eSubOcc { display: none; }
-        
-        /* Elements for Print Management */
-        #receiptPrintArea { display: none; }
-        .print-header { display: none; }
+        #receiptPrintArea, .print-header { display: none; }
 
         @media print {
             body { background: white; padding: 0; }
-            .no-print, .entry-section, .action-btns, .tabs, .year-selector, .edit-link, .btn-edit, .btn-del, .btn-receipt { display: none !important; }
-            .container { box-shadow: none; border: none; width: 100% !important; max-width: 100% !important; margin: 0; padding: 10px; }
-            
-            /* Report Print Mode */
-            body.printing-report .tab-content { display: none !important; }
-            body.printing-report .tab-content.active { display: block !important; }
-            body.printing-report .print-header { display: block !important; text-align: center; margin-bottom: 20px; }
-            body.printing-report .stats { display: flex !important; justify-content: space-around; margin-bottom: 20px; }
-            body.printing-report .card { background: none !important; border: 1px solid #333 !important; color: #000 !important; flex: 1; margin: 0 5px; }
-            body.printing-report .card h2 { color: #000 !important; font-size: 16px; margin: 5px 0; }
-            body.printing-report th { background: #ddd !important; color: #000 !important; border: 1px solid #000; }
-            body.printing-report td { border: 1px solid #000; }
-
-            /* Receipt Print Mode */
+            .no-print, .entry-section, .action-btns, .tabs, .edit-link, .row-btns { display: none !important; }
+            .container { box-shadow: none; border: none; width: 100% !important; padding: 0; }
+            .tab-content { display: none !important; }
+            .tab-content.active { display: block !important; }
+            .print-header { display: block !important; text-align: center; }
+            .stats { display: flex !important; justify-content: space-around; border: 1px solid #000; color: #000 !important; }
+            .card { color: #000 !important; background: none !important; flex: 1; border-right: 1px solid #000; }
             body.printing-receipt .container { display: none !important; }
-            body.printing-receipt #receiptPrintArea { display: block !important; position: absolute; top: 0; left: 0; width: 100%; }
+            body.printing-receipt #receiptPrintArea { display: block !important; }
         }
     </style>
 </head>
 <body id="mainBody">
 
-<div class="container">
-    <h1 class="no-print">TREASURE BOOKS <span style="color:var(--secondary)">PRO</span></h1>
+<div class="container no-print">
+    <h1>TREASURE BOOKS ☁️</h1>
     
-    <div class="print-header">
-        <h2 id="reportTitle" style="color:var(--primary); text-transform: uppercase;"></h2>
-        <hr>
-    </div>
-
     <div class="committee-info">
-        <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link no-print" onclick="editMember('tName', 'tName')">Edit</button></div>
-        <div>Asst. Treasurer: <span id="atName" class="name-val">Loading...</span> <button class="edit-link no-print" onclick="editMember('atName', 'atName')">Edit</button></div>
+        <div>Treasurer: <span id="tName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
+        <div>Asst: <span id="atName" class="name-val">Loading...</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
     </div>
 
-    <div class="entry-section no-print">
-        <h3 id="formTitle" style="color:var(--primary)">Nayi Cloud Entry</h3>
+    <div class="entry-section">
         <div class="form-grid">
             <input type="hidden" id="editKey" value="">
             <select id="eType" onchange="handleFormChange()">
-                <option value="donation">Donation (Daan)</option>
-                <option value="expense">Expenditure (Kharch)</option>
+                <option value="donation">Donation</option>
+                <option value="expense">Expenditure</option>
             </select>
             <input type="date" id="eDate">
-            <input type="text" id="eName" placeholder="Donor Name">
+            <input type="text" id="eName" placeholder="Name/Detail">
             <select id="eOcc" onchange="checkExService()">
                 <option value="">Occupation</option>
                 <option value="Teacher">Teacher</option><option value="Police">Police</option>
@@ -112,7 +94,7 @@
                 <option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
             </select>
             <select id="eSubOcc">
-                <option value="">Branch (Ex-Serv)</option>
+                <option value="">Branch</option>
                 <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
                 <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
                 <option value="Engineer">Engineer</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
@@ -120,59 +102,52 @@
                 <option value="Private Service">Private Service</option><option value="Social Worker">Social Worker</option>
             </select>
             <input type="number" id="eAmount" placeholder="Amount ₹">
-            <button class="btn-save" id="saveBtn" onclick="saveEntry()">Save Data</button>
+            <button class="btn-save" id="saveBtn" onclick="saveEntry()">Save Entry</button>
         </div>
     </div>
 
-    <div class="year-selector no-print">
-        <label>🔍 <b>Data History Year:</b> </label>
-        <select id="yearFilter" onchange="loadView()"></select>
-    </div>
-
     <div class="stats">
-        <div class="card bg-blue">Total Collection<br><h2 id="sumIn">₹0</h2></div>
-        <div class="card bg-red">Total Expense<br><h2 id="sumOut">₹0</h2></div>
-        <div class="card bg-green">Balance<br><h2 id="sumBal">₹0</h2></div>
+        <div class="card bg-blue">In: <span id="sumIn">0</span></div>
+        <div class="card bg-red">Out: <span id="sumOut">0</span></div>
+        <div class="card bg-green">Bal: <span id="sumBal">0</span></div>
     </div>
 
-    <div class="action-btns no-print">
-        <button class="btn-print" onclick="triggerPrintReport()">Print Report</button>
-        <button class="btn-excel" onclick="exportToExcel()">Download Excel</button>
+    <div class="action-btns">
+        <button class="btn-print" onclick="triggerPrintReport()">Print This Report</button>
     </div>
 
-    <div class="tabs no-print">
-        <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATION SHEET</div>
-        <div class="tab" id="tabExp" onclick="switchTab('viewExp')">EXPENDITURE SHEET</div>
+    <div class="tabs">
+        <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATIONS</div>
+        <div class="tab" id="tabExp" onclick="switchTab('viewExp')">EXPENSES</div>
     </div>
 
     <div id="viewDon" class="tab-content active">
         <table>
-            <thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
+            <thead><tr><th>Date</th><th>Name</th><th>Amt</th><th>Action</th></tr></thead>
             <tbody id="bodyDon"></tbody>
         </table>
     </div>
 
     <div id="viewExp" class="tab-content">
         <table>
-            <thead><tr><th>Sl.No</th><th>Date</th><th>Expenditure Detail</th><th>Amount (₹)</th><th class="no-print">Actions</th></tr></thead>
+            <thead><tr><th>Date</th><th>Detail</th><th>Amt</th><th>Action</th></tr></thead>
             <tbody id="bodyExp"></tbody>
         </table>
     </div>
 </div>
 
 <div id="receiptPrintArea">
-    <div style="border: 8px double var(--primary); padding: 40px; text-align: center; width: 600px; margin: auto; background: #fff;">
-        <h1 style="color:var(--primary); margin:0;">DONATION RECEIPT</h1>
-        <p style="border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 10px;"><b>TREASURE BOOKS OFFICIAL</b></p>
-        <div style="text-align: left; margin-top: 30px; line-height: 2.2; font-size: 18px;">
-            <p><b>Date:</b> <span id="rDate"></span></p>
-            <p><b>Donor Name:</b> <span id="rName"></span></p>
-            <p><b>Occupation:</b> <span id="rOcc"></span></p>
-            <p><b>Amount Received:</b> <span id="rAmt" style="font-size: 24px; font-weight: bold; background: #f0f0f0; padding: 5px 15px; border-radius: 5px;"></span></p>
+    <div style="border: 5px solid var(--primary); padding: 20px; width: 90%; margin: auto; text-align: center;">
+        <h2 style="margin:0;">OFFICIAL RECEIPT</h2>
+        <hr>
+        <div style="text-align: left; line-height: 2;">
+            <p>Date: <span id="rDate"></span></p>
+            <p>Donor: <span id="rName"></span></p>
+            <p>Occupation: <span id="rOcc"></span></p>
+            <h3 style="background:#eee; padding: 10px;">Amount: <span id="rAmt"></span></h3>
         </div>
-        <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="text-align:center;"><p>_______________________</p><p>Treasurer Signature</p></div>
-            <div style="text-align:center;"><p>_______________________</p><p>Donor Signature</p></div>
+        <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+            <p>(Treasurer)</p><p>(Donor)</p>
         </div>
     </div>
 </div>
@@ -198,14 +173,11 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        if(tabId === 'viewDon') document.getElementById('tabDon').classList.add('active');
-        else document.getElementById('tabExp').classList.add('active');
+        document.getElementById(tabId === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
     }
 
     function triggerPrintReport() {
         document.getElementById('mainBody').className = 'printing-report';
-        const title = activeTab === 'viewDon' ? "DONATION SHEET REPORT" : "EXPENDITURE SHEET REPORT";
-        document.getElementById('reportTitle').innerText = title;
         window.print();
     }
 
@@ -219,20 +191,14 @@
         window.print();
     }
 
-    // Window focus se body class reset (Printing ke baad vapas normal karne ke liye)
-    window.onafterprint = function() {
-        document.getElementById('mainBody').className = '';
-    };
+    window.onafterprint = () => { document.getElementById('mainBody').className = ''; };
 
     function checkExService() {
-        const occ = document.getElementById('eOcc').value;
-        const subOcc = document.getElementById('eSubOcc');
-        subOcc.style.display = (occ === "Ex-Service") ? "inline-block" : "none";
+        document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none";
     }
 
     function handleFormChange() {
         const type = document.getElementById('eType').value;
-        document.getElementById('eName').placeholder = (type === 'donation') ? "Donor Name" : "Expenditure Detail";
         document.getElementById('eOcc').style.display = (type === 'donation') ? "inline-block" : "none";
         checkExService();
     }
@@ -246,116 +212,70 @@
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
 
-        if(!date || !name || isNaN(amt)) { alert("Fill Details!"); return; }
+        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
 
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
 
         if(editKey === "") dbRef.ref(path).push(entry);
-        else { dbRef.ref(path + editKey).set(entry); resetEditState(); }
-        clearInputs();
-    }
-
-    function resetEditState() {
-        document.getElementById('editKey').value = "";
-        document.getElementById('saveBtn').innerText = "Save Data";
-        document.getElementById('eType').disabled = false;
+        else { dbRef.ref(path + editKey).set(entry); document.getElementById('editKey').value = ""; }
+        
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
     function triggerEdit(type, key) {
         const item = (type === 'don') ? currentData.donations[key] : currentData.expenses[key];
         document.getElementById('eType').value = (type === 'don') ? 'donation' : 'expense';
-        document.getElementById('eType').disabled = true;
         document.getElementById('eDate').value = item.date;
         document.getElementById('eName').value = item.name;
         document.getElementById('eAmount').value = item.amt;
         document.getElementById('editKey').value = key;
-        document.getElementById('saveBtn').innerText = "Update Data";
         handleFormChange();
-        window.scrollTo(0,0);
     }
 
     function deleteEntry(type, key) {
-        if(confirm("Delete this entry?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove();
+        if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove();
     }
 
-    function loadView() {
-        const fYear = document.getElementById('yearFilter').value;
+    dbRef.ref().on('value', (snap) => {
+        const val = snap.val();
+        if(!val) return;
+        currentData.donations = val.donations || {};
+        currentData.expenses = val.expenses || {};
+        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
+        document.getElementById('atName').innerText = val.config?.atName || "Asst";
+        
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
-        let tIn = 0, tOut = 0, cDon = 1, cExp = 1;
+        let tIn = 0, tOut = 0;
         bDon.innerHTML = ''; bExp.innerHTML = '';
 
-        for(let key in currentData.donations) {
-            let x = currentData.donations[key];
-            if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${cDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="no-print"><button class="btn-receipt" onclick="triggerReceipt('${key}')">Receipt</button>
-                <button class="btn-edit" onclick="triggerEdit('don', '${key}')">Edit</button>
-                <button class="btn-del" onclick="deleteEntry('don', '${key}')">Del</button></td></tr>`;
-                tIn += x.amt;
-            }
+        for(let k in currentData.donations) {
+            let x = currentData.donations[k];
+            bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+            <td class="row-btns"><button class="btn-receipt" onclick="triggerReceipt('${k}')">R</button>
+            <button class="btn-edit" onclick="triggerEdit('don', '${k}')">E</button>
+            <button class="btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
+            tIn += x.amt;
         }
-        for(let key in currentData.expenses) {
-            let x = currentData.expenses[key];
-            if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${cExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="no-print"><button class="btn-edit" onclick="triggerEdit('exp', '${key}')">Edit</button>
-                <button class="btn-del" onclick="deleteEntry('exp', '${key}')">Del</button></td></tr>`;
-                tOut += x.amt;
-            }
+        for(let k in currentData.expenses) {
+            let x = currentData.expenses[k];
+            bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+            <td class="row-btns"><button class="btn-edit" onclick="triggerEdit('exp', '${k}')">E</button>
+            <button class="btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
+            tOut += x.amt;
         }
-        document.getElementById('sumIn').innerText = '₹' + tIn.toLocaleString();
-        document.getElementById('sumOut').innerText = '₹' + tOut.toLocaleString();
-        document.getElementById('sumBal').innerText = '₹' + (tIn - tOut).toLocaleString();
-    }
-
-    dbRef.ref().on('value', (snapshot) => {
-        const val = snapshot.val();
-        if(val) {
-            currentData.donations = val.donations || {};
-            currentData.expenses = val.expenses || {};
-            document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
-            document.getElementById('atName').innerText = val.config?.atName || "Assistant";
-            loadView();
-        }
+        document.getElementById('sumIn').innerText = tIn;
+        document.getElementById('sumOut').innerText = tOut;
+        document.getElementById('sumBal').innerText = (tIn - tOut);
     });
 
-    function clearInputs() { 
-        document.getElementById('eName').value = ''; 
-        document.getElementById('eAmount').value = ''; 
-    }
-
-    function buildYearDropdown() {
-        const sel = document.getElementById('yearFilter');
-        for (let y = 2024; y <= 2050; y++) {
-            let opt = document.createElement('option');
-            opt.value = y; opt.text = "Year " + y;
-            if(y === new Date().getFullYear()) opt.selected = true;
-            sel.appendChild(opt);
-        }
-    }
-
     function editMember(elementId, field) {
-        let val = prompt("New Name:", document.getElementById(elementId).innerText);
-        if(val) dbRef.ref('config/' + field).set(val);
+        let v = prompt("New Name:", document.getElementById(elementId).innerText);
+        if(v) dbRef.ref('config/' + field).set(v);
     }
 
-    function exportToExcel() {
-        const y = document.getElementById('yearFilter').value;
-        const report = [["Sl.No", "Date", "Name", "Occupation", "Amount"]];
-        Object.values(currentData.donations).filter(x=>x.year==y).forEach((x,i)=>report.push([i+1, x.date, x.name, x.occ, x.amt]));
-        const ws = XLSX.utils.aoa_to_sheet(report);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Donations");
-        XLSX.writeFile(wb, `Report_${y}.xlsx`);
-    }
-
-    window.onload = function() {
-        buildYearDropdown();
-        handleFormChange();
-        document.getElementById('eDate').valueAsDate = new Date();
-    };
+    window.onload = () => { document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
 </body>
 </html>
