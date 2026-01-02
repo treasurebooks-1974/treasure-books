@@ -226,4 +226,108 @@
                     <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                     <div style="text-align:left; margin-top:30px; line-height:2.2; font-size:18px; border-top:2px solid var(--gold); padding-top:15px;">
                         <p>Date: <b>${item.date}</b></p>
-                        <p>Donor Name: <b>${item.name}
+                        <p>Donor Name: <b>${item.name}</b></p>
+                        <p>Occupation: <b>${item.occ}</b></p>
+                        <p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:bold;">₹ ${item.amt.toLocaleString()}</span></p>
+                    </div>
+                    <div style="margin-top:50px; text-align:right;">
+                        <p class="digital-sig">${trName}</p>
+                        <p style="margin:0;">__________________</p>
+                        <p style="font-size:12px; font-weight:bold;">Treasurer Signature</p>
+                    </div>
+                </div>
+            </div>`;
+        window.print();
+    }
+
+    function switchTab(id) {
+        activeTab = id;
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
+    }
+
+    dbRef.ref().on('value', (snap) => {
+        const val = snap.val() || {};
+        currentData.donations = val.donations || {};
+        currentData.expenses = val.expenses || {};
+        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
+        document.getElementById('atName').innerText = val.config?.atName || "Assistant";
+        loadView();
+    });
+
+    function loadView() {
+        const fYear = document.getElementById('yearFilter').value;
+        let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
+        let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
+        for(let k in currentData.donations) {
+            let x = currentData.donations[k];
+            if(x.year == fYear) {
+                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+                <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">R</button>
+                <button class="btn-e" onclick="triggerEdit('don', '${k}')">E</button><button class="btn-x" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
+                tIn += x.amt;
+            }
+        }
+        for(let k in currentData.expenses) {
+            let x = currentData.expenses[k];
+            if(x.year == fYear) {
+                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
+                <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">E</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
+                tOut += x.amt;
+            }
+        }
+        document.getElementById('sumIn').innerText = tIn.toLocaleString();
+        document.getElementById('sumOut').innerText = tOut.toLocaleString();
+        document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
+    }
+
+    function saveEntry() {
+        const type = document.getElementById('eType').value;
+        const date = document.getElementById('eDate').value;
+        const name = document.getElementById('eName').value;
+        const occ = document.getElementById('eOcc').value;
+        const subOcc = document.getElementById('eSubOcc').value;
+        const amt = parseFloat(document.getElementById('eAmount').value);
+        const editKey = document.getElementById('editKey').value;
+        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
+        let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
+        const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
+        const path = (type === 'donation') ? 'donations/' : 'expenses/';
+        if(editKey === "") dbRef.ref(path).push(entry);
+        else { dbRef.ref(path + editKey).set(entry); document.getElementById('editKey').value = ""; }
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
+    }
+
+    function buildYearDropdown() {
+        const sel = document.getElementById('yearFilter');
+        for (let y = 2024; y <= 2050; y++) {
+            let opt = document.createElement('option'); opt.value = y; opt.text = "Year " + y;
+            if(y === new Date().getFullYear()) opt.selected = true;
+            sel.appendChild(opt);
+        }
+    }
+
+    function editMember(elId, field) {
+        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
+        if(v) dbRef.ref('config/' + field).set(v);
+    }
+
+    function triggerEdit(type, key) {
+        const item = (type === 'don') ? currentData.donations[key] : currentData.expenses[key];
+        document.getElementById('eType').value = (type === 'don') ? 'donation' : 'expense';
+        document.getElementById('eDate').value = item.date;
+        document.getElementById('eName').value = item.name;
+        document.getElementById('eAmount').value = item.amt;
+        document.getElementById('editKey').value = key;
+        handleFormChange(); window.scrollTo(0,0);
+    }
+
+    function deleteEntry(type, key) { if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
+    function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
+    function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
+    window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
+</script>
+</body>
+</html>
