@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Separate Sheets</title>
+    <title>TREASURE BOOKS - Master Pro Final</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         
         :root { --navy: #0d1b3e; --gold: #b8860b; --bg: #f4f7f6; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
@@ -30,16 +30,13 @@
         .bg-green { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
         
         .year-filter-box { background: var(--navy); color: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-weight: 600; }
-        .year-filter-box select { width: auto; background: #fff; border: none; padding: 6px 15px; margin-left: 10px; border-radius: 5px; cursor: pointer; }
+        .year-filter-box select { width: auto; background: #fff; border: none; padding: 6px 15px; margin-left: 10px; border-radius: 5px; }
 
         .btn-print-main { background: #455a64; color: white; border: none; border-radius: 10px; padding: 14px; width: 100%; font-weight: 700; margin-bottom: 20px; cursor: pointer; }
 
         .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; background: #f9f9f9; }
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
-
-        .tab-content { display: none; overflow-x: auto; }
-        .tab-content.active { display: block; }
 
         table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
@@ -59,29 +56,26 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
             
-            .report-header { text-align: center; border-bottom: 5px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .report-header h1 { margin: 0; font-size: 32px; font-weight: 900; color: #000 !important; }
-            .report-header h2 { margin: 10px 0; font-size: 24px; font-weight: 800; text-decoration: underline; }
+            .print-header-main { text-align: center; border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
+            .print-header-main h1 { margin: 0; font-size: 28px; font-weight: 800; text-transform: uppercase; color: #000 !important; }
+            .print-header-main h2 { margin: 5px 0; font-size: 24px; font-weight: 700; color: #000 !important; }
+            .print-header-main p { margin: 2px 0; font-size: 14px; font-weight: bold; color: #000 !important; }
+            .print-header-main h3 { margin: 10px 0; font-size: 22px; font-weight: 800; text-decoration: underline; color: #000 !important; }
 
             .report-summary-box { 
                 display: flex; justify-content: space-around; border: 3px solid #000; 
-                padding: 15px; margin-bottom: 25px; font-weight: 900; font-size: 18px; 
+                padding: 12px; margin-bottom: 25px; font-weight: 800; font-size: 16px; 
             }
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             .print-table th { 
-                border: 2px solid #000; 
-                padding: 12px; 
-                text-align: left; 
-                font-size: 14px; 
-                background-color: #000 !important; /* Headlines Background Black */
-                color: #fff !important; /* Headlines Text White */
-                font-weight: 900;
+                border: 2px solid #000; padding: 12px; text-align: left; font-size: 14px; 
+                background-color: #000 !important; color: #fff !important; font-weight: 900;
                 -webkit-print-color-adjust: exact;
             }
-            .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; color: #000 !important; }
+            .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
 
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
-            .receipt-card { border: 12px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 90vh; }
+            .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
         }
     </style>
 </head>
@@ -189,7 +183,7 @@
     function printReport() {
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
-        const reportTitle = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
+        const reportType = activeTab === 'viewDon' ? "DONATIONS REPORT" : "EXPENSES REPORT";
         
         let tableRows = "";
         if(activeTab === 'viewDon') {
@@ -209,14 +203,15 @@
             '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
 
         pArea.innerHTML = `
-            <div class="report-header">
-                <h1>${reportTitle}</h1>
-                <p style="font-weight:bold;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                <h2>${getSahidYear(year)}</h2>
+            <div class="print-header-main">
+                <h1>${getSahidYear(year)}</h1>
+                <h2>B.B.C MARANG BUNDU</h2>
+                <p>Reg.no :- MBJ8750-13 Of 2022</p>
+                <h3>${reportType}</h3>
             </div>
             <div class="report-summary-box">
-                <span>COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
-                <span>EXPENSE: ₹${document.getElementById('sumOut').innerText}</span>
+                <span>TOTAL COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
+                <span>TOTAL EXPENSE: ₹${document.getElementById('sumOut').innerText}</span>
                 <span>BALANCE: ₹${document.getElementById('sumBal').innerText}</span>
             </div>
             <table class="print-table">
@@ -231,14 +226,17 @@
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-centered">
                 <div class="receipt-card">
-                    <h1>DONATION RECEIPT</h1>
-                    <h3 style="margin:15px 0; color:#000; font-size:22px;">${getSahidYear(item.year)}</h3>
-                    <p style="font-size:14px; font-weight:bold; color:#000;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                    <div style="text-align:left; margin-top:40px; line-height:2.5; font-size:20px; border-top:3px solid #000; padding-top:20px; color:#000;">
-                        <p>Date: <b>${item.date}</b></p>
+                    <div class="print-header-main" style="border:none; margin:0; padding:0;">
+                        <h1>${getSahidYear(item.year)}</h1>
+                        <h2>B.B.C MARANG BUNDU</h2>
+                        <p>Reg.no :- MBJ8750-13 Of 2022</p>
+                        <h3 style="margin-top:15px; border: 2px solid #000; display:inline-block; padding:5px 20px;">DONATION RECEIPT</h3>
+                    </div>
+                    <div style="text-align:left; margin-top:35px; line-height:2.5; font-size:19px; border-top:2.5px solid #000; padding-top:20px;">
+                        <p>Receipt Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
-                        <p>Amount: <span style="background:#eee; padding:10px 20px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
+                        <p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:800; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
                     </div>
                 </div>
             </div>`;
@@ -329,7 +327,7 @@
         handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
