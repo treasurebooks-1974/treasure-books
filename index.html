@@ -17,7 +17,7 @@
         .committee-info { display: flex; justify-content: space-around; background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #d1d9ff; font-size: 14px; }
         .name-val { color: var(--navy); font-weight: bold; border-bottom: 2px solid var(--gold); }
         
-        /* Form & Controls */
+        /* Dashboard Styling */
         .entry-section { background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         input, select { padding: 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 15px; width: 100%; box-sizing: border-box; }
@@ -46,22 +46,36 @@
         .row-btns button { border: none; padding: 6px 10px; border-radius: 6px; color: white; cursor: pointer; font-size: 11px; }
         .btn-r { background: var(--gold); } .btn-e { background: #2196f3; } .btn-x { background: #f44336; }
 
-        /* RECEIPT DESIGN */
+        /* PRINT DESIGN - EXACT MIDDLE */
         #printArea { display: none; }
         @media print {
+            body { background: white; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
             .no-print { display: none !important; }
-            #printArea { display: block !important; }
-            body { background: white; padding: 0; }
+            #printArea { 
+                display: flex !important; 
+                align-items: center; 
+                justify-content: center; 
+                width: 100%; 
+                height: 100%; 
+            }
         }
         
         .receipt-card {
-            border: 10px double var(--navy); padding: 40px; width: 600px; margin: auto;
-            background: #fff; position: relative; font-family: 'Inter', sans-serif;
+            border: 5px solid #d4af37; 
+            padding: 40px; 
+            width: 550px; 
+            background: #fff url('https://i.imgur.com/Gj8lT7E.png') no-repeat center;
+            background-size: 80%;
+            position: relative; 
+            font-family: 'Inter', sans-serif;
+            box-shadow: none;
+            text-align: center;
         }
         .receipt-header h2 { margin: 0; color: var(--navy); font-size: 32px; letter-spacing: 2px; }
-        .receipt-header p { margin: 5px 0; font-size: 14px; font-weight: bold; }
-        .receipt-body { text-align: left; margin-top: 30px; line-height: 2.5; font-size: 18px; border-top: 2px solid var(--gold); padding-top: 20px; }
-        .digital-sig { font-family: 'Dancing Script', cursive; font-size: 28px; color: #1a237e; margin: 0; }
+        .receipt-header p { margin: 5px 0; font-size: 13px; font-weight: bold; color: #333; }
+        .receipt-body { text-align: left; margin-top: 30px; line-height: 2.2; font-size: 17px; border-top: 2px solid var(--gold); padding-top: 20px; }
+        .digital-sig { font-family: 'Dancing Script', cursive; font-size: 26px; color: #1a237e; margin: 0; }
+        .amt-box { background: #f9f9f9; padding: 10px 20px; border: 1px solid #ddd; display: inline-block; font-weight: bold; color: var(--navy); font-size: 20px; }
     </style>
 </head>
 <body id="mainBody">
@@ -70,8 +84,8 @@
     <h1>TREASURE BOOKS</h1>
     
     <div class="committee-info">
-        <div>TREASURER: <span id="tName" class="name-val">Loading...</span> <button onclick="editMember('tName', 'tName')" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
-        <div>ASSISTANT: <span id="atName" class="name-val">Loading...</span> <button onclick="editMember('atName', 'atName')" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
+        <div>TREASURER: <span id="tName" class="name-val">Loading...</span> <button onclick="editMember('tName', 'tName')" class="no-print" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
+        <div>ASSISTANT: <span id="atName" class="name-val">Loading...</span> <button onclick="editMember('atName', 'atName')" class="no-print" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
     </div>
 
     <div class="year-filter-box">
@@ -166,37 +180,6 @@
         return `${count}${suffix} SAHID DIWAS ${year}`;
     }
 
-    function switchTab(id) {
-        activeTab = id;
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
-    }
-
-    function printReport() {
-        const pArea = document.getElementById('printArea');
-        const selectedYear = document.getElementById('yearFilter').value;
-        const sahidTitle = getSahidYear(selectedYear);
-        const tableHtml = document.getElementById(activeTab).innerHTML;
-        
-        pArea.innerHTML = `
-            <div style="text-align:center; padding:20px; font-family:sans-serif;">
-                <h1 style="margin:0;">TREASURE BOOKS</h1>
-                <h2 style="margin:5px 0; color:var(--navy);">${sahidTitle}</h2>
-                <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                <hr>
-                <div style="display:flex; justify-content:space-around; margin:20px 0; border:1px solid #000; padding:10px;">
-                    <b>IN: ₹${document.getElementById('sumIn').innerText}</b>
-                    <b>OUT: ₹${document.getElementById('sumOut').innerText}</b>
-                    <b>BAL: ₹${document.getElementById('sumBal').innerText}</b>
-                </div>
-                ${tableHtml}
-            </div>
-        `;
-        window.print();
-    }
-
     function printReceipt(key) {
         const item = currentData.donations[key];
         const trName = document.getElementById('tName').innerText;
@@ -207,26 +190,57 @@
             <div class="receipt-card">
                 <div class="receipt-header">
                     <h2>TREASURE BOOKS</h2>
-                    <h3 style="margin:10px 0; color:var(--navy);">${sahidTitle}</h3>
+                    <h3 style="margin:10px 0; color:var(--navy); font-size:22px;">${sahidTitle}</h3>
                     <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                 </div>
                 <div class="receipt-body">
-                    <p><b>RECEIPT DATE:</b> ${item.date}</p>
-                    <p><b>DONOR NAME:</b> ${item.name}</p>
-                    <p><b>OCCUPATION:</b> ${item.occ}</p>
-                    <p><b>AMOUNT:</b> <span style="background:#f0f0f0; padding:5px 20px; border-radius:5px; font-weight:bold;">₹ ${item.amt.toLocaleString()}</span></p>
+                    <p><b>Receipt Date:</b> ${item.date}</p>
+                    <p><b>Donor Name:</b> ${item.name}</p>
+                    <p><b>Occupation:</b> ${item.occ}</p>
+                    <p><b>Amount Received:</b> <span class="amt-box">₹ ${item.amt.toLocaleString()}</span></p>
                 </div>
-                <div style="margin-top:60px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div style="text-align:center;"><p style="margin:0;">__________________</p><p>Donor Signature</p></div>
+                <div style="margin-top:50px; display:flex; justify-content:space-between; align-items:flex-end;">
+                    <div style="text-align:center;"><p style="margin:0;">__________________</p><p style="font-size:12px;">Donor Signature</p></div>
                     <div style="text-align:center;">
                         <p class="digital-sig">${trName}</p>
                         <p style="margin:0;">__________________</p>
-                        <p>Treasurer Signature</p>
+                        <p style="font-size:12px;">Treasurer Signature</p>
                     </div>
                 </div>
             </div>
         `;
         window.print();
+    }
+
+    function printReport() {
+        const pArea = document.getElementById('printArea');
+        const selectedYear = document.getElementById('yearFilter').value;
+        const sahidTitle = getSahidYear(selectedYear);
+        const tableHtml = document.getElementById(activeTab).innerHTML;
+        
+        pArea.innerHTML = `
+            <div style="width:100%; text-align:center; padding:20px; font-family:sans-serif; border:1px solid #ddd; background:#fff;">
+                <h1 style="margin:0;">TREASURE BOOKS</h1>
+                <h2 style="margin:5px 0; color:var(--navy);">${sahidTitle}</h2>
+                <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+                <hr>
+                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:bold;">
+                    <span>IN: ₹${document.getElementById('sumIn').innerText}</span>
+                    <span>OUT: ₹${document.getElementById('sumOut').innerText}</span>
+                    <span>BAL: ₹${document.getElementById('sumBal').innerText}</span>
+                </div>
+                ${tableHtml}
+            </div>
+        `;
+        window.print();
+    }
+
+    function switchTab(id) {
+        activeTab = id;
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
     }
 
     dbRef.ref().on('value', (snap) => {
@@ -276,7 +290,7 @@
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
 
-        if(!date || !name || isNaN(amt)) return alert("Sari details bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
 
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
