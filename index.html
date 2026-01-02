@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Ultra Premium Pro</title>
+    <title>TREASURE BOOK - Ultra Premium Pro Final</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -19,7 +19,6 @@
             position: relative;
         }
         
-        /* Floating Year Icon - Top Right */
         .year-control-pro {
             position: absolute; top: 25px; right: 25px;
             background: var(--navy); color: #ffd700; padding: 6px 12px;
@@ -32,7 +31,6 @@
             cursor: pointer; outline: none; font-size: 11px;
         }
 
-        /* Centered Branding */
         .brand-header { text-align: center; margin-bottom: 35px; border-bottom: 1.5px solid #eee; padding-bottom: 20px; }
         .brand-header h1 { color: var(--navy); font-size: 34px; font-weight: 900; letter-spacing: 4px; margin: 0; text-transform: uppercase; }
         .brand-header h2 { color: #444; font-size: 20px; font-weight: 700; margin: 5px 0; }
@@ -161,7 +159,7 @@
             <div class="list-title">💰 Collection List</div>
             <button class="btn-print-icon" onclick="printReport('don')">⎙ <span>Print Sheet</span></button>
         </div>
-        <table><thead><tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        <table><thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
 
     <div class="list-section">
@@ -169,7 +167,7 @@
             <div class="list-title">📉 Expenditure List</div>
             <button class="btn-print-icon" onclick="printReport('exp')">⎙ <span>Print Sheet</span></button>
         </div>
-        <table><thead><tr><th>Date</th><th>Detail</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        <table><thead><tr><th>Sl.No</th><th>Date</th><th>Detail</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
@@ -210,10 +208,11 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
         
+        let slDon = 1;
         const sortedDon = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
         sortedDon.forEach(([k, x]) => {
             if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
+                bDon.innerHTML += `<tr><td>${slDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button>
                 <button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button>
                 <button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
@@ -221,10 +220,11 @@
             }
         });
 
+        let slExp = 1;
         const sortedExp = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
         sortedExp.forEach(([k, x]) => {
             if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
+                bExp.innerHTML += `<tr><td>${slExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button>
                 <button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
                 tOut += x.amt;
@@ -292,9 +292,10 @@
         const year = document.getElementById('yearFilter').value;
         const reportTitle = type === 'don' ? "DONATIONS COLLECTION REPORT" : "EXPENSES REPORT";
         let rows = "";
+        let sl = 1;
         const data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => {
-            rows += `<tr><td>${x.date}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`;
+            rows += `<tr><td>${sl++}</td><td>${x.date}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`;
         });
         document.getElementById('printArea').innerHTML = `
             <div style="text-align:center; padding:20px;">
@@ -303,7 +304,7 @@
                 <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
                 <h3 style="border:2.5px solid #000; display:inline-block; padding:5px 25px; margin-bottom:20px;">${reportTitle}</h3>
                 <table class="print-table" style="width:100%; border-collapse:collapse;">
-                    <thead>${type==='don'?'<tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th></tr>':'<tr><th>Date</th><th>Detail</th><th>Amt</th></tr>'}</thead>
+                    <thead>${type==='don'?'<tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th></tr>':'<tr><th>Sl.No</th><th>Date</th><th>Detail</th><th>Amt</th></tr>'}</thead>
                     <tbody>${rows}</tbody>
                 </table>
             </div>`;
