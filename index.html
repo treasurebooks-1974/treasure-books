@@ -3,65 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Ultra Premium Pro Final</title>
+    <title>TREASURE BOOK - Ultra Premium Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=Inter:wght@300;400;600;700;900&display=swap');
         
-        :root { --navy: #0d1b3e; --gold: #b8860b; --premium-gold: #d4af37; --bg-grad: linear-gradient(135deg, #0d1b3e 0%, #1a2a6c 100%); }
+        :root { --navy: #0d1b3e; --gold: #b8860b; --premium-gold: #d4af37; --glass: rgba(255, 255, 255, 0.95); }
         
-        body { font-family: 'Inter', sans-serif; background: var(--bg-grad); background-attachment: fixed; margin: 0; padding: 15px; color: #333; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: radial-gradient(circle at top right, #1a2a6c, #0d1b3e);
+            background-attachment: fixed; margin: 0; padding: 20px; color: #333; 
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Ultra Premium Pro Animated Border Design */
+        .premium-frame {
+            position: relative; width: 100%; max-width: 1050px; padding: 5px;
+            background: linear-gradient(135deg, var(--gold), #fff, var(--navy), #fff, var(--gold));
+            background-size: 400% 400%; animation: gradientBorder 15s ease infinite;
+            border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        @keyframes gradientBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
         .container { 
-            max-width: 1000px; margin: auto; background: rgba(255, 255, 255, 0.98);
-            border-radius: 35px; padding: 35px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
-            position: relative;
+            background: var(--glass); border-radius: 35px; padding: 40px; 
+            position: relative; width: 100%; box-sizing: border-box;
         }
         
-        /* Premium Floating Year Icon */
+        /* Mini Year Icon - Top Right */
         .year-control-pro {
-            position: absolute; top: 25px; right: 25px;
-            background: var(--navy); color: var(--premium-gold); padding: 6px 12px;
+            position: absolute; top: 30px; right: 40px;
+            background: var(--navy); color: var(--premium-gold); padding: 8px 15px;
             border-radius: 12px; font-size: 11px; font-weight: 800;
-            border: 1px solid var(--gold); display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid var(--gold); display: flex; align-items: center; gap: 8px;
         }
-        .year-control-pro select { background: transparent; color: #fff; border: none; font-weight: 700; cursor: pointer; outline: none; font-size: 11px; }
+        .year-control-pro select { background: transparent; color: #fff; border: none; font-weight: 700; outline: none; cursor: pointer; }
 
-        /* Centered Executive Branding */
-        .brand-header { text-align: center; margin-bottom: 35px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
-        .brand-header h1 { color: var(--navy); font-size: 38px; font-weight: 900; letter-spacing: 5px; margin: 0; text-transform: uppercase; text-shadow: 1px 1px 0px rgba(184, 134, 11, 0.3); }
-        .brand-header h2 { color: var(--gold); font-size: 22px; font-weight: 800; margin: 8px 0; letter-spacing: 2px; }
-        .brand-header p { color: #555; font-size: 13px; font-weight: 700; margin: 0; background: #fdf2d9; display: inline-block; padding: 4px 15px; border-radius: 20px; border: 1px solid #f3e5c2; }
+        /* Branding */
+        .brand-header { text-align: center; margin-bottom: 40px; }
+        .brand-header h1 { color: var(--navy); font-size: 42px; font-weight: 900; letter-spacing: 6px; margin: 0; text-transform: uppercase; text-shadow: 2px 2px 4px rgba(184, 134, 11, 0.2); }
+        .brand-header h2 { color: var(--gold); font-size: 24px; font-weight: 800; margin: 10px 0; letter-spacing: 3px; }
+        .brand-header p { color: #555; font-size: 13px; font-weight: 700; margin: 0; background: #fdf2d9; display: inline-block; padding: 5px 20px; border-radius: 25px; border: 1px solid #f3e5c2; }
 
-        .executive-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-        .exec-card { background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .exec-card span { font-size: 10px; color: #64748b; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
-        .exec-card b { font-size: 15px; color: var(--navy); border-bottom: 2px solid var(--gold); }
-        .exec-edit { position: absolute; right: 10px; top: 10px; font-size: 9px; cursor: pointer; color: #d32f2f; text-decoration: underline; background: none; border: none; }
+        /* Executive Cards */
+        .executive-info { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 35px; }
+        .exec-card { background: #fff; padding: 15px; border-radius: 20px; border: 1.5px solid #eee; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.02); }
+        .exec-card span { font-size: 10px; color: #999; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .exec-card b { font-size: 16px; color: var(--navy); border-bottom: 2.5px solid var(--gold); }
+        .exec-edit { position: absolute; right: 12px; top: 12px; font-size: 10px; cursor: pointer; color: #d32f2f; text-decoration: none; border: none; background: none; font-weight: bold; }
 
-        .entry-section { background: #fff; padding: 20px; border-radius: 25px; border: 1px solid #edf2f7; margin-bottom: 30px; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-        input, select { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 14px; outline: none; transition: 0.3s; background: #fff; }
-        .btn-save-compact { background: var(--navy); color: white; border: none; border-radius: 10px; padding: 10px 25px; font-size: 13px; font-weight: 700; cursor: pointer; margin: 15px auto 0; display: block; }
+        /* Input Styles */
+        .entry-section { background: #f8fafc; padding: 25px; border-radius: 30px; border: 1px solid #edf2f7; margin-bottom: 35px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        input, select { padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 15px; font-size: 14px; outline: none; transition: 0.4s; }
+        input:focus { border-color: var(--gold); background: #fff; }
+        .btn-save-compact { background: var(--navy); color: white; border: none; border-radius: 12px; padding: 12px 35px; font-size: 14px; font-weight: 800; cursor: pointer; margin: 20px auto 0; display: block; box-shadow: 0 10px 20px rgba(13,27,62,0.2); }
 
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
-        .card { padding: 15px; border-radius: 20px; color: white; text-align: center; font-weight: 700; font-size: 12px; }
-        .bg-blue { background: #1e3c72; } .bg-red { background: #b71c1c; } .bg-green { background: #1b5e20; }
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+        .card { padding: 20px; border-radius: 25px; color: white; text-align: center; font-weight: 800; font-size: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .bg-blue { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+        .bg-red { background: linear-gradient(135deg, #b71c1c, #d32f2f); }
+        .bg-green { background: linear-gradient(135deg, #11998e, #38ef7d); }
 
-        .list-section { background: white; border-radius: 25px; padding: 20px; border: 1px solid #f1f5f9; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-        .list-title { font-size: 13px; font-weight: 900; color: var(--navy); text-transform: uppercase; }
-        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 1px solid var(--gold); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 5px; }
+        /* List Sections */
+        .list-section { background: white; border-radius: 30px; padding: 25px; border: 1px solid #f1f5f9; box-shadow: 0 15px 40px rgba(0,0,0,0.03); margin-bottom: 35px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f8fafc; padding-bottom: 12px; }
+        .list-title { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 1px; }
+        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 1px solid var(--gold); padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-print-icon:hover { background: var(--gold); color: #fff; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background: #f8fafc; color: #64748b; padding: 15px; text-align: left; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f8fafc; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8fafc; color: #94a3b8; padding: 18px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 15px; border-bottom: 1px solid #f8fafc; font-size: 14px; font-weight: 500; }
 
-        .act-btn { border: none; padding: 6px 12px; border-radius: 8px; color: white; cursor: pointer; font-size: 10px; font-weight: 700; margin-right: 2px; }
+        .act-btn { border: none; padding: 8px 12px; border-radius: 10px; color: white; cursor: pointer; font-size: 11px; font-weight: 700; margin-right: 5px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #0ea5e9; } .btn-del { background: #ef4444; }
 
+        /* --- PRINT --- */
         #printArea { display: none; }
         @media print {
             @page { size: A4; margin: 15mm; }
@@ -69,68 +95,70 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
-            .receipt-card { border: 10px double #000; padding: 40px; width: 540px; text-align: center; background: #fff; }
-            .official-signature { font-family: 'Great Vibes', cursive; font-size: 36px; color: #000 !important; display: block; margin-bottom: -8px; padding-right: 15px; transform: rotate(-2deg); }
-            .sig-line { border-top: 2px solid #000; width: 190px; margin-left: auto; padding-top: 4px; font-weight: 900; font-size: 12px; text-align: center; }
-            .print-table th { background: #000 !important; color: #fff !important; padding: 12px; -webkit-print-color-adjust: exact; border: 1px solid #000; }
+            .receipt-card { border: 12px double #000; padding: 60px; width: 550px; text-align: center; background: #fff; }
+            
+            /* Modern Calligraphy Style Signature */
+            .official-signature { font-family: 'Birthstone', cursive; font-size: 48px; color: #1a237e !important; display: block; margin-bottom: -15px; padding-right: 30px; font-weight: normal; }
+            .sig-line { border-top: 2px solid #000; width: 200px; margin-left: auto; padding-top: 6px; font-weight: 900; font-size: 13px; text-align: center; }
+            .print-table th { background: #000 !important; color: #fff !important; padding: 12px; border: 1px solid #000; -webkit-print-color-adjust: exact; }
             .print-table td { border: 1px solid #000; padding: 10px; font-weight: 600; }
         }
     </style>
 </head>
 <body>
 
-<div class="container no-print">
-    <div class="year-control-pro">🔍 YEAR <select id="yearFilter" onchange="loadView()"></select></div>
+<div class="premium-frame no-print">
+    <div class="container">
+        <div class="year-control-pro">🔍 YEAR <select id="yearFilter" onchange="loadView()"></select></div>
 
-    <div class="brand-header">
-        <h1>TREASURE BOOK</h1>
-        <h2>B.B.C MARANG BUNDU</h2>
-        <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
-    </div>
-    
-    <div class="executive-info">
-        <div class="exec-card"><span>Official Treasurer</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Change</button></div>
-        <div class="exec-card"><span>Asst. Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Change</button></div>
-    </div>
-
-    <div class="entry-section">
-        <div class="form-grid">
-            <input type="hidden" id="editKey" value=""><input type="hidden" id="editType" value="">
-            <select id="eType" onchange="handleFormChange()"><option value="donation">Collection</option><option value="expense">Expense</option></select>
-            <input type="date" id="eDate">
-            <input type="text" id="eName" placeholder="Name or Purpose">
-            <select id="eOcc" onchange="checkExService()">
-                <option value="">Occupation</option><option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option>
-                <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="Doctor">Doctor</option><option value="Engineer">Engineer</option>
-                <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="CISF">CISF</option><option value="Railway">Railway</option>
-                <option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option>
-                <option value="Social Worker">Social Worker</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
-            </select>
-            <select id="eSubOcc" style="display:none;">
-                <option value="">Branch</option><option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
-                <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
-                <option value="CISF">CISF</option><option value="Railway">Railway</option><option value="Govt Service">Govt Service</option>
-                <option value="Private Service">Private Service</option>
-            </select>
-            <input type="number" id="eAmount" placeholder="Amount ₹">
+        <div class="brand-header">
+            <h1>TREASURE BOOK</h1>
+            <h2>B.B.C MARANG BUNDU</h2>
+            <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
         </div>
-        <button class="btn-save-compact" id="saveBtn" onclick="saveEntry()">SAVE TRANSACTION</button>
-    </div>
+        
+        <div class="executive-info">
+            <div class="exec-card"><span>TREASURER</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button></div>
+            <div class="exec-card"><span>ASST. TREASURER</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button></div>
+        </div>
 
-    <div class="stats">
-        <div class="card bg-blue">COLLECTION<br><b id="sumIn">0</b></div>
-        <div class="card bg-red">EXPENSES<br><b id="sumOut">0</b></div>
-        <div class="card bg-green">BALANCE<br><b id="sumBal">0</b></div>
-    </div>
+        <div class="entry-section">
+            <div class="form-grid">
+                <input type="hidden" id="editKey" value=""><input type="hidden" id="editType" value="">
+                <select id="eType" onchange="handleFormChange()"><option value="donation">Collection</option><option value="expense">Expense</option></select>
+                <input type="date" id="eDate">
+                <input type="text" id="eName" placeholder="Full Name / Particulars">
+                <select id="eOcc" onchange="checkExService()">
+                    <option value="">Occupation</option><option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option>
+                    <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="Doctor">Doctor</option><option value="Engineer">Engineer</option>
+                    <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="CISF">CISF</option><option value="Railway">Railway</option>
+                    <option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option>
+                    <option value="Social Worker">Social Worker</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
+                </select>
+                <select id="eSubOcc" style="display:none;">
+                    <option value="">Branch</option><option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
+                    <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="BSF">BSF</option><option value="Railway">Railway</option>
+                </select>
+                <input type="number" id="eAmount" placeholder="Amount ₹">
+            </div>
+            <button class="btn-save-compact" id="saveBtn" onclick="saveEntry()">SAVE DATA</button>
+        </div>
 
-    <div class="list-section">
-        <div class="list-header"><div class="list-title">💰 Donation Collection List</div><button class="btn-print-icon" onclick="printReport('don')">⎙ <span>Print Sheet</span></button></div>
-        <table><thead><tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
-    </div>
+        <div class="stats">
+            <div class="card bg-blue">COLLECTION<br><b id="sumIn">0</b></div>
+            <div class="card bg-red">EXPENSES<br><b id="sumOut">0</b></div>
+            <div class="card bg-green">BALANCE<br><b id="sumBal">0</b></div>
+        </div>
 
-    <div class="list-section">
-        <div class="list-header"><div class="list-title">📉 Expenditure List</div><button class="btn-print-icon" onclick="printReport('exp')">⎙ <span>Print Sheet</span></button></div>
-        <table><thead><tr><th>Sl.No</th><th>Date</th><th>Detail</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        <div class="list-section">
+            <div class="list-header"><div class="list-title">💰 COLLECTION LEDGER</div><button class="btn-print-icon" onclick="printReport('don')">⎙</button></div>
+            <table><thead><tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        </div>
+
+        <div class="list-section">
+            <div class="list-header"><div class="list-title">📉 EXPENDITURE LEDGER</div><button class="btn-print-icon" onclick="printReport('exp')">⎙</button></div>
+            <table><thead><tr><th>Sl</th><th>Date</th><th>Detail</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        </div>
     </div>
 </div>
 
@@ -161,8 +189,8 @@
         const val = snap.val() || {};
         currentData.donations = val.donations || {};
         currentData.expenses = val.expenses || {};
-        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
-        document.getElementById('atName').innerText = val.config?.atName || "Asst Treasurer";
+        document.getElementById('tName').innerText = val.config?.tName || "TREASURER";
+        document.getElementById('atName').innerText = val.config?.atName || "ASSISTANT";
         loadView();
     });
 
@@ -180,12 +208,12 @@
 
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), editKey = document.getElementById('editKey').value, occ = document.getElementById('eOcc').value;
-        if(!date || !name || isNaN(amt)) return alert("Fill data!");
+        if(!date || !name || isNaN(amt)) return alert("Data bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + document.getElementById('eSubOcc').value + ")" : (occ || "-");
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
         dbRef.ref((type === 'donation' ? 'donations/' : 'expenses/')).push(entry);
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = "SAVE TRANSACTION";
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = "SAVE DATA";
     }
 
     function editEntry(type, key) {
@@ -197,7 +225,7 @@
 
     function printReceipt(key) {
         const item = currentData.donations[key], trName = document.getElementById('tName').innerText;
-        document.getElementById('printArea').innerHTML = `<div class="receipt-centered"><div class="receipt-card"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><h3 style="border:2.5px solid #000; display:inline-block; padding:5px 25px; margin-top:15px;">DONATION RECEIPT</h3><div style="text-align:left; margin-top:30px; line-height:2.5; font-size:19px; border-top:2px solid #000; padding-top:25px;"><p>Date: <b>${item.date}</b></p><p>Donor Name: <b>${item.name}</b></p><p>Occupation: <b>${item.occ}</b></p><p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p></div><div style="text-align:right; margin-top:60px;"><span class="official-signature">${trName}</span><div class="sig-line">Treasurer Signature</div><div style="font-size:12px; font-weight:bold; margin-top:5px; margin-right: 50px;">Date: ${item.date}</div></div></div></div>`;
+        document.getElementById('printArea').innerHTML = `<div class="receipt-centered"><div class="receipt-card"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><h3 style="border:2.5px solid #000; display:inline-block; padding:5px 25px; margin-top:15px;">DONATION RECEIPT</h3><div style="text-align:left; margin-top:35px; line-height:2.5; font-size:19px; border-top:2px solid #000; padding-top:25px;"><p>Date: <b>${item.date}</b></p><p>Donor Name: <b>${item.name}</b></p><p>Occupation: <b>${item.occ}</b></p><p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p></div><div style="text-align:right; margin-top:60px;"><span class="official-signature">${trName}</span><div class="sig-line">Treasurer Signature</div><div style="font-size:12px; font-weight:bold; margin-top:5px; margin-right: 50px;">Date: ${item.date}</div></div></div></div>`;
         window.print();
     }
 
@@ -205,12 +233,12 @@
         const year = document.getElementById('yearFilter').value, reportTitle = type === 'don' ? "DONATIONS COLLECTION REPORT" : "EXPENSES REPORT";
         let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { rows += `<tr><td>${sl++}</td><td>${x.date}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; });
-        document.getElementById('printArea').innerHTML = `<div style="text-align:center; padding:20px;"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><h3 style="border:2.5px solid #000; display:inline-block; padding:5px 25px; margin-bottom:20px;">${reportTitle}</h3><table class="print-table" style="width:100%; border-collapse:collapse;"><thead>${type==='don'?'<tr><th>Sl.No</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th></tr>':'<tr><th>Sl.No</th><th>Date</th><th>Detail</th><th>Amt</th></tr>'}</thead><tbody>${rows}</tbody></table></div>`;
+        document.getElementById('printArea').innerHTML = `<div style="text-align:center; padding:20px;"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><h3 style="border:2.5px solid #000; display:inline-block; padding:5px 25px; margin-bottom:20px;">${reportTitle}</h3><table class="print-table" style="width:100%; border-collapse:collapse;"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Detail</th><th>Amt</th></tr>'}</thead><tbody>${rows}</tbody></table></div>`;
         window.print();
     }
 
     function buildYearDropdown() { const sel = document.getElementById('yearFilter'); for (let y = 2024; y <= 2050; y++) { let opt = document.createElement('option'); opt.value = y; opt.text = y; if(y === new Date().getFullYear()) opt.selected = true; sel.appendChild(opt); } }
-    function editMember(elId, field) { let v = prompt("Enter Official Name:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
+    function editMember(elId, field) { let v = prompt("Official Name:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
