@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Fixed</title>
+    <title>TREASURE BOOKS - Master Pro Print Fixed</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700&display=swap');
         
         :root { --navy: #0d1b3e; --gold: #b8860b; --bg: #f4f7f6; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
@@ -38,9 +38,6 @@
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
 
-        .tab-content { display: none; overflow-x: auto; }
-        .tab-content.active { display: block; }
-
         table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
         th { background: var(--navy); color: white; font-size: 11px; text-transform: uppercase; }
@@ -52,27 +49,47 @@
         #eSubOcc { display: none; }
         #printArea { display: none; }
 
-        /* --- PROFESSIONAL A4 PRINT CSS --- */
+        /* --- PROFESSIONAL PRINT CSS --- */
         @media print {
-            @page { size: A4; margin: 15mm; }
+            @page { size: A4; margin: 10mm; }
             body { background: white !important; margin: 0; padding: 0; color: #000; }
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
             
-            .report-header { text-align: center; border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .report-header h1 { margin: 0; font-size: 28px; font-weight: 800; text-transform: uppercase; }
-            .report-header h2 { margin: 10px 0; font-size: 20px; text-decoration: underline; }
+            /* Headline Colors and Styling for Print */
+            .report-header { text-align: center; border-bottom: 5px solid #000; padding-bottom: 10px; margin-bottom: 25px; }
+            .report-header h1 { margin: 0; font-size: 32px; font-weight: 900; color: #000 !important; }
+            .report-header h2 { margin: 10px 0; font-size: 24px; font-weight: 800; text-decoration: underline; color: #000 !important; }
 
             .report-summary-box { 
-                display: flex; justify-content: space-around; border: 2px solid #000; 
-                padding: 12px; margin-bottom: 25px; font-weight: 800; font-size: 15px; 
+                display: flex; justify-content: space-around; border: 3px solid #000; 
+                padding: 15px; margin-bottom: 25px; font-weight: 900; font-size: 18px; 
             }
+            
+            /* High-Contrast Print Table Headlines */
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            .print-table th, .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 13px; }
-            .print-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
+            .print-table th { 
+                border: 2px solid #000; 
+                padding: 12px; 
+                text-align: left; 
+                font-size: 14px; 
+                background-color: #000 !important; /* Headlines background black */
+                color: #fff !important; /* Headlines text white */
+                font-weight: 900;
+                -webkit-print-color-adjust: exact;
+            }
+            .print-table td { 
+                border: 1px solid #000; 
+                padding: 10px; 
+                text-align: left; 
+                font-size: 14px; 
+                color: #000 !important;
+                font-weight: 600;
+            }
 
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 90vh; }
-            .receipt-card { border: 10px double #b8860b; padding: 40px; width: 550px; text-align: center; background: #fff; }
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
+            .receipt-card { border: 12px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
+            .receipt-card h1 { color: #000 !important; font-weight: 900; font-size: 36px; border-bottom: 3px solid #000; padding-bottom: 10px; }
         }
     </style>
 </head>
@@ -180,7 +197,7 @@
     function printReport() {
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
-        const reportTitle = (activeTab === 'viewDon') ? "DONATION REPORT" : "EXPENSES REPORT";
+        const reportTitle = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
         
         let tableRows = "";
         if(activeTab === 'viewDon') {
@@ -195,14 +212,14 @@
             }
         }
 
-        const tableHeader = (activeTab === 'viewDon') ? 
+        const tableHeader = activeTab === 'viewDon' ? 
             '<tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt (₹)</th></tr>' : 
             '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
 
         pArea.innerHTML = `
             <div class="report-header">
                 <h1>${reportTitle}</h1>
-                <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+                <p style="font-weight:bold;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                 <h2>${getSahidYear(year)}</h2>
             </div>
             <div class="report-summary-box">
@@ -222,14 +239,14 @@
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-centered">
                 <div class="receipt-card">
-                    <h1 style="color:var(--navy); margin:0; border-bottom: 3px solid #000; padding-bottom: 8px;">DONATION RECEIPT</h1>
-                    <h3 style="margin:12px 0;">${getSahidYear(item.year)}</h3>
-                    <p style="font-size:13px; font-weight:bold;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                    <div style="text-align:left; margin-top:35px; line-height:2.4; font-size:18px; border-top:2.5px solid var(--gold); padding-top:20px;">
+                    <h1>DONATION RECEIPT</h1>
+                    <h3 style="margin:15px 0; color:#000; font-size:22px;">${getSahidYear(item.year)}</h3>
+                    <p style="font-size:14px; font-weight:bold; color:#000;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+                    <div style="text-align:left; margin-top:40px; line-height:2.5; font-size:20px; border-top:3px solid #000; padding-top:20px; color:#000;">
                         <p>Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
-                        <p>Amount: <span style="background:#f2f2f2; padding:5px 15px; font-weight:bold; border:1px solid #ccc;">₹ ${item.amt.toLocaleString()}</span></p>
+                        <p>Amount: <span style="background:#eee; padding:10px 20px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
                     </div>
                 </div>
             </div>`;
@@ -261,7 +278,7 @@
             let x = currentData.donations[k];
             if(x.year == fYear) {
                 bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">Bill</button>
+                <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">Receipt</button>
                 <button class="btn-e" onclick="triggerEdit('don', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('don', '${k}')">Del</button></td></tr>`;
                 tIn += x.amt;
             }
@@ -287,7 +304,7 @@
         const subOcc = document.getElementById('eSubOcc').value;
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
-        if(!date || !name || isNaN(amt)) return alert("Sari details dhyan se bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
