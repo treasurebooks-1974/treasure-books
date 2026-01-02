@@ -20,7 +20,6 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Motion Glow Border Dashboard */
         .premium-frame {
             position: relative; width: 100%; max-width: 1100px; padding: 4px;
             background: linear-gradient(90deg, #060b26, #b8860b, #00d2ff, #b8860b, #060b26);
@@ -94,7 +93,7 @@
             .print-header { text-align: center; border-bottom: 3.5px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
             .print-header h1 { font-size: 38px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 5px; }
             .print-header h2 { font-size: 22px; margin: 10px 0; color: #000; }
-            .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1.5px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
+            .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; }
 
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -118,8 +117,13 @@
             .receipt-card { border: 12px double #000; padding: 60px; width: 620px; text-align: center; background: #fff; position: relative; }
             .thank-you-note { margin-top: 25px; padding: 15px; border-top: 1px dashed #000; font-style: italic; font-size: 14px; color: #333; line-height: 1.5; }
             
-            .official-signature { font-family: 'Birthstone', cursive; font-size: 65px; color: #1a237e !important; display: block; margin-bottom: -22px; transform: rotate(-4deg); font-weight: 400; }
-            .sig-line { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 15px; text-align: center; }
+            /* Natural Small Calligraphy Signature */
+            .official-signature { 
+                font-family: 'Birthstone', cursive; font-size: 48px; color: #0c154a !important; 
+                display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); 
+                font-weight: 400; letter-spacing: 0.5px;
+            }
+            .sig-line { border-top: 2.5px solid #000; width: 220px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -158,7 +162,7 @@
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
                     <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
                     <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="Railway">Railway</option>
-                    <option value="Govt Service">Govt Service</option>
+                    <option value="Govt Service">Govt Service</option><option value="Private Service">Private Service</option>
                 </select>
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
@@ -234,7 +238,7 @@
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
         dbRef.ref((type === 'donation' ? 'donations/' : 'expenses/')).push(entry);
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = "CONFIRM TRANSACTION";
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = '';
     }
 
     function editEntry(type, key) {
@@ -250,12 +254,7 @@
         <div class="receipt-centered">
             <div class="receipt-card">
                 <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label" style="font-size:18px;">DONATION RECEIPT</span></div>
-                <div style="text-align:left; margin-top:30px; line-height:2.6; font-size:22px; border-top:2px solid #000; padding-top:25px;">
-                    <p>Receipt Date: <b>${item.date}</b></p>
-                    <p>Donor Name: <b>${item.name}</b></p>
-                    <p>Occupation: <b>${item.occ}</b></p>
-                    <p>Amount Received: <span style="background:#f2f2f2; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()} /-</span></p>
-                </div>
+                <div style="text-align:left; margin-top:30px; line-height:2.6; font-size:22px; border-top:2px solid #000; padding-top:25px;"><p>Receipt Date: <b>${item.date}</b></p><p>Donor Name: <b>${item.name}</b></p><p>Occupation: <b>${item.occ}</b></p><p>Amount Received: <span style="background:#f2f2f2; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()} /-</span></p></div>
                 <div class="thank-you-note">
                     "Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."
                     <br><strong style="display:block; margin-top:10px; font-size: 16px;">🙏 Thank You for Your Generous Contribution!</strong>
