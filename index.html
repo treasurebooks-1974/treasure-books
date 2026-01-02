@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Dashboard</title>
+    <title>TREASURE BOOKS - Master Pro Dashboard</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -50,23 +50,36 @@
         #eSubOcc { display: none; }
         #printArea { display: none; }
 
-        /* PRINT STYLING - NO BACKGROUND, CENTER ALIGN */
+        /* PROFESSIONAL A4 PRINT STYLING */
         @media print {
+            @page { size: A4; margin: 15mm; }
             body { background: white !important; margin: 0; padding: 0; }
             .no-print { display: none !important; }
-            #printArea { display: flex !important; align-items: center; justify-content: center; width: 100%; min-height: 100vh; }
+            #printArea { display: block !important; width: 100%; }
             
+            .report-header { text-align: center; border-bottom: 3px solid var(--navy); padding-bottom: 10px; margin-bottom: 20px; }
+            .report-header h1 { margin: 0; font-size: 32px; color: #000 !important; }
+            .report-header h2 { margin: 5px 0; color: #333 !important; text-decoration: underline; }
+            .report-summary-box { 
+                display: flex; justify-content: space-between; border: 2px solid #000; 
+                padding: 15px; margin-bottom: 20px; font-weight: bold; font-size: 16px; 
+            }
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            .print-table th, .print-table td { border: 1px solid #000; padding: 10px; text-align: left; }
+            .print-table th { background-color: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
+            
+            .signature-section { margin-top: 50px; display: flex; justify-content: space-between; }
+            .sig-box { text-align: center; width: 200px; border-top: 1.5px solid #000; padding-top: 5px; font-weight: bold; }
+
+            /* Receipt Middle Logic */
+            .receipt-centered { 
+                display: flex; align-items: center; justify-content: center; height: 90vh; 
+            }
             .receipt-card {
                 border: 8px double #b8860b; padding: 40px; width: 550px; 
-                background: #fff; position: relative; text-align: center;
+                text-align: center; background: #fff;
             }
-            .r-header h1 { font-size: 34px; color: #0d1b3e; margin: 0; letter-spacing: 2px; }
-            .r-header h3 { margin: 8px 0; color: #0d1b3e; font-size: 20px; }
-            .r-header p { margin: 4px 0; font-size: 12px; font-weight: bold; }
-            .r-body { text-align: left; margin-top: 25px; line-height: 2.2; font-size: 18px; border-top: 2px solid #b8860b; padding-top: 15px; }
-            .r-amt { background: #f0f0f0; padding: 5px 15px; font-weight: bold; border-radius: 4px; font-size: 20px; }
-            .r-sig-row { margin-top: 60px; display: flex; justify-content: flex-end; align-items: flex-end; }
-            .digital-sig { font-family: 'Dancing Script', cursive; font-size: 30px; color: #1a237e; margin: 0; }
+            .digital-sig { font-family: 'Dancing Script', cursive; font-size: 30px; color: #1a237e; }
         }
     </style>
 </head>
@@ -125,7 +138,7 @@
         <div class="card bg-green">Bal: <b id="sumBal">0</b></div>
     </div>
 
-    <button class="btn-print-main" onclick="printReport()">PRINT THIS REPORT</button>
+    <button class="btn-print-main" onclick="printReport()">⎙ PRINT PROFESSIONAL REPORT</button>
 
     <div class="tabs">
         <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATIONS</div>
@@ -171,144 +184,46 @@
         return `${count}${suffix} SAHID DIWAS ${year}`;
     }
 
+    function printReport() {
+        const pArea = document.getElementById('printArea');
+        const year = document.getElementById('yearFilter').value;
+        const reportTitle = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
+        const tableBody = document.getElementById(activeTab === 'viewDon' ? 'bodyDon' : 'bodyExp').innerHTML;
+        const tableHeader = activeTab === 'viewDon' ? 
+            '<tr><th>Date</th><th>Donor Name</th><th>Amt (₹)</th></tr>' : 
+            '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
+
+        pArea.innerHTML = `
+            <div class="report-header">
+                <h1>TREASURE BOOKS</h1>
+                <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+                <h2>${getSahidYear(year)} - ${reportTitle}</h2>
+            </div>
+            <div class="report-summary-box">
+                <span>TOTAL COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
+                <span>TOTAL EXPENSE: ₹${document.getElementById('sumOut').innerText}</span>
+                <span>BALANCE: ₹${document.getElementById('sumBal').innerText}</span>
+            </div>
+            <table class="print-table">
+                <thead>${tableHeader}</thead>
+                <tbody>${tableBody}</tbody>
+            </table>
+            <div class="signature-section">
+                <div class="sig-box">Treasurer Signature</div>
+                <div class="sig-box">Asst. Treasurer Signature</div>
+            </div>`;
+        window.print();
+    }
+
     function printReceipt(key) {
         const item = currentData.donations[key];
         const trName = document.getElementById('tName').innerText;
         document.getElementById('printArea').innerHTML = `
-            <div class="receipt-card">
-                <div class="r-header">
-                    <h1>TREASURE BOOKS</h1>
-                    <h3>${getSahidYear(item.year)}</h3>
-                    <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                </div>
-                <div class="r-body">
-                    <p>Receipt Date: <b>${item.date}</b></p>
-                    <p>Donor Name: <b>${item.name}</b></p>
-                    <p>Occupation: <b>${item.occ}</b></p>
-                    <p>Amount Received: <span class="r-amt">₹ ${item.amt.toLocaleString()}</span></p>
-                </div>
-                <div class="r-sig-row">
-                    <div style="text-align:center;">
-                        <p class="digital-sig">${trName}</p>
-                        <p style="margin:0;">__________________</p>
-                        <p style="font-size:12px; font-weight:bold;">Treasurer Signature</p>
-                    </div>
-                </div>
-            </div>`;
-        window.print();
-    }
-
-    function printReport() {
-        const pArea = document.getElementById('printArea');
-        const year = document.getElementById('yearFilter').value;
-        const tableHtml = document.getElementById(activeTab).innerHTML;
-        const reportName = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
-        
-        pArea.innerHTML = `
-            <div style="text-align:center; padding:20px; font-family:sans-serif; background:#fff; width:100%;">
-                <h1>TREASURE BOOKS</h1>
-                <h2 style="margin:5px 0; color:var(--navy);">${getSahidYear(year)}</h2>
-                <h3 style="margin:5px 0; text-decoration:underline;">${reportName}</h3>
-                <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
-                <hr>
-                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:bold; border:1px solid #000; padding:10px;">
-                    <span>IN: ₹${document.getElementById('sumIn').innerText}</span>
-                    <span>OUT: ₹${document.getElementById('sumOut').innerText}</span>
-                    <span>BAL: ₹${document.getElementById('sumBal').innerText}</span>
-                </div>
-                ${tableHtml}
-            </div>`;
-        window.print();
-    }
-
-    function switchTab(id) {
-        activeTab = id;
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
-    }
-
-    dbRef.ref().on('value', (snap) => {
-        const val = snap.val() || {};
-        currentData.donations = val.donations || {};
-        currentData.expenses = val.expenses || {};
-        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
-        document.getElementById('atName').innerText = val.config?.atName || "Assistant";
-        loadView();
-    });
-
-    function loadView() {
-        const fYear = document.getElementById('yearFilter').value;
-        let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
-        let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
-        for(let k in currentData.donations) {
-            let x = currentData.donations[k];
-            if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
-                <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">R</button>
-                <button class="btn-e" onclick="triggerEdit('don', '${k}')">E</button><button class="btn-x" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
-                tIn += x.amt;
-            }
-        }
-        for(let k in currentData.expenses) {
-            let x = currentData.expenses[k];
-            if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
-                <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">E</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
-                tOut += x.amt;
-            }
-        }
-        document.getElementById('sumIn').innerText = tIn.toLocaleString();
-        document.getElementById('sumOut').innerText = tOut.toLocaleString();
-        document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
-    }
-
-    function saveEntry() {
-        const type = document.getElementById('eType').value;
-        const date = document.getElementById('eDate').value;
-        const name = document.getElementById('eName').value;
-        const occ = document.getElementById('eOcc').value;
-        const subOcc = document.getElementById('eSubOcc').value;
-        const amt = parseFloat(document.getElementById('eAmount').value);
-        const editKey = document.getElementById('editKey').value;
-        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
-        let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
-        const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
-        const path = (type === 'donation') ? 'donations/' : 'expenses/';
-        if(editKey === "") dbRef.ref(path).push(entry);
-        else { dbRef.ref(path + editKey).set(entry); document.getElementById('editKey').value = ""; }
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
-    }
-
-    function buildYearDropdown() {
-        const sel = document.getElementById('yearFilter');
-        for (let y = 2024; y <= 2050; y++) {
-            let opt = document.createElement('option'); opt.value = y; opt.text = "Year " + y;
-            if(y === new Date().getFullYear()) opt.selected = true;
-            sel.appendChild(opt);
-        }
-    }
-
-    function editMember(elId, field) {
-        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
-        if(v) dbRef.ref('config/' + field).set(v);
-    }
-
-    function triggerEdit(type, key) {
-        const item = (type === 'don') ? currentData.donations[key] : currentData.expenses[key];
-        document.getElementById('eType').value = (type === 'don') ? 'donation' : 'expense';
-        document.getElementById('eDate').value = item.date;
-        document.getElementById('eName').value = item.name;
-        document.getElementById('eAmount').value = item.amt;
-        document.getElementById('editKey').value = key;
-        handleFormChange(); window.scrollTo(0,0);
-    }
-
-    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
-    function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
-    function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
-    window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
-</script>
-</body>
-</html>
+            <div class="receipt-centered">
+                <div class="receipt-card">
+                    <h1 style="color:var(--navy); margin:0;">TREASURE BOOKS</h1>
+                    <h3 style="margin:10px 0;">${getSahidYear(item.year)}</h3>
+                    <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+                    <div style="text-align:left; margin-top:30px; line-height:2.2; font-size:18px; border-top:2px solid var(--gold); padding-top:15px;">
+                        <p>Date: <b>${item.date}</b></p>
+                        <p>Donor Name: <b>${item.name}
