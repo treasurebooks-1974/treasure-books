@@ -3,102 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Final</title>
+    <title>TREASURE BOOKS - Premium Master Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600;700;800&display=swap');
         
-        :root { --navy: #0d1b3e; --gold: #b8860b; --bg: #f4f7f6; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
-        .container { max-width: 900px; margin: auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--navy); padding: 25px; }
+        :root { --navy: #0d1b3e; --gold: #b8860b; --accent: #2196f3; --bg: #eef2f7; }
         
-        h1 { color: var(--navy); text-align: center; font-size: 26px; text-transform: uppercase; margin: 10px 0; letter-spacing: 2px; }
-        .committee-info { display: flex; justify-content: space-around; background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #d1d9ff; font-size: 13px; }
+        /* Professional Background Styling */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0d1b3e 0%, #1a2a6c 50%, #b21f1f 100%);
+            background-attachment: fixed;
+            margin: 0; padding: 15px; color: #333; 
+        }
+
+        /* Glassmorphism Container */
+        .container { 
+            max-width: 900px; margin: auto; 
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-radius: 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 25px; 
+        }
+        
+        h1 { color: var(--navy); text-align: center; font-size: 28px; font-weight: 800; margin: 0 0 20px 0; letter-spacing: 1px; }
+        
+        .committee-info { 
+            display: flex; justify-content: space-around; background: rgba(13, 27, 62, 0.05); 
+            padding: 15px; border-radius: 15px; margin-bottom: 25px; border: 1px dashed var(--navy);
+        }
         .name-val { color: var(--navy); font-weight: 700; border-bottom: 2px solid var(--gold); }
-        .edit-link { color: #d32f2f; cursor: pointer; background: none; border: none; font-size: 11px; text-decoration: underline; margin-left: 5px; }
+        .edit-link { color: #d32f2f; cursor: pointer; border: none; background: none; font-size: 11px; text-decoration: underline; }
 
-        .entry-section { background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 25px; }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        input, select { padding: 14px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 15px; width: 100%; box-sizing: border-box; outline: none; }
-        .btn-save { background: var(--navy); color: white; border: none; border-radius: 10px; padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer; }
-
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
-        .card { padding: 18px 5px; border-radius: 15px; color: white; text-align: center; font-weight: 600; }
-        .bg-blue { background: linear-gradient(135deg, #1a237e, #3949ab); }
-        .bg-red { background: linear-gradient(135deg, #b71c1c, #d32f2f); }
-        .bg-green { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
+        /* Modern Entry Section */
+        .entry-section { 
+            background: #fff; padding: 20px; border-radius: 18px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 25px; 
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
         
-        .year-filter-box { background: var(--navy); color: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-weight: 600; }
-        .year-filter-box select { width: auto; background: #fff; border: none; padding: 6px 15px; margin-left: 10px; border-radius: 5px; }
+        input, select { 
+            padding: 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; 
+            outline: none; transition: 0.3s; width: 100%; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--navy); background: #fdfdfd; }
+        .full-row { grid-column: span 2; }
+        @media (max-width: 600px) { .full-row { grid-column: span 1; } }
 
-        /* Print Button Layout */
-        .print-actions { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-p { flex: 1; color: white; border: none; border-radius: 10px; padding: 14px; font-weight: 700; cursor: pointer; }
+        .btn-save { 
+            background: var(--navy); color: white; border: none; border-radius: 12px; 
+            padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px;
+        }
+
+        /* Professional Stats Cards */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .card { padding: 15px; border-radius: 18px; color: white; text-align: center; font-weight: 600; box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
+        .bg-blue { background: linear-gradient(to right, #1e3c72, #2a5298); }
+        .bg-red { background: linear-gradient(to right, #cb2d3e, #ef473a); }
+        .bg-green { background: linear-gradient(to right, #11998e, #38ef7d); }
+
+        .print-actions { display: flex; gap: 15px; margin-bottom: 25px; }
+        .btn-p { flex: 1; color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-p:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .btn-p-don { background: #2e7d32; }
         .btn-p-exp { background: #c62828; }
 
-        .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; background: #f9f9f9; }
-        .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
-        .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
+        .tabs { display: flex; margin-bottom: 15px; background: #eee; border-radius: 12px; padding: 5px; }
+        .tab { flex: 1; padding: 12px; text-align: center; font-weight: 700; cursor: pointer; color: #555; border-radius: 10px; transition: 0.3s; }
+        .tab.active { background: white; color: var(--navy); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        .tab-content { display: none; overflow-x: auto; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
-        th { background: var(--navy); color: white; font-size: 11px; text-transform: uppercase; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 15px; overflow: hidden; }
+        th { background: var(--navy); color: white; padding: 15px; text-align: left; font-size: 12px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
 
-        .row-btns { display: flex; gap: 5px; border: none !important; }
-        .row-btns button { border: none; padding: 7px 10px; border-radius: 6px; color: white; font-size: 11px; cursor: pointer; font-weight: 600; }
-        .btn-r { background: var(--gold); } .btn-e { background: #2196f3; } .btn-x { background: #f44336; }
+        .btn-r { background: var(--gold); border: none; padding: 6px 12px; border-radius: 6px; color: white; cursor: pointer; font-size: 11px; }
 
+        /* PRINT STYLE */
         #printArea { display: none; }
-
-        /* --- PROFESSIONAL A4 PRINT CSS --- */
         @media print {
-            @page { size: A4; margin: 10mm; }
-            body { background: white !important; margin: 0; padding: 0; color: #000; }
+            body { background: white !important; padding: 0; }
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
-            
-            .print-header-main { text-align: center; border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .print-header-main h1 { margin: 0; font-size: 28px; font-weight: 900; text-transform: uppercase; color: #000 !important; }
-            .print-header-main h2 { margin: 5px 0; font-size: 24px; font-weight: 800; color: #000 !important; }
-            .print-header-main p { margin: 2px 0; font-size: 14px; font-weight: bold; color: #000 !important; }
-            .print-header-main h3 { margin: 10px 0; font-size: 22px; font-weight: 900; text-decoration: underline; color: #000 !important; border: 3px solid #000; display: inline-block; padding: 5px 25px; }
-
-            .report-summary-box { 
-                display: flex; justify-content: space-around; border: 3px solid #000; 
-                padding: 12px; margin-bottom: 25px; font-weight: 900; font-size: 16px; 
-            }
-            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            .print-table th { 
-                border: 2px solid #000; padding: 12px; text-align: left; font-size: 14px; 
-                background-color: #000 !important; color: #fff !important; font-weight: 900;
-                -webkit-print-color-adjust: exact;
-            }
-            .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
-
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
-            .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; position: relative; }
-            .shorthand-signature { font-family: 'Dancing Script', cursive; font-size: 34px; color: #000 !important; margin-bottom: -5px; display: block; }
-            .sig-line { border-top: 2px solid #000; width: 220px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; text-transform: uppercase; }
-            .sig-date { font-size: 12px; margin-top: 3px; font-weight: bold; }
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 98vh; }
+            .receipt-card { border: 10px double #000; padding: 40px; width: 550px; text-align: center; background: #fff; }
+            .shorthand-signature { font-family: 'Dancing Script', cursive; font-size: 34px; margin-bottom: -5px; display: block; }
+            .sig-line { border-top: 2px solid #000; width: 220px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; }
+            .print-table th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+            .print-table td, .print-table th { border: 1.5px solid #000; padding: 10px; }
         }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
 <div class="container no-print">
-    <h1>TREASURE BOOKS</h1>
+    <h1>TREASURE BOOKS PRO</h1>
     
     <div class="committee-info">
         <div>TR: <span id="tName" class="name-val">...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
         <div>ASST: <span id="atName" class="name-val">...</span> <button class="edit-link" onclick="editMember('atName', 'atName')">Edit</button></div>
     </div>
 
-    <div class="year-filter-box">🔍 HISTORY CONTROL: <select id="yearFilter" onchange="loadView()"></select></div>
+    <div class="year-filter-box">🔍 VIEW YEAR: <select id="yearFilter" onchange="loadView()"></select></div>
 
     <div class="entry-section">
         <div class="form-grid">
@@ -108,32 +121,24 @@
                 <option value="expense">Expenditure (Payment)</option>
             </select>
             <input type="date" id="eDate">
-            <input type="text" id="eName" placeholder="Donor Name / Detail">
+            <input type="text" id="eName" class="full-row" placeholder="Name or Detail">
             
             <select id="eOcc" onchange="checkExService()">
-                <option value="">Occupation</option>
-                <option value="Teacher">Teacher</option><option value="Police">Police</option>
-                <option value="Doctor">Doctor</option><option value="Engineer">Engineer</option>
-                <option value="Govt Service">Govt Service</option><option value="Private Service">Private Service</option>
-                <option value="Army">Army</option><option value="Navy">Navy</option>
-                <option value="Air Force">Air Force</option><option value="BSF">BSF</option>
-                <option value="CRPF">CRPF</option><option value="CISF">CISF</option>
-                <option value="Railway">Railway</option><option value="Student">Student</option>
-                <option value="Farmer">Farmer</option><option value="Social Worker">Social Worker</option>
+                <option value="">Select Occupation</option>
+                <option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Doctor">Doctor</option>
+                <option value="Engineer">Engineer</option><option value="Army">Army</option><option value="Navy">Navy</option>
+                <option value="BSF">BSF</option><option value="Student">Student</option><option value="Farmer">Farmer</option>
                 <option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
             </select>
 
-            <select id="eSubOcc">
-                <option value="">Branch (Ex-Serv)</option>
+            <select id="eSubOcc" style="display:none;">
+                <option value="">Branch</option>
                 <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
-                <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
-                <option value="Engineer">Engineer</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
-                <option value="CISF">CISF</option><option value="Railway">Railway</option><option value="Govt Service">Govt Service</option>
-                <option value="Private Service">Private Service</option><option value="Social Worker">Social Worker</option>
+                <option value="Police">Police</option><option value="BSF">BSF</option><option value="Railway">Railway</option>
             </select>
 
             <input type="number" id="eAmount" placeholder="Amount ₹">
-            <button class="btn-save" onclick="saveEntry()">SAVE DATA</button>
+            <button class="btn-save full-row" onclick="saveEntry()">SAVE TRANSACTION</button>
         </div>
     </div>
 
@@ -144,8 +149,8 @@
     </div>
 
     <div class="print-actions">
-        <button class="btn-p btn-p-don" onclick="printSeparateReport('don')">⎙ PRINT DONATION SHEET</button>
-        <button class="btn-p btn-p-exp" onclick="printSeparateReport('exp')">⎙ PRINT EXPENDITURE SHEET</button>
+        <button class="btn-p btn-p-don" onclick="printReport('don')">⎙ PRINT DONATION SHEET</button>
+        <button class="btn-p btn-p-exp" onclick="printReport('exp')">⎙ PRINT EXPENDITURE SHEET</button>
     </div>
 
     <div class="tabs">
@@ -154,17 +159,10 @@
     </div>
 
     <div id="viewDon" class="tab-content active">
-        <table>
-            <thead><tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt (₹)</th><th>Action</th></tr></thead>
-            <tbody id="bodyDon"></tbody>
-        </table>
+        <table><thead><tr><th>Date</th><th>Name</th><th>Occupation</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
-
     <div id="viewExp" class="tab-content">
-        <table>
-            <thead><tr><th>Date</th><th>Expense Detail</th><th>Amt (₹)</th><th>Action</th></tr></thead>
-            <tbody id="bodyExp"></tbody>
-        </table>
+        <table><thead><tr><th>Date</th><th>Detail</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
@@ -192,39 +190,31 @@
         return `${count}${suffix} SAHID DIWAS ${year}`;
     }
 
-    function printSeparateReport(type) {
-        const pArea = document.getElementById('printArea');
+    function printReport(type) {
         const year = document.getElementById('yearFilter').value;
-        const reportTitle = type === 'don' ? "DONATIONS REPORT" : "EXPENSES REPORT";
-        
-        let tableRows = "";
+        const title = type === 'don' ? "DONATIONS REPORT" : "EXPENSES REPORT";
+        let rows = "";
         if(type === 'don') {
-            const sorted = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-            sorted.forEach(([k, x]) => {
-                if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+            Object.values(currentData.donations).filter(x => x.year == year).forEach(x => {
+                rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
             });
         } else {
-            const sorted = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-            sorted.forEach(([k, x]) => {
-                if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+            Object.values(currentData.expenses).filter(x => x.year == year).forEach(x => {
+                rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
             });
         }
-
-        const tableHeader = type === 'don' ? 
-            '<tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt (₹)</th></tr>' : 
-            '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
-
-        pArea.innerHTML = `
-            <div class="print-header-main">
+        
+        document.getElementById('printArea').innerHTML = `
+            <div style="text-align:center;">
                 <h1>${getSahidYear(year)}</h1>
                 <h2>B.B.C MARANG BUNDU</h2>
                 <p>Reg.no :- MBJ8750-13 Of 2022</p>
-                <h3>${reportTitle}</h3>
-            </div>
-            <table class="print-table">
-                <thead>${tableHeader}</thead>
-                <tbody>${tableRows}</tbody>
-            </table>`;
+                <h3 style="text-decoration:underline;">${title}</h3>
+                <table class="print-table" style="width:100%; border-collapse:collapse; margin-top:20px;">
+                    <thead>${type==='don'?'<tr><th>Date</th><th>Name</th><th>Occupation</th><th>Amt</th></tr>':'<tr><th>Date</th><th>Detail</th><th>Amt</th></tr>'}</thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
         window.print();
     }
 
@@ -234,23 +224,21 @@
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-centered">
                 <div class="receipt-card">
-                    <div class="print-header-main" style="border:none; margin:0; padding:0;">
-                        <h1>${getSahidYear(item.year)}</h1>
-                        <h2>B.B.C MARANG BUNDU</h2>
-                        <p>Reg.no :- MBJ8750-13 Of 2022</p>
-                        <h3>DONATION RECEIPT</h3>
-                    </div>
-                    <div style="text-align:left; margin-top:35px; line-height:2.5; font-size:19px; border-top:2.5px solid #000; padding-top:20px;">
-                        <p>Receipt Date: <b>${item.date}</b></p>
+                    <h1>${getSahidYear(item.year)}</h1>
+                    <h2>B.B.C MARANG BUNDU</h2>
+                    <p>Reg.no :- MBJ8750-13 Of 2022</p>
+                    <h3 style="border:2px solid #000; display:inline-block; padding:5px 20px; margin-top:15px;">DONATION RECEIPT</h3>
+                    <div style="text-align:left; margin-top:30px; line-height:2.5; font-size:18px; border-top:2px solid #000; padding-top:20px;">
+                        <p>Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
-                        <p>Amount Received: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
+                        <p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
                     </div>
-                    <div style="margin-top:60px; text-align:right; width: 100%;">
-                        <div style="display: inline-block; text-align: center;">
+                    <div style="margin-top:60px; text-align:right;">
+                        <div style="display:inline-block; text-align:center;">
                             <span class="shorthand-signature">${trName}</span>
                             <div class="sig-line">Treasurer Signature</div>
-                            <div class="sig-date">Date: ${item.date}</div>
+                            <div style="font-size:12px; margin-top:5px; font-weight:bold;">Date: ${item.date}</div>
                         </div>
                     </div>
                 </div>
@@ -258,7 +246,6 @@
         window.print();
     }
 
-    // Dashboard navigation & Firebase sync
     function switchTab(id) {
         activeTab = id;
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -281,23 +268,15 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
         
-        const sortedDon = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedDon.forEach(([k, x]) => {
-            if(x.year == fYear) {
-                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">Bill</button>
-                <button class="btn-e" onclick="triggerEdit('don', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('don', '${k}')">Del</button></td></tr>`;
-                tIn += x.amt;
-            }
+        Object.entries(currentData.donations).filter(x => x[1].year == fYear).forEach(([k, x]) => {
+            bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
+            <td><button class="btn-r" onclick="printReceipt('${k}')">Receipt</button></td></tr>`;
+            tIn += x.amt;
         });
 
-        const sortedExp = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedExp.forEach(([k, x]) => {
-            if(x.year == fYear) {
-                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
-                <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">Del</button></td></tr>`;
-                tOut += x.amt;
-            }
+        Object.entries(currentData.expenses).filter(x => x[1].year == fYear).forEach(([k, x]) => {
+            bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td><td>-</td></tr>`;
+            tOut += x.amt;
         });
         
         document.getElementById('sumIn').innerText = tIn.toLocaleString();
@@ -312,13 +291,10 @@
         const occ = document.getElementById('eOcc').value;
         const subOcc = document.getElementById('eSubOcc').value;
         const amt = parseFloat(document.getElementById('eAmount').value);
-        const editKey = document.getElementById('editKey').value;
-        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
-        const path = (type === 'donation') ? 'donations/' : 'expenses/';
-        if(editKey === "") dbRef.ref(path).push(entry);
-        else { dbRef.ref(path + editKey).set(entry); document.getElementById('editKey').value = ""; }
+        dbRef.ref((type === 'donation' ? 'donations/' : 'expenses/')).push(entry);
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
@@ -332,21 +308,10 @@
     }
 
     function editMember(elId, field) {
-        let v = prompt("Name Likhein:", document.getElementById(elId).innerText);
+        let v = prompt("New Name:", document.getElementById(elId).innerText);
         if(v) dbRef.ref('config/' + field).set(v);
     }
 
-    function triggerEdit(type, key) {
-        const item = (type === 'don') ? currentData.donations[key] : currentData.expenses[key];
-        document.getElementById('eType').value = (type === 'don') ? 'donation' : 'expense';
-        document.getElementById('eDate').value = item.date;
-        document.getElementById('eName').value = item.name;
-        document.getElementById('eAmount').value = item.amt;
-        document.getElementById('editKey').value = key;
-        handleFormChange(); window.scrollTo(0,0);
-    }
-
-    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
