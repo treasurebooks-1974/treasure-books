@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Ultra Premium Pro Max</title>
+    <title>TREASURE BOOK - Premium Master Pro Max</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -20,14 +20,12 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Motion Glow Border Frame */
         .premium-frame {
             position: relative; width: 100%; max-width: 1100px; padding: 3px;
             background: linear-gradient(90deg, #060b26, #b8860b, #00d2ff, #b8860b, #060b26);
             background-size: 300% 300%; animation: glowRotate 8s linear infinite;
             border-radius: 40px; box-shadow: 0 0 50px rgba(184, 134, 11, 0.3);
         }
-
         @keyframes glowRotate { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
         .container { 
@@ -87,15 +85,11 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
 
-            /* LEDGER PRINTOUT DESIGN */
             .ledger-container { 
                 padding: 40px; min-height: 297mm; position: relative; 
                 background: radial-gradient(circle at center, rgba(184, 134, 11, 0.03) 0%, transparent 100%);
             }
-            .ledger-border { 
-                border: 4px double #000; padding: 20px; height: calc(100% - 80px);
-                position: relative;
-            }
+            .ledger-border { border: 4px double #000; padding: 20px; min-height: 260mm; position: relative; }
             .print-header { text-align: center; border-bottom: 3px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
             .print-header h1 { font-size: 38px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 5px; }
             .print-header h2 { font-size: 22px; margin: 10px 0; color: #000; }
@@ -105,18 +99,25 @@
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             .print-table th { background: #000 !important; color: #fff !important; padding: 12px; border: 1.5px solid #000; font-size: 14px; -webkit-print-color-adjust: exact; }
             .print-table td { border: 1.5px solid #000; padding: 10px; font-size: 14px; font-weight: 700; color: #000; }
-            .total-summary-print { margin-top: 30px; border: 3px solid #000; padding: 15px; display: flex; justify-content: space-around; font-size: 18px; font-weight: 900; background: #eee !important; -webkit-print-color-adjust: exact; }
 
-            /* RECEIPT PRINTOUT DESIGN */
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 0; }
-            .receipt-card { 
-                border: 12px double #000; padding: 60px; width: 600px; text-align: center; background: #fff;
-                position: relative; box-shadow: none;
+            /* Final Summary Box in Print */
+            .total-summary-print { 
+                margin-top: 40px; border: 4px solid #000; padding: 20px; 
+                display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+                text-align: center; font-size: 16px; font-weight: 900; 
+                background: #f1f1f1 !important; -webkit-print-color-adjust: exact;
             }
-            .receipt-card::before { content: "OFFICIAL RECEIPT"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60px; color: rgba(0,0,0,0.03); z-index: 0; pointer-events: none; font-weight: 900; width: 100%; }
+            .summary-item { border-right: 2px solid #000; }
+            .summary-item:last-child { border-right: none; }
 
-            .official-signature { font-family: 'Birthstone', cursive; font-size: 60px; color: #1a237e !important; display: block; margin-bottom: -20px; font-weight: 400; transform: rotate(-4deg); }
-            .sig-line { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 15px; text-align: center; text-transform: uppercase; }
+            .signature-row { margin-top: 80px; display: flex; justify-content: space-between; padding: 0 40px; }
+            .sig-box-p { text-align: center; width: 200px; border-top: 2px solid #000; padding-top: 5px; font-weight: 900; font-size: 14px; }
+
+            /* Receipt Section */
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; }
+            .receipt-card { border: 12px double #000; padding: 60px; width: 600px; text-align: center; background: #fff; position: relative; }
+            .official-signature { font-family: 'Birthstone', cursive; font-size: 60px; color: #1a237e !important; display: block; margin-bottom: -20px; transform: rotate(-4deg); }
+            .sig-line { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 15px; text-align: center; }
         }
     </style>
 </head>
@@ -124,10 +125,7 @@
 
 <div class="premium-frame no-print">
     <div class="container">
-        <div class="year-control-pro">
-            🔍 VIEW YEAR <select id="yearFilter" onchange="loadView()"></select>
-        </div>
-
+        <div class="year-control-pro">🔍 YEAR <select id="yearFilter" onchange="loadView()"></select></div>
         <div class="brand-header">
             <h1>TREASURE BOOK</h1>
             <h2>B.B.C MARANG BUNDU</h2>
@@ -135,44 +133,27 @@
         </div>
         
         <div class="executive-info">
-            <div class="exec-card">
-                <span>Principal Treasurer</span>
-                <b id="tName">...</b>
-                <button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button>
-            </div>
-            <div class="exec-card">
-                <span>Assistant Treasurer</span>
-                <b id="atName">...</b>
-                <button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button>
-            </div>
+            <div class="exec-card"><span>Principal Treasurer</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button></div>
+            <div class="exec-card"><span>Asst Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button></div>
         </div>
 
         <div class="entry-section">
             <div class="form-grid">
                 <input type="hidden" id="editKey"><input type="hidden" id="editType">
-                <select id="eType" onchange="handleFormChange()">
-                    <option value="donation">CREDIT (Collection)</option>
-                    <option value="expense">DEBIT (Expenditure)</option>
-                </select>
+                <select id="eType" onchange="handleFormChange()"><option value="donation">CREDIT (Collection)</option><option value="expense">DEBIT (Expenditure)</option></select>
                 <input type="date" id="eDate">
-                <input type="text" id="eName" placeholder="Full Name or Detail">
+                <input type="text" id="eName" placeholder="Name or Detail">
                 <select id="eOcc" onchange="checkExService()">
                     <option value="">Occupation</option>
                     <option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option>
-                    <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="Doctor">Doctor</option>
-                    <option value="Engineer">Engineer</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
-                    <option value="CISF">CISF</option><option value="Railway">Railway</option><option value="Student">Student</option>
-                    <option value="Farmer">Farmer</option><option value="Business">Business</option>
-                    <option value="Govt Service">Govt Service</option><option value="Private Service">Private Service</option>
-                    <option value="Social Worker">Social Worker</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
+                    <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="BSF">BSF</option>
+                    <option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option>
+                    <option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
                 </select>
                 <select id="eSubOcc" style="display:none;">
                     <option value="">Branch List</option>
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
-                    <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
-                    <option value="Engineer">Engineer</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
-                    <option value="CISF">CISF</option><option value="Railway">Railway</option><option value="Govt Service">Govt Service</option>
-                    <option value="Private Service">Private Service</option><option value="Social Worker">Social Worker</option>
+                    <option value="BSF">BSF</option><option value="Railway">Railway</option><option value="Govt Service">Govt Service</option>
                 </select>
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
@@ -187,16 +168,12 @@
 
         <div class="list-section">
             <div class="list-header"><div class="list-title">💰 CREDIT LEDGER</div><button class="btn-print-icon" onclick="printReport('don')">⎙</button></div>
-            <div style="overflow-x:auto;">
-                <table><thead><tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
-            </div>
+            <table id="tblDon"><thead><tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
         </div>
 
         <div class="list-section">
             <div class="list-header"><div class="list-title">📉 DEBIT LEDGER</div><button class="btn-print-icon" onclick="printReport('exp')">⎙</button></div>
-            <div style="overflow-x:auto;">
-                <table><thead><tr><th>Sl</th><th>Date</th><th>Expense Detail</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
-            </div>
+            <table id="tblExp"><thead><tr><th>Sl</th><th>Date</th><th>Expense Detail</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
         </div>
     </div>
 </div>
@@ -252,7 +229,7 @@
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
         dbRef.ref((type === 'donation' ? 'donations/' : 'expenses/')).push(entry);
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = "CONFIRM TRANSACTION";
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = '';
     }
 
     function editEntry(type, key) {
@@ -267,23 +244,9 @@
         document.getElementById('printArea').innerHTML = `
         <div class="receipt-centered">
             <div class="receipt-card">
-                <div class="print-header" style="border-bottom: 2.5px solid #000;">
-                    <h1>${getSahidYear(item.year)}</h1>
-                    <h2>B.B.C MARANG BUNDU</h2>
-                    <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <span class="print-type-label" style="font-size:18px;">DONATION RECEIPT</span>
-                </div>
-                <div style="text-align:left; margin-top:30px; line-height:2.6; font-size:22px; border-top:2px solid #000; padding-top:25px;">
-                    <p>Receipt Date: <b>${item.date}</b></p>
-                    <p>Donor Name: <b>${item.name}</b></p>
-                    <p>Occupation: <b>${item.occ}</b></p>
-                    <p>Amount Received: <span style="background:#f2f2f2; padding:5px 15px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()} /-</span></p>
-                </div>
-                <div style="text-align:right; margin-top:60px;">
-                    <span class="official-signature">${trName}</span>
-                    <div class="sig-line">Principal Treasurer</div>
-                    <div style="font-size:12px; font-weight:900; margin-top:6px; margin-right: 50px;">DATE: ${item.date}</div>
-                </div>
+                <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label" style="font-size:18px;">DONATION RECEIPT</span></div>
+                <div style="text-align:left; margin-top:30px; line-height:2.6; font-size:22px; border-top:2px solid #000; padding-top:25px;"><p>Receipt Date: <b>${item.date}</b></p><p>Donor Name: <b>${item.name}</b></p><p>Occupation: <b>${item.occ}</b></p><p>Amount Received: <span style="background:#f2f2f2; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()} /-</span></p></div>
+                <div style="text-align:right; margin-top:60px;"><span class="official-signature">${trName}</span><div class="sig-line">Principal Treasurer</div><div style="font-size:12px; font-weight:900; margin-top:6px; margin-right: 50px;">DATE: ${item.date}</div></div>
             </div>
         </div>`;
         window.print();
@@ -294,13 +257,15 @@
         let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { rows += `<tr><td>${sl++}</td><td>${x.date}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; });
         
+        const sumIn = document.getElementById('sumIn').innerText;
+        const sumOut = document.getElementById('sumOut').innerText;
+        const sumBal = document.getElementById('sumBal').innerText;
+
         document.getElementById('printArea').innerHTML = `
         <div class="ledger-container">
             <div class="ledger-border">
                 <div class="print-header">
-                    <h1>${getSahidYear(year)}</h1>
-                    <h2>B.B.C MARANG BUNDU</h2>
-                    <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p>
                     <span class="print-type-label">${reportTitle}</span>
                 </div>
                 <table class="print-table">
@@ -308,11 +273,13 @@
                     <tbody>${rows}</tbody>
                 </table>
                 <div class="total-summary-print">
-                    <span>${type==='don'?'TOTAL COLLECTION':'TOTAL EXPENDITURE'}: ₹ ${document.getElementById(type==='don'?'sumIn':'sumOut').innerText}</span>
+                    <div class="summary-item">COLLECTION<br>₹ ${sumIn}</div>
+                    <div class="summary-item">EXPENDITURE<br>₹ ${sumOut}</div>
+                    <div class="summary-item">NET BALANCE<br>₹ ${sumBal}</div>
                 </div>
-                <div style="margin-top:100px; display:flex; justify-content:space-between; padding:0 40px;">
-                    <div style="text-align:center;"><div style="border-top:2px solid #000; width:200px; padding-top:5px; font-weight:bold;">Accountant</div></div>
-                    <div style="text-align:center;"><div style="border-top:2px solid #000; width:200px; padding-top:5px; font-weight:bold;">Principal Treasurer</div></div>
+                <div class="signature-row">
+                    <div class="sig-box-p">General Secretary</div>
+                    <div class="sig-box-p">Principal Treasurer</div>
                 </div>
             </div>
         </div>`;
