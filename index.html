@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Professional Edition (No Signature)</title>
+    <title>TREASURE BOOKS - Master Pro Fixed</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -52,7 +52,7 @@
         #eSubOcc { display: none; }
         #printArea { display: none; }
 
-        /* --- PROFESSIONAL A4 PRINT CSS (NO SIGNATURE) --- */
+        /* --- PROFESSIONAL A4 PRINT CSS --- */
         @media print {
             @page { size: A4; margin: 15mm; }
             body { background: white !important; margin: 0; padding: 0; color: #000; }
@@ -60,8 +60,8 @@
             #printArea { display: block !important; width: 100%; }
             
             .report-header { text-align: center; border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .report-header h1 { margin: 0; font-size: 30px; font-weight: 800; text-transform: uppercase; }
-            .report-header h2 { margin: 10px 0; font-size: 22px; text-decoration: underline; }
+            .report-header h1 { margin: 0; font-size: 28px; font-weight: 800; text-transform: uppercase; }
+            .report-header h2 { margin: 10px 0; font-size: 20px; text-decoration: underline; }
 
             .report-summary-box { 
                 display: flex; justify-content: space-around; border: 2px solid #000; 
@@ -70,12 +70,9 @@
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             .print-table th, .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 13px; }
             .print-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-            
-            /* Signature section removed */
-            .signature-section { display: none !important; }
 
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 90vh; }
-            .receipt-card { border: 10px double #b8860b; padding: 50px; width: 550px; text-align: center; background: #fff; }
+            .receipt-card { border: 10px double #b8860b; padding: 40px; width: 550px; text-align: center; background: #fff; }
         }
     </style>
 </head>
@@ -183,7 +180,7 @@
     function printReport() {
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
-        const reportTitle = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
+        const reportTitle = (activeTab === 'viewDon') ? "DONATION REPORT" : "EXPENSES REPORT";
         
         let tableRows = "";
         if(activeTab === 'viewDon') {
@@ -198,13 +195,13 @@
             }
         }
 
-        const tableHeader = activeTab === 'viewDon' ? 
+        const tableHeader = (activeTab === 'viewDon') ? 
             '<tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt (₹)</th></tr>' : 
             '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
 
         pArea.innerHTML = `
             <div class="report-header">
-                <h1>${reportHeaderTitle}</h1>
+                <h1>${reportTitle}</h1>
                 <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                 <h2>${getSahidYear(year)}</h2>
             </div>
@@ -251,8 +248,8 @@
         const val = snap.val() || {};
         currentData.donations = val.donations || {};
         currentData.expenses = val.expenses || {};
-        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
-        document.getElementById('atName').innerText = val.config?.atName || "Assistant";
+        document.getElementById('tName').innerText = val.config?.tName || "Treasurer Name";
+        document.getElementById('atName').innerText = val.config?.atName || "Assistant Name";
         loadView();
     });
 
@@ -290,7 +287,7 @@
         const subOcc = document.getElementById('eSubOcc').value;
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
-        if(!date || !name || isNaN(amt)) return alert("Details bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Sari details dhyan se bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
@@ -309,7 +306,7 @@
     }
 
     function editMember(elId, field) {
-        let v = prompt("Name Likhein:", document.getElementById(elId).innerText);
+        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
         if(v) dbRef.ref('config/' + field).set(v);
     }
 
