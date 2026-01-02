@@ -17,19 +17,16 @@
         .committee-info { display: flex; justify-content: space-around; background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #d1d9ff; font-size: 14px; }
         .name-val { color: var(--navy); font-weight: bold; border-bottom: 2px solid var(--gold); }
         
-        /* Dashboard Styling */
+        /* Form & Stats */
         .entry-section { background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         input, select { padding: 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 15px; width: 100%; box-sizing: border-box; }
         .btn-save { background: var(--navy); color: white; border: none; border-radius: 10px; padding: 16px; font-size: 16px; font-weight: bold; cursor: pointer; }
-
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .card { padding: 15px; border-radius: 12px; color: white; text-align: center; }
         .bg-blue { background: #1a237e; } .bg-red { background: #b71c1c; } .bg-green { background: #1b5e20; }
         
         .year-filter-box { background: var(--navy); color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
-        .year-filter-box select { width: auto; background: white; color: black; margin-left: 10px; padding: 5px 15px; }
-
         .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; }
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; cursor: pointer; color: #777; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
@@ -43,39 +40,33 @@
 
         .btn-print-report { background: #455a64; color: white; border: none; border-radius: 8px; padding: 12px; width: 100%; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
         .row-btns { display: flex; gap: 5px; }
-        .row-btns button { border: none; padding: 6px 10px; border-radius: 6px; color: white; cursor: pointer; font-size: 11px; }
+        .row-btns button { border: none; padding: 6px 10px; border-radius: 4px; color: white; cursor: pointer; font-size: 11px; }
         .btn-r { background: var(--gold); } .btn-e { background: #2196f3; } .btn-x { background: #f44336; }
 
-        /* PRINT DESIGN - EXACT MIDDLE */
+        /* PRINT SETTINGS */
         #printArea { display: none; }
+
         @media print {
-            body { background: white; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
+            body { background: white !important; margin: 0; padding: 0; }
             .no-print { display: none !important; }
-            #printArea { 
-                display: flex !important; 
-                align-items: center; 
-                justify-content: center; 
-                width: 100%; 
-                height: 100%; 
+            #printArea { display: flex !important; align-items: center; justify-content: center; width: 100%; min-height: 100vh; }
+            
+            /* Receipt Specific Design */
+            .receipt-card {
+                border: 15px double #d4af37; padding: 50px; width: 550px; 
+                background: #fff url('https://i.imgur.com/Gj8lT7E.png') no-repeat center;
+                background-size: 80%; position: relative; text-align: center;
             }
+            .receipt-header h2 { margin: 0; color: #0d1b3e; font-size: 34px; letter-spacing: 2px; font-weight: 800; }
+            .receipt-header h3 { margin: 10px 0; color: #0d1b3e; font-size: 22px; }
+            .receipt-header p { margin: 5px 0; font-size: 13px; font-weight: bold; }
+            .receipt-body { text-align: left; margin-top: 40px; line-height: 2.5; font-size: 19px; border-top: 2px solid #b8860b; padding-top: 25px; }
+            .amt-box { background: #f0f0f0; padding: 5px 20px; border: 1px solid #ccc; font-weight: bold; font-size: 22px; color: #0d1b3e; }
+            .digital-sig { font-family: 'Dancing Script', cursive; font-size: 30px; color: #1a237e; margin: 0; }
+
+            /* Report Specific Design (When not printing receipt) */
+            .report-print { width: 100%; padding: 20px; text-align: center; }
         }
-        
-        .receipt-card {
-            border: 5px solid #d4af37; 
-            padding: 40px; 
-            width: 550px; 
-            background: #fff url('https://i.imgur.com/Gj8lT7E.png') no-repeat center;
-            background-size: 80%;
-            position: relative; 
-            font-family: 'Inter', sans-serif;
-            box-shadow: none;
-            text-align: center;
-        }
-        .receipt-header h2 { margin: 0; color: var(--navy); font-size: 32px; letter-spacing: 2px; }
-        .receipt-header p { margin: 5px 0; font-size: 13px; font-weight: bold; color: #333; }
-        .receipt-body { text-align: left; margin-top: 30px; line-height: 2.2; font-size: 17px; border-top: 2px solid var(--gold); padding-top: 20px; }
-        .digital-sig { font-family: 'Dancing Script', cursive; font-size: 26px; color: #1a237e; margin: 0; }
-        .amt-box { background: #f9f9f9; padding: 10px 20px; border: 1px solid #ddd; display: inline-block; font-weight: bold; color: var(--navy); font-size: 20px; }
     </style>
 </head>
 <body id="mainBody">
@@ -84,8 +75,8 @@
     <h1>TREASURE BOOKS</h1>
     
     <div class="committee-info">
-        <div>TREASURER: <span id="tName" class="name-val">Loading...</span> <button onclick="editMember('tName', 'tName')" class="no-print" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
-        <div>ASSISTANT: <span id="atName" class="name-val">Loading...</span> <button onclick="editMember('atName', 'atName')" class="no-print" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
+        <div>TREASURER: <span id="tName" class="name-val">Loading...</span> <button onclick="editMember('tName', 'tName')" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
+        <div>ASSISTANT: <span id="atName" class="name-val">Loading...</span> <button onclick="editMember('atName', 'atName')" style="border:none; background:none; color:red; cursor:pointer; font-size:10px;">Edit</button></div>
     </div>
 
     <div class="year-filter-box">
@@ -173,10 +164,7 @@
 
     function getSahidYear(year) {
         let count = parseInt(year) - 1974;
-        let suffix = "th";
-        if (count % 10 == 1 && count != 11) suffix = "st";
-        else if (count % 10 == 2 && count != 12) suffix = "nd";
-        else if (count % 10 == 3 && count != 13) suffix = "rd";
+        let suffix = (count % 10 == 1 && count != 11) ? "st" : (count % 10 == 2 && count != 12) ? "nd" : (count % 10 == 3 && count != 13) ? "rd" : "th";
         return `${count}${suffix} SAHID DIWAS ${year}`;
     }
 
@@ -184,13 +172,11 @@
         const item = currentData.donations[key];
         const trName = document.getElementById('tName').innerText;
         const sahidTitle = getSahidYear(item.year);
-        const pArea = document.getElementById('printArea');
-        
-        pArea.innerHTML = `
+        document.getElementById('printArea').innerHTML = `
             <div class="receipt-card">
                 <div class="receipt-header">
                     <h2>TREASURE BOOKS</h2>
-                    <h3 style="margin:10px 0; color:var(--navy); font-size:22px;">${sahidTitle}</h3>
+                    <h3>${sahidTitle}</h3>
                     <p>B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                 </div>
                 <div class="receipt-body">
@@ -199,7 +185,7 @@
                     <p><b>Occupation:</b> ${item.occ}</p>
                     <p><b>Amount Received:</b> <span class="amt-box">₹ ${item.amt.toLocaleString()}</span></p>
                 </div>
-                <div style="margin-top:50px; display:flex; justify-content:space-between; align-items:flex-end;">
+                <div style="margin-top:70px; display:flex; justify-content:space-between; align-items:flex-end;">
                     <div style="text-align:center;"><p style="margin:0;">__________________</p><p style="font-size:12px;">Donor Signature</p></div>
                     <div style="text-align:center;">
                         <p class="digital-sig">${trName}</p>
@@ -207,40 +193,26 @@
                         <p style="font-size:12px;">Treasurer Signature</p>
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
         window.print();
     }
 
     function printReport() {
-        const pArea = document.getElementById('printArea');
-        const selectedYear = document.getElementById('yearFilter').value;
-        const sahidTitle = getSahidYear(selectedYear);
+        const year = document.getElementById('yearFilter').value;
         const tableHtml = document.getElementById(activeTab).innerHTML;
-        
-        pArea.innerHTML = `
-            <div style="width:100%; text-align:center; padding:20px; font-family:sans-serif; border:1px solid #ddd; background:#fff;">
-                <h1 style="margin:0;">TREASURE BOOKS</h1>
-                <h2 style="margin:5px 0; color:var(--navy);">${sahidTitle}</h2>
-                <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
+        document.getElementById('printArea').innerHTML = `
+            <div class="report-print">
+                <h1>TREASURE BOOKS</h1>
+                <h2>${getSahidYear(year)} - FINANCIAL REPORT</h2>
                 <hr>
-                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:bold;">
-                    <span>IN: ₹${document.getElementById('sumIn').innerText}</span>
-                    <span>OUT: ₹${document.getElementById('sumOut').innerText}</span>
-                    <span>BAL: ₹${document.getElementById('sumBal').innerText}</span>
+                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:bold; border:1px solid #000; padding:10px;">
+                    <span>COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
+                    <span>EXPENSE: ₹${document.getElementById('sumOut').innerText}</span>
+                    <span>BALANCE: ₹${document.getElementById('sumBal').innerText}</span>
                 </div>
                 ${tableHtml}
-            </div>
-        `;
+            </div>`;
         window.print();
-    }
-
-    function switchTab(id) {
-        activeTab = id;
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
     }
 
     dbRef.ref().on('value', (snap) => {
@@ -257,7 +229,6 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0;
         bDon.innerHTML = ''; bExp.innerHTML = '';
-
         for(let k in currentData.donations) {
             let x = currentData.donations[k];
             if(x.year == fYear) {
@@ -271,8 +242,7 @@
             let x = currentData.expenses[k];
             if(x.year == fYear) {
                 bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td>
-                <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">E</button>
-                <button class="btn-x" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
+                <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">E</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
                 tOut += x.amt;
             }
         }
@@ -289,17 +259,21 @@
         const subOcc = document.getElementById('eSubOcc').value;
         const amt = parseFloat(document.getElementById('eAmount').value);
         const editKey = document.getElementById('editKey').value;
-
         if(!date || !name || isNaN(amt)) return alert("Details bharein!");
-
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + subOcc + ")" : occ;
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         const path = (type === 'donation') ? 'donations/' : 'expenses/';
-
         if(editKey === "") dbRef.ref(path).push(entry);
         else { dbRef.ref(path + editKey).set(entry); document.getElementById('editKey').value = ""; }
-        
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
+    }
+
+    function switchTab(id) {
+        activeTab = id;
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById(id === 'viewDon' ? 'tabDon' : 'tabExp').classList.add('active');
     }
 
     function buildYearDropdown() {
@@ -319,22 +293,13 @@
         document.getElementById('eName').value = item.name;
         document.getElementById('eAmount').value = item.amt;
         document.getElementById('editKey').value = key;
-        handleFormChange();
-        window.scrollTo(0,0);
+        handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) {
-        if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove();
-    }
-
-    function editMember(elId, field) {
-        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
-        if(v) dbRef.ref('config/' + field).set(v);
-    }
-
+    function deleteEntry(type, key) { if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
+    function editMember(elId, field) { let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
-
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
 </body>
