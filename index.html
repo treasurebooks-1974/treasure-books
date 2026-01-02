@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Final</title>
+    <title>TREASURE BOOKS - Master Pro Final Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -38,6 +38,9 @@
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
 
+        .tab-content { display: none; overflow-x: auto; }
+        .tab-content.active { display: block; }
+
         table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
         th { background: var(--navy); color: white; font-size: 11px; text-transform: uppercase; }
@@ -51,20 +54,20 @@
 
         /* --- PROFESSIONAL A4 PRINT CSS --- */
         @media print {
-            @page { size: A4; margin: 15mm; }
+            @page { size: A4; margin: 10mm; }
             body { background: white !important; margin: 0; padding: 0; color: #000; }
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
             
             .print-header-main { text-align: center; border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .print-header-main h1 { margin: 0; font-size: 28px; font-weight: 800; text-transform: uppercase; color: #000 !important; }
-            .print-header-main h2 { margin: 5px 0; font-size: 24px; font-weight: 700; color: #000 !important; }
+            .print-header-main h1 { margin: 0; font-size: 28px; font-weight: 900; text-transform: uppercase; color: #000 !important; }
+            .print-header-main h2 { margin: 5px 0; font-size: 24px; font-weight: 800; color: #000 !important; }
             .print-header-main p { margin: 2px 0; font-size: 14px; font-weight: bold; color: #000 !important; }
-            .print-header-main h3 { margin: 10px 0; font-size: 22px; font-weight: 800; text-decoration: underline; color: #000 !important; }
+            .print-header-main h3 { margin: 10px 0; font-size: 22px; font-weight: 900; text-decoration: underline; color: #000 !important; border: 3px solid #000; display: inline-block; padding: 5px 25px; }
 
             .report-summary-box { 
                 display: flex; justify-content: space-around; border: 3px solid #000; 
-                padding: 12px; margin-bottom: 25px; font-weight: 800; font-size: 16px; 
+                padding: 12px; margin-bottom: 25px; font-weight: 900; font-size: 16px; 
             }
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             .print-table th { 
@@ -74,8 +77,8 @@
             }
             .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
 
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 90vh; }
-            .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
+            .receipt-card { border: 12px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
         }
     </style>
 </head>
@@ -183,7 +186,7 @@
     function printReport() {
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
-        const reportType = activeTab === 'viewDon' ? "DONATIONS REPORT" : "EXPENSES REPORT";
+        const reportTitle = activeTab === 'viewDon' ? "DONATIONS REPORT" : "EXPENSES REPORT";
         
         let tableRows = "";
         if(activeTab === 'viewDon') {
@@ -207,7 +210,7 @@
                 <h1>${getSahidYear(year)}</h1>
                 <h2>B.B.C MARANG BUNDU</h2>
                 <p>Reg.no :- MBJ8750-13 Of 2022</p>
-                <h3>${reportType}</h3>
+                <h3>${reportTitle}</h3>
             </div>
             <div class="report-summary-box">
                 <span>TOTAL COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
@@ -230,13 +233,13 @@
                         <h1>${getSahidYear(item.year)}</h1>
                         <h2>B.B.C MARANG BUNDU</h2>
                         <p>Reg.no :- MBJ8750-13 Of 2022</p>
-                        <h3 style="margin-top:15px; border: 2px solid #000; display:inline-block; padding:5px 20px;">DONATION RECEIPT</h3>
+                        <h3>DONATION RECEIPT</h3>
                     </div>
                     <div style="text-align:left; margin-top:35px; line-height:2.5; font-size:19px; border-top:2.5px solid #000; padding-top:20px;">
-                        <p>Receipt Date: <b>${item.date}</b></p>
+                        <p>Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
-                        <p>Amount: <span style="background:#eee; padding:5px 15px; font-weight:800; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
+                        <p>Amount Received: <span style="background:#eee; padding:5px 15px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
                     </div>
                 </div>
             </div>`;
@@ -313,7 +316,7 @@
     }
 
     function editMember(elId, field) {
-        let v = prompt("Name Likhein:", document.getElementById(elId).innerText);
+        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
         if(v) dbRef.ref('config/' + field).set(v);
     }
 
@@ -327,7 +330,7 @@
         handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
