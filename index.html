@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Final Edition</title>
+    <title>TREASURE BOOKS - Master Pro Signature Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700;800&display=swap');
         
         :root { --navy: #0d1b3e; --gold: #b8860b; --bg: #f4f7f6; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
         .container { max-width: 900px; margin: auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--navy); padding: 25px; }
         
         h1 { color: var(--navy); text-align: center; font-size: 26px; text-transform: uppercase; margin: 10px 0; letter-spacing: 2px; }
-        .committee-info { display: flex; justify-content: space-around; background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #d1d9ff; font-size: 14px; }
+        .committee-info { display: flex; justify-content: space-around; background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #d1d9ff; font-size: 13px; }
         .name-val { color: var(--navy); font-weight: 700; border-bottom: 2px solid var(--gold); }
         .edit-link { color: #d32f2f; cursor: pointer; background: none; border: none; font-size: 11px; text-decoration: underline; margin-left: 5px; }
 
@@ -49,7 +49,6 @@
         .row-btns button { border: none; padding: 7px 10px; border-radius: 6px; color: white; font-size: 11px; cursor: pointer; font-weight: 600; }
         .btn-r { background: var(--gold); } .btn-e { background: #2196f3; } .btn-x { background: #f44336; }
 
-        #eSubOcc { display: none; }
         #printArea { display: none; }
 
         /* --- PROFESSIONAL A4 PRINT CSS --- */
@@ -77,8 +76,11 @@
             }
             .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
 
+            /* Professional Receipt Design with Signature */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
-            .receipt-card { border: 12px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; }
+            .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; position: relative; }
+            .digital-signature { font-family: 'Dancing Script', cursive; font-size: 32px; color: #1a237e !important; margin-bottom: -15px; }
+            .sig-line { border-top: 2px solid #000; width: 200px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; }
         }
     </style>
 </head>
@@ -190,15 +192,15 @@
         
         let tableRows = "";
         if(activeTab === 'viewDon') {
-            for(let k in currentData.donations) {
-                let x = currentData.donations[k];
+            const sortedDonations = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+            sortedDonations.forEach(([k, x]) => {
                 if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
-            }
+            });
         } else {
-            for(let k in currentData.expenses) {
-                let x = currentData.expenses[k];
+            const sortedExpenses = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+            sortedExpenses.forEach(([k, x]) => {
                 if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
-            }
+            });
         }
 
         const tableHeader = activeTab === 'viewDon' ? 
@@ -226,6 +228,7 @@
 
     function printReceipt(key) {
         const item = currentData.donations[key];
+        const trName = document.getElementById('tName').innerText;
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-centered">
                 <div class="receipt-card">
@@ -239,7 +242,13 @@
                         <p>Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
-                        <p>Amount Received: <span style="background:#eee; padding:5px 15px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
+                        <p>Amount Received: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
+                    </div>
+                    <div style="margin-top:60px; text-align:right; width: 100%;">
+                        <div style="display: inline-block; text-align: center;">
+                            <p class="digital-signature">${trName}</p>
+                            <div class="sig-line">Treasurer Signature</div>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -267,23 +276,26 @@
         const fYear = document.getElementById('yearFilter').value;
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
-        for(let k in currentData.donations) {
-            let x = currentData.donations[k];
+        
+        const sortedDonations = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+        sortedDonations.forEach(([k, x]) => {
             if(x.year == fYear) {
                 bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">Bill</button>
                 <button class="btn-e" onclick="triggerEdit('don', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('don', '${k}')">Del</button></td></tr>`;
                 tIn += x.amt;
             }
-        }
-        for(let k in currentData.expenses) {
-            let x = currentData.expenses[k];
+        });
+
+        const sortedExpenses = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+        sortedExpenses.forEach(([k, x]) => {
             if(x.year == fYear) {
                 bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">Del</button></td></tr>`;
                 tOut += x.amt;
             }
-        }
+        });
+        
         document.getElementById('sumIn').innerText = tIn.toLocaleString();
         document.getElementById('sumOut').innerText = tOut.toLocaleString();
         document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
