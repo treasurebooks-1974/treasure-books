@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Professional Edition</title>
+    <title>TREASURE BOOKS - Master Pro Final</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -32,11 +32,18 @@
         .year-filter-box { background: var(--navy); color: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-weight: 600; }
         .year-filter-box select { width: auto; background: #fff; border: none; padding: 6px 15px; margin-left: 10px; border-radius: 5px; }
 
-        .btn-print-main { background: #455a64; color: white; border: none; border-radius: 10px; padding: 14px; width: 100%; font-weight: 700; margin-bottom: 20px; cursor: pointer; }
+        /* Print Button Layout */
+        .print-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-p { flex: 1; color: white; border: none; border-radius: 10px; padding: 14px; font-weight: 700; cursor: pointer; }
+        .btn-p-don { background: #2e7d32; }
+        .btn-p-exp { background: #c62828; }
 
         .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; background: #f9f9f9; }
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
+
+        .tab-content { display: none; overflow-x: auto; }
+        .tab-content.active { display: block; }
 
         table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
@@ -73,11 +80,11 @@
             }
             .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
 
-            /* Professional Receipt Design with Shorthand Signature */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
             .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; position: relative; }
-            .shorthand-signature { font-family: 'Dancing Script', cursive; font-size: 34px; color: #000 !important; margin-bottom: -10px; display: block; }
+            .shorthand-signature { font-family: 'Dancing Script', cursive; font-size: 34px; color: #000 !important; margin-bottom: -5px; display: block; }
             .sig-line { border-top: 2px solid #000; width: 220px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; text-transform: uppercase; }
+            .sig-date { font-size: 12px; margin-top: 3px; font-weight: bold; }
         }
     </style>
 </head>
@@ -136,7 +143,10 @@
         <div class="card bg-green">Balance<br><b id="sumBal">0</b></div>
     </div>
 
-    <button class="btn-print-main" onclick="printReport()">⎙ GENERATE PROFESSIONAL REPORT</button>
+    <div class="print-actions">
+        <button class="btn-p btn-p-don" onclick="printSeparateReport('don')">⎙ PRINT DONATION SHEET</button>
+        <button class="btn-p btn-p-exp" onclick="printSeparateReport('exp')">⎙ PRINT EXPENDITURE SHEET</button>
+    </div>
 
     <div class="tabs">
         <div class="tab active" id="tabDon" onclick="switchTab('viewDon')">DONATIONS</div>
@@ -182,25 +192,25 @@
         return `${count}${suffix} SAHID DIWAS ${year}`;
     }
 
-    function printReport() {
+    function printSeparateReport(type) {
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
-        const reportTitle = activeTab === 'viewDon' ? "DONATIONS REPORT" : "EXPENSES REPORT";
+        const reportTitle = type === 'don' ? "DONATIONS REPORT" : "EXPENSES REPORT";
         
         let tableRows = "";
-        if(activeTab === 'viewDon') {
-            const sortedDonations = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-            sortedDonations.forEach(([k, x]) => {
+        if(type === 'don') {
+            const sorted = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+            sorted.forEach(([k, x]) => {
                 if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
             });
         } else {
-            const sortedExpenses = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-            sortedExpenses.forEach(([k, x]) => {
+            const sorted = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+            sorted.forEach(([k, x]) => {
                 if(x.year == year) tableRows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
             });
         }
 
-        const tableHeader = activeTab === 'viewDon' ? 
+        const tableHeader = type === 'don' ? 
             '<tr><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amt (₹)</th></tr>' : 
             '<tr><th>Date</th><th>Expenditure Detail</th><th>Amt (₹)</th></tr>';
 
@@ -210,11 +220,6 @@
                 <h2>B.B.C MARANG BUNDU</h2>
                 <p>Reg.no :- MBJ8750-13 Of 2022</p>
                 <h3>${reportTitle}</h3>
-            </div>
-            <div class="report-summary-box">
-                <span>TOTAL COLLECTION: ₹${document.getElementById('sumIn').innerText}</span>
-                <span>TOTAL EXPENSE: ₹${document.getElementById('sumOut').innerText}</span>
-                <span>BALANCE: ₹${document.getElementById('sumBal').innerText}</span>
             </div>
             <table class="print-table">
                 <thead>${tableHeader}</thead>
@@ -245,6 +250,7 @@
                         <div style="display: inline-block; text-align: center;">
                             <span class="shorthand-signature">${trName}</span>
                             <div class="sig-line">Treasurer Signature</div>
+                            <div class="sig-date">Date: ${item.date}</div>
                         </div>
                     </div>
                 </div>
@@ -252,6 +258,7 @@
         window.print();
     }
 
+    // Dashboard navigation & Firebase sync
     function switchTab(id) {
         activeTab = id;
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -274,8 +281,8 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
         
-        const sortedDonations = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedDonations.forEach(([k, x]) => {
+        const sortedDon = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+        sortedDon.forEach(([k, x]) => {
             if(x.year == fYear) {
                 bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td class="row-btns no-print"><button class="btn-r" onclick="printReceipt('${k}')">Bill</button>
@@ -284,8 +291,8 @@
             }
         });
 
-        const sortedExpenses = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedExpenses.forEach(([k, x]) => {
+        const sortedExp = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
+        sortedExp.forEach(([k, x]) => {
             if(x.year == fYear) {
                 bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td>
                 <td class="row-btns no-print"><button class="btn-e" onclick="triggerEdit('exp', '${k}')">Edit</button><button class="btn-x" onclick="deleteEntry('exp', '${k}')">Del</button></td></tr>`;
@@ -325,7 +332,7 @@
     }
 
     function editMember(elId, field) {
-        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
+        let v = prompt("Name Likhein:", document.getElementById(elId).innerText);
         if(v) dbRef.ref('config/' + field).set(v);
     }
 
@@ -339,7 +346,7 @@
         handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Delete karna chahte hain?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type==='don'?'donations/':'expenses/') + key).remove(); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     function handleFormChange() { document.getElementById('eOcc').style.display = (document.getElementById('eType').value === 'donation') ? "inline-block" : "none"; checkExService(); }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
