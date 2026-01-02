@@ -34,20 +34,21 @@
             backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);
         }
         
-        .year-control-pro {
-            position: absolute; top: 30px; right: 45px;
-            background: var(--navy); color: var(--premium-gold); padding: 8px 18px;
-            border-radius: 14px; font-size: 11px; font-weight: 900;
-            border: 1px solid var(--gold); display: flex; align-items: center; gap: 8px;
+        /* Chhota & Professional Year Control - Positioned inside Asst. Treasurer Area */
+        .year-control-mini {
+            position: absolute; top: -15px; right: 0;
+            background: var(--navy); color: var(--premium-gold); padding: 3px 10px;
+            border-radius: 8px; font-size: 10px; font-weight: 900;
+            border: 1px solid var(--gold); display: flex; align-items: center; gap: 4px;
         }
-        .year-control-pro select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; }
+        .year-control-mini select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; font-size: 10px; }
 
         .brand-header { text-align: center; margin-bottom: 45px; }
         .brand-header h1 { color: var(--navy); font-size: 46px; font-weight: 900; letter-spacing: 8px; margin: 0; text-transform: uppercase; }
         .brand-header h2 { color: var(--gold); font-size: 26px; font-weight: 800; margin: 12px 0; letter-spacing: 4px; }
         .brand-header p { color: #444; font-size: 13px; font-weight: 700; margin: 0; background: rgba(184, 134, 11, 0.1); display: inline-block; padding: 6px 25px; border-radius: 30px; border: 1.5px solid rgba(184, 134, 11, 0.2); }
 
-        .executive-info { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .executive-info { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; position: relative; }
         .exec-card { background: linear-gradient(145deg, #ffffff, #f1f5f9); padding: 20px; border-radius: 22px; border: 1.5px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .exec-card span { font-size: 10px; color: #64748b; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
         .exec-card b { font-size: 18px; color: var(--navy); border-bottom: 3px solid var(--gold); padding: 0 10px; }
@@ -93,7 +94,7 @@
             .print-header { text-align: center; border-bottom: 3.5px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
             .print-header h1 { font-size: 38px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 5px; }
             .print-header h2 { font-size: 22px; margin: 10px 0; color: #000; }
-            .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
+            .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1.5px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; }
 
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -119,8 +120,8 @@
             
             /* Natural Small Calligraphy Signature */
             .official-signature { 
-                font-family: 'Birthstone', cursive; font-size: 48px; color: #0c154a !important; 
-                display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); 
+                font-family: 'Birthstone', cursive; font-size: 44px; color: #0c154a !important; 
+                display: block; margin-bottom: -12px; transform: rotate(-3deg) translateX(-10px); 
                 font-weight: 400; letter-spacing: 0.5px;
             }
             .sig-line { border-top: 2.5px solid #000; width: 220px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
@@ -131,7 +132,7 @@
 
 <div class="premium-frame no-print">
     <div class="container">
-        <div class="year-control-pro">🔍 VIEW YEAR <select id="yearFilter" onchange="loadView()"></select></div>
+        
         <div class="brand-header">
             <h1>TREASURE BOOK</h1>
             <h2>B.B.C MARANG BUNDU</h2>
@@ -139,8 +140,20 @@
         </div>
         
         <div class="executive-info">
-            <div class="exec-card"><span>Principal Treasurer</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button></div>
-            <div class="exec-card"><span>Asst Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button></div>
+            <div class="exec-card">
+                <span>Principal Treasurer</span>
+                <b id="tName">...</b>
+                <button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button>
+            </div>
+            
+            <div class="exec-card" style="position: relative;">
+                <div class="year-control-mini">
+                    YEAR <select id="yearFilter" onchange="loadView()"></select>
+                </div>
+                <span>Assistant Treasurer</span>
+                <b id="atName">...</b>
+                <button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button>
+            </div>
         </div>
 
         <div class="entry-section">
@@ -162,7 +175,7 @@
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
                     <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
                     <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="Railway">Railway</option>
-                    <option value="Govt Service">Govt Service</option><option value="Private Service">Private Service</option>
+                    <option value="Govt Service">Govt Service</option>
                 </select>
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
