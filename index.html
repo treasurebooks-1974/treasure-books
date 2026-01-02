@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS - Master Pro Signature Edition</title>
+    <title>TREASURE BOOKS - Professional Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -37,9 +37,6 @@
         .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; background: #f9f9f9; }
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; color: #888; font-size: 13px; }
         .tab.active { color: var(--navy); border-bottom: 4px solid var(--gold); background: #fff; }
-
-        .tab-content { display: none; overflow-x: auto; }
-        .tab-content.active { display: block; }
 
         table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #f0f0f0; text-align: left; }
@@ -76,11 +73,11 @@
             }
             .print-table td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; font-weight: 600; color: #000 !important; }
 
-            /* Professional Receipt Design with Signature */
+            /* Professional Receipt Design with Shorthand Signature */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 95vh; }
             .receipt-card { border: 10px double #000; padding: 50px; width: 580px; text-align: center; background: #fff; position: relative; }
-            .digital-signature { font-family: 'Dancing Script', cursive; font-size: 32px; color: #1a237e !important; margin-bottom: -15px; }
-            .sig-line { border-top: 2px solid #000; width: 200px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; }
+            .shorthand-signature { font-family: 'Dancing Script', cursive; font-size: 34px; color: #000 !important; margin-bottom: -10px; display: block; }
+            .sig-line { border-top: 2px solid #000; width: 220px; margin: auto; padding-top: 5px; font-weight: bold; font-size: 13px; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -239,14 +236,14 @@
                         <h3>DONATION RECEIPT</h3>
                     </div>
                     <div style="text-align:left; margin-top:35px; line-height:2.5; font-size:19px; border-top:2.5px solid #000; padding-top:20px;">
-                        <p>Date: <b>${item.date}</b></p>
+                        <p>Receipt Date: <b>${item.date}</b></p>
                         <p>Donor Name: <b>${item.name}</b></p>
                         <p>Occupation: <b>${item.occ}</b></p>
                         <p>Amount Received: <span style="background:#eee; padding:5px 15px; font-weight:900; border:1px solid #000;">₹ ${item.amt.toLocaleString()}</span></p>
                     </div>
                     <div style="margin-top:60px; text-align:right; width: 100%;">
                         <div style="display: inline-block; text-align: center;">
-                            <p class="digital-signature">${trName}</p>
+                            <span class="shorthand-signature">${trName}</span>
                             <div class="sig-line">Treasurer Signature</div>
                         </div>
                     </div>
