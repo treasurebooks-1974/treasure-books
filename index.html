@@ -50,30 +50,30 @@
         #eSubOcc { display: none; }
         #printArea { display: none; }
 
-        /* PRINT STYLING - PHOTO THEME & MIDDLE ALIGN */
+        /* PRINT STYLING - NO BACKGROUND, CENTER ALIGN */
         @media print {
             body { background: white !important; margin: 0; padding: 0; }
             .no-print { display: none !important; }
             #printArea { display: flex !important; align-items: center; justify-content: center; width: 100%; min-height: 100vh; }
             
             .receipt-card {
-                border: 12px double #b8860b; padding: 50px; width: 580px; 
-                background: #fff url('https://i.imgur.com/Gj8lT7E.png') no-repeat center;
-                background-size: 85%; position: relative; text-align: center;
+                border: 8px double #b8860b; padding: 40px; width: 550px; 
+                background: #fff; position: relative; text-align: center;
             }
-            .r-header h1 { font-size: 38px; color: #0d1b3e; margin: 0; letter-spacing: 2px; }
-            .r-header h3 { margin: 10px 0; color: #0d1b3e; font-size: 22px; }
-            .r-body { text-align: left; margin-top: 30px; line-height: 2.5; font-size: 19px; border-top: 2px solid #b8860b; padding-top: 20px; }
-            .r-amt { background: #eee; padding: 5px 20px; font-weight: bold; border-radius: 5px; font-size: 22px; }
-            .r-sig-row { margin-top: 70px; display: flex; justify-content: space-between; align-items: flex-end; }
-            .digital-sig { font-family: 'Dancing Script', cursive; font-size: 32px; color: #1a237e; margin: 0; }
+            .r-header h1 { font-size: 34px; color: #0d1b3e; margin: 0; letter-spacing: 2px; }
+            .r-header h3 { margin: 8px 0; color: #0d1b3e; font-size: 20px; }
+            .r-header p { margin: 4px 0; font-size: 12px; font-weight: bold; }
+            .r-body { text-align: left; margin-top: 25px; line-height: 2.2; font-size: 18px; border-top: 2px solid #b8860b; padding-top: 15px; }
+            .r-amt { background: #f0f0f0; padding: 5px 15px; font-weight: bold; border-radius: 4px; font-size: 20px; }
+            .r-sig-row { margin-top: 60px; display: flex; justify-content: flex-end; align-items: flex-end; }
+            .digital-sig { font-family: 'Dancing Script', cursive; font-size: 30px; color: #1a237e; margin: 0; }
         }
     </style>
 </head>
 <body id="mainBody">
 
 <div class="container no-print">
-    <h1>TREASURE BOOKS <span style="color:var(--gold)">PRO</span></h1>
+    <h1>TREASURE BOOKS</h1>
     
     <div class="committee-info">
         <div>TR: <span id="tName" class="name-val">...</span> <button class="edit-link" onclick="editMember('tName', 'tName')">Edit</button></div>
@@ -188,10 +188,10 @@
                     <p>Amount Received: <span class="r-amt">₹ ${item.amt.toLocaleString()}</span></p>
                 </div>
                 <div class="r-sig-row">
-                    <div style="text-align:center;"><p>_________________</p><p style="font-size:12px;">Donor Sign</p></div>
                     <div style="text-align:center;">
                         <p class="digital-sig">${trName}</p>
-                        <p>_________________</p><p style="font-size:12px;">Treasurer Sign</p>
+                        <p style="margin:0;">__________________</p>
+                        <p style="font-size:12px; font-weight:bold;">Treasurer Signature</p>
                     </div>
                 </div>
             </div>`;
@@ -202,10 +202,14 @@
         const pArea = document.getElementById('printArea');
         const year = document.getElementById('yearFilter').value;
         const tableHtml = document.getElementById(activeTab).innerHTML;
+        const reportName = activeTab === 'viewDon' ? "DONATION REPORT" : "EXPENSES REPORT";
+        
         pArea.innerHTML = `
             <div style="text-align:center; padding:20px; font-family:sans-serif; background:#fff; width:100%;">
                 <h1>TREASURE BOOKS</h1>
-                <h2>${getSahidYear(year)} - REPORT</h2>
+                <h2 style="margin:5px 0; color:var(--navy);">${getSahidYear(year)}</h2>
+                <h3 style="margin:5px 0; text-decoration:underline;">${reportName}</h3>
+                <p style="font-size:12px;">B.B.C MARANG BUNDU, Reg.no :- MBJ8750-13 Of 2022.</p>
                 <hr>
                 <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:bold; border:1px solid #000; padding:10px;">
                     <span>IN: ₹${document.getElementById('sumIn').innerText}</span>
@@ -217,7 +221,6 @@
         window.print();
     }
 
-    // Baki dashboard functions
     function switchTab(id) {
         activeTab = id;
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -288,7 +291,7 @@
     }
 
     function editMember(elId, field) {
-        let v = prompt("New Name:", document.getElementById(elId).innerText);
+        let v = prompt("Official Name Likhein:", document.getElementById(elId).innerText);
         if(v) dbRef.ref('config/' + field).set(v);
     }
 
