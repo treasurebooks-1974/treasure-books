@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Ultra Premium Pro Max</title>
+    <title>TREASURE BOOK - Master Pro Max</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=Inter:wght@300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=Inter:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
         
         :root { 
             --navy: #060b26; --gold: #b8860b; --premium-gold: #ffd700; 
@@ -20,6 +20,7 @@
             display: flex; align-items: center; justify-content: center;
         }
 
+        /* Motion Glow Border Dashboard */
         .premium-frame {
             position: relative; width: 100%; max-width: 1100px; padding: 4px;
             background: linear-gradient(90deg, #060b26, #b8860b, #00d2ff, #b8860b, #060b26);
@@ -34,7 +35,6 @@
             backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);
         }
         
-        /* Dashboard Top-Right Tiny Year Control */
         .year-control-nano {
             position: absolute; top: 20px; right: 30px;
             background: var(--navy); color: var(--premium-gold); padding: 2px 8px;
@@ -79,13 +79,14 @@
         .act-btn { border: none; padding: 10px 15px; border-radius: 12px; color: white; cursor: pointer; font-size: 11px; font-weight: 800; margin-right: 6px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
-        /* --- PRINT STYLES --- */
+        /* --- 🚀 ULTRA-PREMIUM PRO MAX PRINT STYLES --- */
         #printArea { display: none; }
         @media print {
             @page { size: A4 portrait; margin: 0mm; }
             body { background: white !important; margin: 0; padding: 0; }
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
+
             .ledger-container { padding: 40px; min-height: 297mm; position: relative; background: radial-gradient(circle at center, rgba(184, 134, 11, 0.03) 0%, transparent 100%); }
             .ledger-border { border: 4px double #000; padding: 20px; min-height: 260mm; position: relative; }
             .print-header { text-align: center; border-bottom: 3.5px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
@@ -93,19 +94,49 @@
             .print-header h2 { font-size: 22px; margin: 10px 0; }
             .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; }
+
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             .print-table th { background: #000 !important; color: #fff !important; padding: 12px; border: 1.5px solid #000; -webkit-print-color-adjust: exact; }
             .print-table td { border: 1.5px solid #000; padding: 10px; font-size: 14px; font-weight: 700; }
+
             .total-summary-print { margin-top: 40px; border: 4px solid #000; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 16px; font-weight: 900; background: #f1f1f1 !important; -webkit-print-color-adjust: exact; }
             .summary-item { border-right: 2px solid #000; }
             .summary-item:last-child { border-right: none; }
+
             .signature-row { margin-top: 80px; display: flex; justify-content: space-between; padding: 0 40px; }
             .sig-box-p { text-align: center; width: 220px; border-top: 2.5px solid #000; padding-top: 8px; font-weight: 900; }
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; }
-            .receipt-card { border: 12px double #000; padding: 60px; width: 620px; text-align: center; background: #fff; position: relative; }
-            .thank-you-note { margin-top: 25px; padding: 15px; border-top: 1px dashed #000; font-style: italic; font-size: 14px; line-height: 1.5; }
-            .official-signature { font-family: 'Birthstone', cursive; font-size: 44px; color: #0c154a !important; display: block; margin-bottom: -12px; transform: rotate(-3deg) translateX(-10px); font-weight: 400; }
-            .sig-line { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 15px; text-align: center; }
+
+            /* 📜 MAJESTIC RECEIPT DESIGN 📜 */
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; background: #f9f9f9; }
+            .receipt-card { 
+                border: 2px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden;
+            }
+            .receipt-inner-border {
+                border: 6px double #000; padding: 40px; position: relative;
+            }
+            /* Diagonal Watermark */
+            .watermark {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg);
+                font-size: 80px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0;
+            }
+            .receipt-title-box {
+                border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; letter-spacing: 2px; margin-top: 15px; font-size: 20px; text-transform: uppercase; background: #fff; position: relative; z-index: 1;
+            }
+            .data-row {
+                display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 18px; font-size: 19px; border-bottom: 1px dotted #888; padding-bottom: 5px;
+            }
+            .data-label { font-weight: 800; min-width: 160px; color: #222; text-transform: uppercase; font-size: 15px; }
+            .data-value { font-weight: 700; color: #000; flex-grow: 1; }
+
+            .amt-box-royal {
+                background: #333 !important; color: #fff !important; padding: 15px 30px; font-size: 28px; font-weight: 900; border-radius: 4px; display: inline-block; margin-top: 10px; -webkit-print-color-adjust: exact;
+            }
+            .thank-you-msg {
+                margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; line-height: 1.6; text-align: center;
+            }
+            
+            .official-signature { font-family: 'Birthstone', cursive; font-size: 55px; color: #1a237e !important; display: block; margin-bottom: -18px; transform: rotate(-4deg); font-weight: 400; padding-right: 20px; }
+            .sig-line-royal { border-top: 2.5px solid #000; width: 220px; margin-left: auto; padding-top: 8px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         }
     </style>
 </head>
@@ -113,11 +144,7 @@
 
 <div class="premium-frame no-print">
     <div class="container">
-        
-        <div class="year-control-nano">
-            YR <select id="yearFilter" onchange="loadView()"></select>
-        </div>
-
+        <div class="year-control-nano">YR <select id="yearFilter" onchange="loadView()"></select></div>
         <div class="brand-header">
             <h1>TREASURE BOOK</h1>
             <h2>B.B.C MARANG BUNDU</h2>
@@ -125,17 +152,8 @@
         </div>
         
         <div class="executive-info">
-            <div class="exec-card">
-                <span>Principal Treasurer</span>
-                <b id="tName">...</b>
-                <button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button>
-            </div>
-            
-            <div class="exec-card">
-                <span>Assistant Treasurer</span>
-                <b id="atName">...</b>
-                <button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button>
-            </div>
+            <div class="exec-card"><span>Principal Treasurer</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button></div>
+            <div class="exec-card"><span>Asst Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button></div>
         </div>
 
         <div class="entry-section">
@@ -157,7 +175,7 @@
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
                     <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="Doctor">Doctor</option>
                     <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="Railway">Railway</option>
-                    <option value="Govt Service">Govt Service</option><option value="Private Service">Private Service</option>
+                    <option value="Govt Service">Govt Service</option>
                 </select>
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
@@ -228,7 +246,7 @@
 
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), editKey = document.getElementById('editKey').value, occ = document.getElementById('eOcc').value;
-        if(!date || !name || isNaN(amt)) return alert("Bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Data bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + document.getElementById('eSubOcc').value + ")" : (occ || "-");
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
@@ -248,16 +266,36 @@
         document.getElementById('printArea').innerHTML = `
         <div class="receipt-centered">
             <div class="receipt-card">
-                <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label" style="font-size:18px;">DONATION RECEIPT</span></div>
-                <div style="text-align:left; margin-top:30px; line-height:2.6; font-size:22px; border-top:2px solid #000; padding-top:25px;"><p>Receipt Date: <b>${item.date}</b></p><p>Donor Name: <b>${item.name}</b></p><p>Occupation: <b>${item.occ}</b></p><p>Amount Received: <span style="background:#f2f2f2; padding:5px 15px; font-weight:900; border:2px solid #000;">₹ ${item.amt.toLocaleString()} /-</span></p></div>
-                <div class="thank-you-note">
-                    "Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."
-                    <br><strong style="display:block; margin-top:10px; font-size: 16px;">🙏 Thank You for Your Generous Contribution!</strong>
-                </div>
-                <div style="text-align:right; margin-top:50px;">
-                    <span class="official-signature">${trName}</span>
-                    <div class="sig-line">Principal Treasurer</div>
-                    <div style="font-size:12px; font-weight:900; margin-top:6px; margin-right: 50px;">DATE: ${item.date}</div>
+                <div class="receipt-inner-border">
+                    <div class="watermark">OFFICIAL RECEIPT</div>
+                    <div class="print-header">
+                        <h1>${getSahidYear(item.year)}</h1>
+                        <h2>B.B.C MARANG BUNDU</h2>
+                        <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
+                        <br>
+                        <div class="receipt-title-box">DONATION RECEIPT</div>
+                    </div>
+                    
+                    <div style="margin-top:40px; position:relative; z-index:1;">
+                        <div class="data-row"><span class="data-label">Receipt Date:</span><span class="data-value">${item.date}</span></div>
+                        <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
+                        <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
+                        <div style="text-align:center; margin-top:20px;">
+                            <div class="data-label" style="margin-bottom:10px;">Amount Received</div>
+                            <div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div>
+                        </div>
+                    </div>
+
+                    <div class="thank-you-msg">
+                        "Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."
+                        <br><strong style="display:block; margin-top:10px; font-size: 17px; color:#000;">🙏 Thank You for Your Generous Contribution!</strong>
+                    </div>
+
+                    <div style="text-align:right; margin-top:50px; position:relative; z-index:1;">
+                        <span class="official-signature">${trName}</span>
+                        <div class="sig-line-royal">Principal Treasurer</div>
+                        <div style="font-size:11px; font-weight:900; margin-top:6px; margin-right: 50px; color:#444;">DATE: ${item.date}</div>
+                    </div>
                 </div>
             </div>
         </div>`;
