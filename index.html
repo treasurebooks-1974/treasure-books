@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS | OFFICIAL</title>
+    <title>TREASURE BOOKS | ELITE EDITION</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -13,11 +13,14 @@
             --bg: #030712;
             --card: rgba(17, 24, 39, 0.7);
             --gold: #eab308;
+            --green: #10b981;
+            --red: #ef4444;
             --border: rgba(255, 255, 255, 0.08);
         }
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: #f3f4f6; padding: 15px; }
 
+        /* --- YEAR ICON --- */
         .year-floating {
             position: fixed; top: 15px; right: 15px; z-index: 1000;
             background: var(--gold); padding: 5px 12px; border-radius: 50px; display: flex; align-items: center;
@@ -31,49 +34,50 @@
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; }
-        .stat-val { font-size: 24px; font-weight: 900; margin-top: 5px; font-family: 'Cinzel'; color: var(--gold); }
+        .stat-val { font-size: 24px; font-weight: 900; margin-top: 5px; font-family: 'Cinzel'; }
 
         .form-hub { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 30px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
         input, select { background: #0b0f1a; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 10px; outline: none; }
         
         .btn-center { display: flex; justify-content: center; margin-top: 20px; }
-        .btn-save { background: var(--gold); color: #000; border: none; padding: 12px 60px; border-radius: 10px; font-weight: 900; cursor: pointer; }
+        .btn-save { background: var(--gold); color: #000; border: none; padding: 12px 60px; border-radius: 10px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .btn-save:hover { opacity: 0.8; transform: scale(1.02); }
 
         .ledger-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .ledger-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; font-size: 11px; color: #6b7280; text-transform: uppercase; padding: 8px; }
+        th { text-align: left; font-size: 11px; color: #6b7280; text-transform: uppercase; padding: 8px; border-bottom: 1px solid var(--border); }
         td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; }
         .btn-act { padding: 4px 8px; border-radius: 5px; cursor: pointer; border: 1px solid #444; background: #1f2937; color: #fff; font-size: 11px; margin-right: 4px; }
 
-        /* --- PRINT AREA --- */
+        /* --- PRINT STYLES --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; }
             
-            .receipt-frame { border: 2px solid #000; padding: 4px; width: 720px; margin: 20px auto; position: relative; overflow: hidden; background: white; }
-            .receipt-inner { border: 4px double #000; padding: 35px; position: relative; z-index: 2; background: transparent; }
+            .print-page { position: relative; width: 100%; min-height: 100vh; padding: 40px; box-sizing: border-box; overflow: hidden; }
             
-            /* Enhanced Watermark */
-            .watermark-container { 
-                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); 
-                width: 120%; text-align: center; pointer-events: none; z-index: 0; opacity: 0.06;
+            /* Professional Diagonal Watermark - Single instance per page */
+            .print-watermark {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+                width: 150%; text-align: center; pointer-events: none; z-index: 0; opacity: 0.06;
+                font-size: 35px; font-weight: 900; line-height: 1.4; color: #000; text-transform: uppercase;
             }
-            .watermark-text { font-size: 32px; font-weight: 900; color: #000; line-height: 1.5; text-transform: uppercase; white-space: nowrap; }
 
-            .receipt-top-header { text-align: center; margin-bottom: 15px; }
-            .event-heading { font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px; }
+            .print-content { position: relative; z-index: 1; }
+            .print-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px; }
+            .print-title { font-size: 28px; font-weight: 900; margin: 0; }
             
-            .receipt-mid-head { text-align: center; margin-top: 10px; }
-            .org-name-bill { font-family: 'Cinzel', serif; font-size: 22px; margin: 5px 0; }
-            .label-bill { background: #000 !important; color: white !important; -webkit-print-color-adjust: exact; padding: 4px 30px; font-weight: bold; margin: 15px 0; display: inline-block; font-size: 18px; }
-            
-            .data-row { font-size: 19px; margin: 18px 0; border-bottom: 1px dotted #444; padding-bottom: 6px; position: relative; }
-            .amt-box-bill { border: 3px solid #000; padding: 12px 45px; font-size: 32px; font-weight: 900; margin: 25px 0; display: inline-block; background: #f8f8f8 !important; -webkit-print-color-adjust: exact; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; text-align: right; margin-top: 30px; }
-            .thanks-note { margin-top: 35px; font-size: 14px; border-top: 1px solid #000; padding-top: 15px; font-style: italic; color: #222; }
+            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            .report-table th, .report-table td { border: 1px solid #000; padding: 12px; text-align: left; }
+            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
+
+            /* Receipt Specific */
+            .receipt-box { border: 4px double #000; padding: 30px; margin: 20px auto; width: 90%; }
+            .amt-grand { border: 2px solid #000; padding: 10px 40px; font-size: 30px; font-weight: 900; margin: 20px 0; display: inline-block; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 36px; text-align: right; margin-top: 30px; }
         }
     </style>
 </head>
@@ -92,9 +96,9 @@
     </header>
 
     <div class="stats-grid">
-        <div class="stat-card">COLLECTION<div class="stat-val" id="sumIn">₹ 0</div></div>
-        <div class="stat-card">EXPENSE<div class="stat-val" id="sumOut" style="color:#ef4444">₹ 0</div></div>
-        <div class="stat-card">BALANCE<div class="stat-val" id="sumBal">₹ 0</div></div>
+        <div class="stat-card" style="border-top: 4px solid var(--green);">COLLECTION<div class="stat-val" id="sumIn" style="color: var(--green);">₹ 0</div></div>
+        <div class="stat-card" style="border-top: 4px solid var(--red);">EXPENSE<div class="stat-val" id="sumOut" style="color: var(--red);">₹ 0</div></div>
+        <div class="stat-card" style="border-top: 4px solid var(--gold);">BALANCE<div class="stat-val" id="sumBal" style="color: var(--gold);">₹ 0</div></div>
     </div>
 
     <div class="form-hub">
@@ -109,8 +113,20 @@
     </div>
 
     <div class="ledger-row">
-        <div class="ledger-box"><h3>🟢 Collections</h3><table id="tblDon"><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table></div>
-        <div class="ledger-box"><h3>🔴 Expenses</h3><table id="tblExp"><thead><tr><th>Date</th><th>Particulars</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table></div>
+        <div class="ledger-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; color:var(--green)">🟢 Collections</h3>
+                <button class="btn-act" onclick="printFullReport('don')">Print List</button>
+            </div>
+            <table id="tblDon"><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        </div>
+        <div class="ledger-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; color:var(--red)">🔴 Expenses</h3>
+                <button class="btn-act" onclick="printFullReport('exp')">Print List</button>
+            </div>
+            <table id="tblExp"><thead><tr><th>Date</th><th>Particulars</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        </div>
     </div>
 </div>
 
@@ -159,7 +175,7 @@
         Object.entries(localData.donations).forEach(([k, x]) => {
             if(x.year == fYear) {
                 tIn += Number(x.amt);
-                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td>
+                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td style="color:var(--green); font-weight:bold">₹${Number(x.amt).toLocaleString()}</td>
                 <td><button class="btn-act" onclick="printReceipt('${k}')">Bill</button>
                 <button class="btn-act" onclick="editMode('donation','${k}')">✏️</button></td></tr>`;
             }
@@ -167,7 +183,7 @@
         Object.entries(localData.expenses).forEach(([k, x]) => {
             if(x.year == fYear) {
                 tOut += Number(x.amt);
-                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td>
+                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td style="color:var(--red); font-weight:bold">₹${Number(x.amt).toLocaleString()}</td>
                 <td><button class="btn-act" onclick="editMode('expense','${k}')">✏️</button></td></tr>`;
             }
         });
@@ -180,7 +196,7 @@
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value,
               name = document.getElementById('eName').value, amt = document.getElementById('eAmount').value,
               key = document.getElementById('editKey').value;
-        if(!date || !name || !amt) return alert("Details bharein!");
+        if(!date || !name || !amt) return alert("Pura data bharein!");
         const entry = { date, name, amt: Number(amt), year: new Date(date).getFullYear() };
         const path = type === 'donation' ? 'donations/' : 'expenses/';
         if(key) db.ref(path + key).set(entry).then(() => resetForm());
@@ -196,44 +212,80 @@
         document.getElementById('editKey').value = key; document.getElementById('saveBtn').innerText = 'UPDATE NOW';
     }
 
+    // --- SHARED WATERMARK HTML ---
+    const watermarkHTML = `
+        <div class="print-watermark">
+            52<sup>nd</sup> Sahid Diwas 2026<br>
+            B.B.C MARANG BUNDU<br>
+            Reg.no :- MBJ8750 - 13 Of 2022<br><br>
+            52<sup>nd</sup> Sahid Diwas 2026<br>
+            B.B.C MARANG BUNDU
+        </div>`;
+
     function printReceipt(key) {
         const item = localData.donations[key];
         const words = inWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div class="receipt-frame">
-                <div class="watermark-container">
-                    <div class="watermark-text">52<sup>nd</sup> Sahid Diwas 2026</div>
-                    <div class="watermark-text">B.B.C MARANG BUNDU</div>
-                    <div class="watermark-text">Reg.no :- MBJ8750 - 13 Of 2022</div>
-                    <div class="watermark-text" style="margin-top:20px">52<sup>nd</sup> Sahid Diwas 2026</div>
-                    <div class="watermark-text">B.B.C MARANG BUNDU</div>
-                </div>
-
-                <div class="receipt-inner">
-                    <div class="receipt-top-header">
-                        <div class="event-heading">52<sup>nd</sup> Sahid Diwas 2026</div>
-                    </div>
-                    
-                    <div class="receipt-mid-head">
-                        <div class="org-name-bill">B.B.C MARANG BUNDU</div>
-                        <div style="font-size:11px; letter-spacing:1px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
-                        <div class="label-bill">DONATION RECEIPT</div>
-                    </div>
-
-                    <div class="data-row" style="margin-top:30px;"><b>Receipt No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span></div>
-                    <div class="data-row">Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b></div>
-                    <div class="data-row">Sum of Rupees: <b style="text-transform:capitalize">${words}</b></div>
-                    <div class="data-row">Towards: <b>52nd Sahid Diwas Celebration Donation</b></div>
-                    
-                    <center><div class="amt-box-bill">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    
-                    <div class="thanks-note">
-                        <b>THANK YOU:</b> Sahid Diwas Samaroh ko safal banane mein aapke yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi.
-                    </div>
-
-                    <div class="sig-area">
+            <div class="print-page">
+                ${watermarkHTML}
+                <div class="print-content">
+                    <div class="receipt-box">
+                        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">
+                            <div style="font-size:24px; font-weight:900;">52<sup>nd</sup> Sahid Diwas 2026</div>
+                            <div style="font-family:Cinzel; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</div>
+                            <small>Reg.no :- MBJ8750 - 13 Of 2022</small><br>
+                            <div style="background:#000; color:#fff; display:inline-block; padding:5px 25px; margin-top:10px; font-weight:bold;">DONATION RECEIPT</div>
+                        </div>
+                        <div style="margin-top:30px; font-size:18px; line-height:2">
+                            <b>No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span><br>
+                            Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b><br>
+                            The sum of Rupees: <b style="text-transform:capitalize">${words}</b><br>
+                            Towards: <b>52nd Sahid Diwas Celebration Donation</b>
+                        </div>
+                        <center><div class="amt-grand">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                        <div style="font-style:italic; font-size:13px; margin-top:20px;">"Thank you for your generous contribution towards our social cause."</div>
                         <div class="sig-font">Principal Treasurer</div>
-                        <div style="font-size:12px; font-weight:bold; font-family:sans-serif; margin-right:10px;">Authorized Signature</div>
+                    </div>
+                </div>
+            </div>`;
+        window.print();
+    }
+
+    function printFullReport(type) {
+        const fYear = document.getElementById('yearFilter').value;
+        const data = type === 'don' ? localData.donations : localData.expenses;
+        let rows = "";
+        let total = 0;
+        
+        Object.values(data).filter(x => x.year == fYear).forEach(x => {
+            total += Number(x.amt);
+            rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`;
+        });
+
+        document.getElementById('printArea').innerHTML = `
+            <div class="print-page">
+                ${watermarkHTML}
+                <div class="print-content">
+                    <div class="print-header">
+                        <div class="print-title">B.B.C MARANG BUNDU</div>
+                        <div>52<sup>nd</sup> Sahid Diwas 2026 | Session: ${fYear}</div>
+                        <div style="margin-top:10px; font-weight:bold; text-decoration:underline;">
+                            OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER
+                        </div>
+                    </div>
+                    <table class="report-table">
+                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                        <tbody>
+                            ${rows}
+                            <tr style="background:#f9f9f9; font-weight:bold;">
+                                <td colspan="2" style="text-align:right">TOTAL:</td>
+                                <td>₹ ${total.toLocaleString()}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top:50px; display:flex; justify-content:space-between">
+                        <div>Report Generated: ${new Date().toLocaleDateString()}</div>
+                        <div style="text-align:center; border-top:1px solid #000; width:200px; padding-top:5px">Principal Treasurer</div>
                     </div>
                 </div>
             </div>`;
