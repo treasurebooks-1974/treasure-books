@@ -20,7 +20,6 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Dashboard Glow Frame */
         .premium-frame {
             position: relative; width: 100%; max-width: 1100px; padding: 4px;
             background: linear-gradient(90deg, #060b26, #b8860b, #00d2ff, #b8860b, #060b26);
@@ -94,10 +93,10 @@
             .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; text-transform: uppercase;}
 
-            /* Balanced & Smaller Ledger Watermark */
+            /* Balanced Professional Ledger Watermark */
             .ledger-watermark {
-                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-                font-size: 32px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; width: 100%; text-align: center; letter-spacing: 1px;
+                position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+                font-size: 38px; color: rgba(0,0,0,0.035); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; width: 100%; text-align: center; letter-spacing: 2px;
             }
 
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 2; background: transparent; }
@@ -115,14 +114,14 @@
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; background: #fff; }
             .receipt-card { border: 2px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden; }
             .receipt-inner-border { border: 6px double #000; padding: 40px; position: relative; }
-            .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 55px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; }
+            .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 60px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; }
             .receipt-title-box { border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; letter-spacing: 2px; margin-top: 15px; font-size: 20px; text-transform: uppercase; background: #fff; position: relative; z-index: 1; }
             .data-row { display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 18px; font-size: 19px; border-bottom: 1px dotted #888; padding-bottom: 5px; position: relative; z-index: 1; }
             .data-label { font-weight: 800; min-width: 160px; color: #222; text-transform: uppercase; font-size: 15px; }
             .data-value { font-weight: 700; color: #000; flex-grow: 1; }
             .amt-box-royal { background: #333 !important; color: #fff !important; padding: 15px 30px; font-size: 28px; font-weight: 900; border-radius: 4px; display: inline-block; margin-top: 10px; -webkit-print-color-adjust: exact; }
             .thank-you-msg { margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; line-height: 1.6; text-align: center; }
-            .official-signature { font-family: 'Birthstone', cursive; font-size: 50px; color: #0c154a !important; display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); font-weight: 400; padding-right: 20px; }
+            .official-signature { font-family: 'Birthstone', cursive; font-size: 52px; color: #0c154a !important; display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); font-weight: 400; padding-right: 20px; }
             .sig-line-royal { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
         }
     </style>
@@ -153,7 +152,6 @@
                     <option value="">Occupation</option>
                     <option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option>
                     <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="BSF">BSF</option>
-                    <option value="CRPF">CRPF</option><option value="CISF">CISF</option><option value="Railway">Railway</option>
                     <option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option>
                     <option value="Social Worker">Social Worker</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
                 </select>
