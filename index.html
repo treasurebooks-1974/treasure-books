@@ -85,6 +85,7 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
 
+            /* LEDGER PRINTOUT DESIGN */
             .ledger-container { padding: 40px; min-height: 297mm; position: relative; background: white; overflow: hidden; }
             .ledger-border { border: 4px double #000; padding: 20px; min-height: 265mm; position: relative; z-index: 1; }
             .print-header { text-align: center; border-bottom: 3.5px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
@@ -92,11 +93,7 @@
             .print-header h2 { font-size: 22px; margin: 10px 0; }
             .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; text-transform: uppercase;}
-
-            .ledger-watermark {
-                position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-                font-size: 38px; color: rgba(0,0,0,0.035); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; width: 100%; text-align: center; letter-spacing: 2px;
-            }
+            .ledger-watermark { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 32px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; width: 100%; text-align: center; letter-spacing: 1px; }
 
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 2; background: transparent; }
             .print-table th { background: #000 !important; color: #fff !important; padding: 12px; border: 1.5px solid #000; font-size: 14px; -webkit-print-color-adjust: exact; }
@@ -109,19 +106,25 @@
             .signature-row { margin-top: 80px; display: flex; justify-content: space-between; padding: 0 40px; }
             .sig-box-p { text-align: center; width: 220px; border-top: 2.5px solid #000; padding-top: 8px; font-weight: 900; }
 
-            /* 📜 RECEIPT DESIGN 📜 */
+            /* 📜 MAJESTIC RECEIPT DESIGN 📜 */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; background: #fff; }
-            .receipt-card { border: 2px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden; }
-            .receipt-inner-border { border: 6px double #000; padding: 40px; position: relative; }
-            .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 60px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; }
+            .receipt-card { border: 2px solid #000; padding: 5px; width: 720px; background: #fff; position: relative; overflow: hidden; }
+            .receipt-inner-border { border: 6px double #000; padding: 45px; position: relative; }
+            .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 55px; color: rgba(0,0,0,0.03); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; }
             .receipt-title-box { border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; letter-spacing: 2px; margin-top: 15px; font-size: 20px; text-transform: uppercase; background: #fff; position: relative; z-index: 1; }
-            .data-row { display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 18px; font-size: 19px; border-bottom: 1px dotted #888; padding-bottom: 5px; position: relative; z-index: 1; }
-            .data-label { font-weight: 800; min-width: 160px; color: #222; text-transform: uppercase; font-size: 15px; }
-            .data-value { font-weight: 700; color: #000; flex-grow: 1; }
-            .amt-box-royal { background: #333 !important; color: #fff !important; padding: 15px 30px; font-size: 28px; font-weight: 900; border-radius: 4px; display: inline-block; margin-top: 10px; -webkit-print-color-adjust: exact; }
+            
+            .data-row { display: flex; justify-content: flex-start; align-items: baseline; margin-bottom: 15px; font-size: 19px; border-bottom: 1px dotted #888; padding-bottom: 5px; position: relative; z-index: 1; }
+            .data-label { font-weight: 800; min-width: 170px; color: #222; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+            .data-value { font-weight: 700; color: #000; flex-grow: 1; font-family: 'Playfair Display', serif; }
+
+            .amt-box-royal { background: #222 !important; color: #fff !important; padding: 12px 25px; font-size: 28px; font-weight: 900; border-radius: 4px; display: inline-block; -webkit-print-color-adjust: exact; }
+            .amt-words-row { margin-top: 20px; padding: 10px; background: #f9f9f9 !important; border-left: 5px solid #000; font-weight: 700; text-transform: capitalize; -webkit-print-color-adjust: exact; }
+            
             .thank-you-msg { margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; line-height: 1.6; text-align: center; }
-            .official-signature { font-family: 'Birthstone', cursive; font-size: 52px; color: #0c154a !important; display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); font-weight: 400; padding-right: 20px; }
-            .sig-line-royal { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
+            
+            .official-signature { font-family: 'Birthstone', cursive; font-size: 48px; color: #0c154a !important; display: block; margin-bottom: -15px; transform: rotate(-3deg) translateX(-10px); font-weight: 400; padding-right: 20px; }
+            .sig-line-royal { border-top: 2.5px solid #000; width: 220px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 13px; text-align: center; text-transform: uppercase; }
+            .footer-info { position: absolute; bottom: 10px; left: 45px; font-size: 9px; font-weight: bold; color: #777; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -203,11 +206,25 @@
     const dbRef = firebase.database();
     let currentData = { donations: {}, expenses: {} };
 
-    // Function to format Date to DD-MM-YYYY
     function formatDate(dateStr) {
         if(!dateStr) return "-";
         const [y, m, d] = dateStr.split('-');
         return `${d}-${m}-${y}`;
+    }
+
+    function numberToWords(num) {
+        const a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+        const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+        if ((num = num.toString()).length > 9) return 'Overflow';
+        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!n) return '';
+        let str = '';
+        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only' : '';
+        return str.trim();
     }
 
     function getSahidYear(year) {
@@ -230,30 +247,16 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
         let slDon = 1, slExp = 1;
-        
         const sortedDon = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedDon.forEach(([k, x]) => { 
-            if(x.year == fYear) { 
-                bDon.innerHTML += `<tr><td>${slDon++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`; 
-                tIn += x.amt; 
-            } 
-        });
-        
+        sortedDon.forEach(([k, x]) => { if(x.year == fYear) { bDon.innerHTML += `<tr><td>${slDon++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`; tIn += x.amt; } });
         const sortedExp = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedExp.forEach(([k, x]) => { 
-            if(x.year == fYear) { 
-                bExp.innerHTML += `<tr><td>${slExp++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`; 
-                tOut += x.amt; 
-            } 
-        });
-        document.getElementById('sumIn').innerText = tIn.toLocaleString(); 
-        document.getElementById('sumOut').innerText = tOut.toLocaleString(); 
-        document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
+        sortedExp.forEach(([k, x]) => { if(x.year == fYear) { bExp.innerHTML += `<tr><td>${slExp++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`; tOut += x.amt; } });
+        document.getElementById('sumIn').innerText = tIn.toLocaleString(); document.getElementById('sumOut').innerText = tOut.toLocaleString(); document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
     }
 
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), editKey = document.getElementById('editKey').value, occ = document.getElementById('eOcc').value;
-        if(!date || !name || isNaN(amt)) return alert("Saari jankari bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Data bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + document.getElementById('eSubOcc').value + ")" : (occ || "-");
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
@@ -263,21 +266,14 @@
 
     function editEntry(type, key) {
         const item = type === 'don' ? currentData.donations[key] : currentData.expenses[key];
-        document.getElementById('eType').value = type === 'don' ? 'donation' : 'expense'; 
-        document.getElementById('eDate').value = item.date; 
-        document.getElementById('eName').value = item.name; 
-        document.getElementById('eAmount').value = item.amt; 
-        document.getElementById('editKey').value = key; 
-        document.getElementById('editType').value = type === 'don' ? 'donation' : 'expense'; 
-        document.getElementById('saveBtn').innerText = "UPDATE NOW"; 
-        handleFormChange(); 
-        window.scrollTo(0,0);
+        document.getElementById('eType').value = type === 'don' ? 'donation' : 'expense'; document.getElementById('eDate').value = item.date; document.getElementById('eName').value = item.name; document.getElementById('eAmount').value = item.amt; document.getElementById('editKey').value = key; document.getElementById('editType').value = type === 'don' ? 'donation' : 'expense'; document.getElementById('saveBtn').innerText = "UPDATE NOW"; handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Kya aap ise delete karna chahte hain?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Permanently Delete?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
 
     function printReceipt(key) {
         const item = currentData.donations[key], trName = document.getElementById('tName').innerText;
+        const amtInWords = numberToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
         <div class="receipt-centered">
             <div class="receipt-card">
@@ -290,12 +286,17 @@
                         <br>
                         <div class="receipt-title-box">DONATION RECEIPT</div>
                     </div>
-                    <div style="margin-top:40px; position:relative; z-index:1;">
+                    <div style="margin-top:35px; position:relative; z-index:1;">
                         <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
                         <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
                         <div class="data-row"><span class="data-label">Receipt Date:</span><span class="data-value">${formatDate(item.date)}</span></div>
-                        <div style="text-align:center; margin-top:20px;">
-                            <div class="data-label" style="margin-bottom:10px;">Amount Received</div>
+                        
+                        <div class="amt-words-row">
+                            <span style="font-size:11px; text-transform:uppercase; color:#555;">Amount in words:</span><br>
+                            <span style="font-size:16px;">Rupees ${amtInWords}</span>
+                        </div>
+
+                        <div style="text-align:center; margin-top:25px;">
                             <div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div>
                         </div>
                     </div>
@@ -303,11 +304,12 @@
                         "Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."
                         <br><strong style="display:block; margin-top:10px; font-size: 17px; color:#000;">🙏 Thank You for Your Generous Contribution!</strong>
                     </div>
-                    <div style="text-align:right; margin-top:50px; position:relative; z-index:1;">
+                    <div style="text-align:right; margin-top:40px; position:relative; z-index:1;">
                         <span class="official-signature">${trName}</span>
                         <div class="sig-line-royal">Principal Treasurer</div>
                         <div style="font-size:11px; font-weight:900; margin-top:6px; margin-right: 50px; color:#444;">DATE: ${formatDate(item.date)}</div>
                     </div>
+                    <div class="footer-info">TXN ID: BBC-${item.year}-${Math.floor(1000 + Math.random() * 9000)}</div>
                 </div>
             </div>
         </div>`;
@@ -318,24 +320,17 @@
         const year = document.getElementById('yearFilter').value;
         const reportTitle = type === 'don' ? "OFFICIAL CREDIT LEDGER (DONATIONS)" : "OFFICIAL DEBIT LEDGER (EXPENDITURE)";
         const watermarkText = type === 'don' ? "OFFICIAL DONATIONS REPORT" : "OFFICIAL EXPENDITURE REPORT";
-        
         let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { 
             rows += `<tr><td>${sl++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; 
         });
-        
-        const sumIn = document.getElementById('sumIn').innerText;
-        const sumOut = document.getElementById('sumOut').innerText;
-        const sumBal = document.getElementById('sumBal').innerText;
-
+        const sumIn = document.getElementById('sumIn').innerText; const sumOut = document.getElementById('sumOut').innerText; const sumBal = document.getElementById('sumBal').innerText;
         document.getElementById('printArea').innerHTML = `
         <div class="ledger-container">
             <div class="ledger-border">
                 <div class="ledger-watermark">${watermarkText}</div>
                 <div class="print-header">
-                    <h1>${getSahidYear(year)}</h1>
-                    <h2>B.B.C MARANG BUNDU</h2>
-                    <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p>
                     <span class="print-type-label">${reportTitle}</span>
                 </div>
                 <table class="print-table">
