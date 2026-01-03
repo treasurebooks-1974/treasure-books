@@ -20,7 +20,6 @@
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: #f3f4f6; padding: 15px; }
 
-        /* --- YEAR ICON --- */
         .year-floating {
             position: fixed; top: 15px; right: 15px; z-index: 1000;
             background: var(--gold); padding: 5px 12px; border-radius: 50px; display: flex; align-items: center;
@@ -42,7 +41,6 @@
         
         .btn-center { display: flex; justify-content: center; margin-top: 20px; }
         .btn-save { background: var(--gold); color: #000; border: none; padding: 12px 60px; border-radius: 10px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .btn-save:hover { opacity: 0.8; transform: scale(1.02); }
 
         .ledger-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .ledger-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; }
@@ -57,27 +55,28 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; }
             
-            .print-page { position: relative; width: 100%; min-height: 100vh; padding: 40px; box-sizing: border-box; overflow: hidden; }
+            .print-page { position: relative; width: 100%; min-height: 290mm; padding: 25mm 15mm; box-sizing: border-box; overflow: hidden; background: white; }
             
-            /* Professional Diagonal Watermark - Single instance per page */
+            /* SINGLE LARGE CENTERED WATERMARK */
             .print-watermark {
                 position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-                width: 150%; text-align: center; pointer-events: none; z-index: 0; opacity: 0.06;
-                font-size: 35px; font-weight: 900; line-height: 1.4; color: #000; text-transform: uppercase;
+                width: 130%; text-align: center; pointer-events: none; z-index: 0; opacity: 0.05;
+                font-size: 45px; font-weight: 900; line-height: 1.2; color: #000; text-transform: uppercase;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
             }
 
             .print-content { position: relative; z-index: 1; }
             .print-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px; }
-            .print-title { font-size: 28px; font-weight: 900; margin: 0; }
             
             .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             .report-table th, .report-table td { border: 1px solid #000; padding: 12px; text-align: left; }
             .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
 
-            /* Receipt Specific */
-            .receipt-box { border: 4px double #000; padding: 30px; margin: 20px auto; width: 90%; }
-            .amt-grand { border: 2px solid #000; padding: 10px 40px; font-size: 30px; font-weight: 900; margin: 20px 0; display: inline-block; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 36px; text-align: right; margin-top: 30px; }
+            /* Receipt Design */
+            .receipt-box { border: 4px double #000; padding: 35px; margin: 20px auto; width: 95%; position: relative; }
+            .amt-grand { border: 3px solid #000; padding: 12px 45px; font-size: 32px; font-weight: 900; margin: 25px 0; display: inline-block; background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; text-align: right; margin-top: 35px; }
+            .thanks-msg { margin-top: 40px; font-size: 14px; border-top: 1px solid #000; padding-top: 15px; font-style: italic; text-align: center; }
         }
     </style>
 </head>
@@ -114,14 +113,14 @@
 
     <div class="ledger-row">
         <div class="ledger-box">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h3 style="margin:0; color:var(--green)">🟢 Collections</h3>
                 <button class="btn-act" onclick="printFullReport('don')">Print List</button>
             </div>
             <table id="tblDon"><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
         </div>
         <div class="ledger-box">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h3 style="margin:0; color:var(--red)">🔴 Expenses</h3>
                 <button class="btn-act" onclick="printFullReport('exp')">Print List</button>
             </div>
@@ -133,6 +132,7 @@
 <div id="printArea"></div>
 
 <script>
+    // Utility: Number to Words
     function inWords(num) {
         var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
         var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
@@ -196,14 +196,17 @@
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value,
               name = document.getElementById('eName').value, amt = document.getElementById('eAmount').value,
               key = document.getElementById('editKey').value;
-        if(!date || !name || !amt) return alert("Pura data bharein!");
+        if(!date || !name || !amt) return alert("Details bharein!");
         const entry = { date, name, amt: Number(amt), year: new Date(date).getFullYear() };
         const path = type === 'donation' ? 'donations/' : 'expenses/';
         if(key) db.ref(path + key).set(entry).then(() => resetForm());
         else db.ref(path).push(entry).then(() => resetForm());
     }
 
-    function resetForm() { document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = 'SAVE DATA'; }
+    function resetForm() { 
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = ''; 
+        document.getElementById('editKey').value = ''; document.getElementById('saveBtn').innerText = 'SAVE DATA'; 
+    }
 
     function editMode(type, key) {
         const data = type === 'donation' ? localData.donations[key] : localData.expenses[key];
@@ -212,14 +215,12 @@
         document.getElementById('editKey').value = key; document.getElementById('saveBtn').innerText = 'UPDATE NOW';
     }
 
-    // --- SHARED WATERMARK HTML ---
+    // --- SHARED SINGLE WATERMARK ---
     const watermarkHTML = `
         <div class="print-watermark">
-            52<sup>nd</sup> Sahid Diwas 2026<br>
-            B.B.C MARANG BUNDU<br>
-            Reg.no :- MBJ8750 - 13 Of 2022<br><br>
-            52<sup>nd</sup> Sahid Diwas 2026<br>
-            B.B.C MARANG BUNDU
+            <div>52<sup>nd</sup> SAHID DIWAS 2026</div>
+            <div style="font-size:38px;">B.B.C MARANG BUNDU</div>
+            <div style="font-size:24px;">REG.NO :- MBJ8750 - 13 OF 2022</div>
         </div>`;
 
     function printReceipt(key) {
@@ -230,21 +231,26 @@
                 ${watermarkHTML}
                 <div class="print-content">
                     <div class="receipt-box">
-                        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">
-                            <div style="font-size:24px; font-weight:900;">52<sup>nd</sup> Sahid Diwas 2026</div>
-                            <div style="font-family:Cinzel; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</div>
+                        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:15px; margin-bottom:20px;">
+                            <div style="font-size:26px; font-weight:900; letter-spacing:2px;">52<sup>nd</sup> Sahid Diwas 2026</div>
+                            <div style="font-family:Cinzel; font-size:22px; margin:8px 0;">B.B.C MARANG BUNDU</div>
                             <small>Reg.no :- MBJ8750 - 13 Of 2022</small><br>
-                            <div style="background:#000; color:#fff; display:inline-block; padding:5px 25px; margin-top:10px; font-weight:bold;">DONATION RECEIPT</div>
+                            <div style="background:#000; color:#fff; display:inline-block; padding:6px 30px; margin-top:15px; font-weight:bold; letter-spacing:1px;">DONATION RECEIPT</div>
                         </div>
-                        <div style="margin-top:30px; font-size:18px; line-height:2">
-                            <b>No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span><br>
-                            Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b><br>
-                            The sum of Rupees: <b style="text-transform:capitalize">${words}</b><br>
-                            Towards: <b>52nd Sahid Diwas Celebration Donation</b>
+                        <div style="margin-top:35px; font-size:19px; line-height:2.2">
+                            <b>Receipt No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span><br>
+                            Received with thanks from Mr./Ms. <b style="font-size:24px; text-decoration:underline;">${item.name}</b><br>
+                            A sum of Rupees <b style="text-transform:capitalize;">${words}</b><br>
+                            Towards <b>52nd Sahid Diwas Celebration Donation</b>.
                         </div>
                         <center><div class="amt-grand">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                        <div style="font-style:italic; font-size:13px; margin-top:20px;">"Thank you for your generous contribution towards our social cause."</div>
+                        
+                        <div class="thanks-msg">
+                            "Sahid Diwas Samaroh ko safal banane mein aapke yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Thank you!"
+                        </div>
+
                         <div class="sig-font">Principal Treasurer</div>
+                        <div style="text-align:right; font-size:11px; font-weight:bold; margin-right:15px;">Authorized Signature</div>
                     </div>
                 </div>
             </div>`;
@@ -254,9 +260,7 @@
     function printFullReport(type) {
         const fYear = document.getElementById('yearFilter').value;
         const data = type === 'don' ? localData.donations : localData.expenses;
-        let rows = "";
-        let total = 0;
-        
+        let rows = ""; let total = 0;
         Object.values(data).filter(x => x.year == fYear).forEach(x => {
             total += Number(x.amt);
             rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`;
@@ -267,9 +271,9 @@
                 ${watermarkHTML}
                 <div class="print-content">
                     <div class="print-header">
-                        <div class="print-title">B.B.C MARANG BUNDU</div>
-                        <div>52<sup>nd</sup> Sahid Diwas 2026 | Session: ${fYear}</div>
-                        <div style="margin-top:10px; font-weight:bold; text-decoration:underline;">
+                        <div style="font-family:Cinzel; font-size:28px;">B.B.C MARANG BUNDU</div>
+                        <div style="font-size:18px; font-weight:bold; margin:5px 0;">52<sup>nd</sup> Sahid Diwas 2026 | Session: ${fYear}</div>
+                        <div style="text-decoration:underline; font-weight:900; margin-top:10px;">
                             OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER
                         </div>
                     </div>
@@ -277,15 +281,15 @@
                         <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
                         <tbody>
                             ${rows}
-                            <tr style="background:#f9f9f9; font-weight:bold;">
-                                <td colspan="2" style="text-align:right">TOTAL:</td>
+                            <tr style="background:#f2f2f2; font-weight:bold;">
+                                <td colspan="2" style="text-align:right">GRAND TOTAL:</td>
                                 <td>₹ ${total.toLocaleString()}</td>
                             </tr>
                         </tbody>
                     </table>
-                    <div style="margin-top:50px; display:flex; justify-content:space-between">
-                        <div>Report Generated: ${new Date().toLocaleDateString()}</div>
-                        <div style="text-align:center; border-top:1px solid #000; width:200px; padding-top:5px">Principal Treasurer</div>
+                    <div style="margin-top:60px; display:flex; justify-content:space-between">
+                        <div><b>Generated On:</b> ${new Date().toLocaleDateString()}</div>
+                        <div style="text-align:center; border-top:1px solid #000; width:220px; padding-top:8px"><b>Principal Treasurer</b><br><small>B.B.C Marang Bundu</small></div>
                     </div>
                 </div>
             </div>`;
