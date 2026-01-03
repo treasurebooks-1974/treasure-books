@@ -77,7 +77,7 @@
         .act-btn { border: none; padding: 10px 15px; border-radius: 12px; color: white; cursor: pointer; font-size: 11px; font-weight: 800; margin-right: 6px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
-        /* --- 🚀 ULTRA-PREMIUM PRO MAX PRINT STYLES --- */
+        /* --- 🚀 PRINT STYLES --- */
         #printArea { display: none; }
         @media print {
             @page { size: A4 portrait; margin: 0mm; }
@@ -93,7 +93,6 @@
             .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; border: 1px solid #000; display: inline-block; padding: 5px 20px; border-radius: 20px; }
             .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 20px 0; display: block; letter-spacing: 2px; text-transform: uppercase;}
 
-            /* Balanced Professional Ledger Watermark */
             .ledger-watermark {
                 position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
                 font-size: 38px; color: rgba(0,0,0,0.035); font-weight: 900; white-space: nowrap; pointer-events: none; z-index: 0; width: 100%; text-align: center; letter-spacing: 2px;
@@ -150,16 +149,19 @@
                 <input type="text" id="eName" placeholder="Full Name or Detail">
                 <select id="eOcc" onchange="checkExService()">
                     <option value="">Occupation</option>
-                    <option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option>
-                    <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="BSF">BSF</option>
+                    <option value="Teacher">Teacher</option><option value="Police">Police</option>
+                    <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
+                    <option value="BSF">BSF</option><option value="CRPF">CRPF</option><option value="CISF">CISF</option>
+                    <option value="ITBP">ITBP</option><option value="SSB">SSB</option><option value="Railway">Railway</option>
                     <option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option>
                     <option value="Social Worker">Social Worker</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
                 </select>
                 <select id="eSubOcc" style="display:none;">
                     <option value="">Branch List</option>
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
-                    <option value="Police">Police</option><option value="Teacher">Teacher</option><option value="BSF">BSF</option>
-                    <option value="Railway">Railway</option><option value="Govt Service">Govt Service</option>
+                    <option value="Police">Police</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
+                    <option value="CISF">CISF</option><option value="ITBP">ITBP</option><option value="SSB">SSB</option>
+                    <option value="Railway">Railway</option><option value="Teacher">Teacher</option><option value="Govt Service">Govt Service</option>
                 </select>
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
@@ -201,6 +203,13 @@
     const dbRef = firebase.database();
     let currentData = { donations: {}, expenses: {} };
 
+    // Function to format Date to DD-MM-YYYY
+    function formatDate(dateStr) {
+        if(!dateStr) return "-";
+        const [y, m, d] = dateStr.split('-');
+        return `${d}-${m}-${y}`;
+    }
+
     function getSahidYear(year) {
         let count = parseInt(year) - 1974;
         let suffix = (count % 10 == 1 && count != 11) ? "st" : (count % 10 == 2 && count != 12) ? "nd" : (count % 10 == 3 && count != 13) ? "rd" : "th";
@@ -221,16 +230,30 @@
         let bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
         let slDon = 1, slExp = 1;
+        
         const sortedDon = Object.entries(currentData.donations).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedDon.forEach(([k, x]) => { if(x.year == fYear) { bDon.innerHTML += `<tr><td>${slDon++}</td><td>${x.date}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`; tIn += x.amt; } });
+        sortedDon.forEach(([k, x]) => { 
+            if(x.year == fYear) { 
+                bDon.innerHTML += `<tr><td>${slDon++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`; 
+                tIn += x.amt; 
+            } 
+        });
+        
         const sortedExp = Object.entries(currentData.expenses).sort((a,b) => new Date(a[1].date) - new Date(b[1].date));
-        sortedExp.forEach(([k, x]) => { if(x.year == fYear) { bExp.innerHTML += `<tr><td>${slExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`; tOut += x.amt; } });
-        document.getElementById('sumIn').innerText = tIn.toLocaleString(); document.getElementById('sumOut').innerText = tOut.toLocaleString(); document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
+        sortedExp.forEach(([k, x]) => { 
+            if(x.year == fYear) { 
+                bExp.innerHTML += `<tr><td>${slExp++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td><td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`; 
+                tOut += x.amt; 
+            } 
+        });
+        document.getElementById('sumIn').innerText = tIn.toLocaleString(); 
+        document.getElementById('sumOut').innerText = tOut.toLocaleString(); 
+        document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
     }
 
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), editKey = document.getElementById('editKey').value, occ = document.getElementById('eOcc').value;
-        if(!date || !name || isNaN(amt)) return alert("Data bharein!");
+        if(!date || !name || isNaN(amt)) return alert("Saari jankari bharein!");
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + document.getElementById('eSubOcc').value + ")" : (occ || "-");
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
         if(editKey) dbRef.ref((document.getElementById('editType').value === 'donation' ? 'donations/' : 'expenses/') + editKey).remove();
@@ -240,10 +263,18 @@
 
     function editEntry(type, key) {
         const item = type === 'don' ? currentData.donations[key] : currentData.expenses[key];
-        document.getElementById('eType').value = type === 'don' ? 'donation' : 'expense'; document.getElementById('eDate').value = item.date; document.getElementById('eName').value = item.name; document.getElementById('eAmount').value = item.amt; document.getElementById('editKey').value = key; document.getElementById('editType').value = type === 'don' ? 'donation' : 'expense'; document.getElementById('saveBtn').innerText = "UPDATE NOW"; handleFormChange(); window.scrollTo(0,0);
+        document.getElementById('eType').value = type === 'don' ? 'donation' : 'expense'; 
+        document.getElementById('eDate').value = item.date; 
+        document.getElementById('eName').value = item.name; 
+        document.getElementById('eAmount').value = item.amt; 
+        document.getElementById('editKey').value = key; 
+        document.getElementById('editType').value = type === 'don' ? 'donation' : 'expense'; 
+        document.getElementById('saveBtn').innerText = "UPDATE NOW"; 
+        handleFormChange(); 
+        window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Permanently Delete?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Kya aap ise delete karna chahte hain?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
 
     function printReceipt(key) {
         const item = currentData.donations[key], trName = document.getElementById('tName').innerText;
@@ -262,7 +293,7 @@
                     <div style="margin-top:40px; position:relative; z-index:1;">
                         <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
                         <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
-                        <div class="data-row"><span class="data-label">Receipt Date:</span><span class="data-value">${item.date}</span></div>
+                        <div class="data-row"><span class="data-label">Receipt Date:</span><span class="data-value">${formatDate(item.date)}</span></div>
                         <div style="text-align:center; margin-top:20px;">
                             <div class="data-label" style="margin-bottom:10px;">Amount Received</div>
                             <div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div>
@@ -275,7 +306,7 @@
                     <div style="text-align:right; margin-top:50px; position:relative; z-index:1;">
                         <span class="official-signature">${trName}</span>
                         <div class="sig-line-royal">Principal Treasurer</div>
-                        <div style="font-size:11px; font-weight:900; margin-top:6px; margin-right: 50px; color:#444;">DATE: ${item.date}</div>
+                        <div style="font-size:11px; font-weight:900; margin-top:6px; margin-right: 50px; color:#444;">DATE: ${formatDate(item.date)}</div>
                     </div>
                 </div>
             </div>
@@ -290,7 +321,7 @@
         
         let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { 
-            rows += `<tr><td>${sl++}</td><td>${x.date}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; 
+            rows += `<tr><td>${sl++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; 
         });
         
         const sumIn = document.getElementById('sumIn').innerText;
