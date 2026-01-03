@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS | OFFICIAL</title>
+    <title>TREASURE BOOKS | ELITE EDITION</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -20,34 +20,37 @@
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: #f3f4f6; padding: 15px; }
 
-        /* Dashboard Styles */
+        /* --- DASHBOARD UI --- */
         .year-floating {
             position: fixed; top: 15px; right: 15px; z-index: 1000;
             background: var(--gold); padding: 5px 12px; border-radius: 50px; display: flex; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
         }
-        .year-floating select { background: transparent; border: none; color: #000; font-weight: 900; font-size: 12px; outline: none; }
+        .year-floating select { background: transparent; border: none; color: #000; font-weight: 900; font-size: 12px; outline: none; cursor: pointer; }
 
         header { text-align: center; margin: 30px 0; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .main-title { font-family: 'Cinzel', serif; font-size: clamp(28px, 5vw, 45px); margin: 0; color: #fff; }
+        .main-title { font-family: 'Cinzel', serif; font-size: clamp(28px, 5vw, 45px); margin: 0; color: #fff; letter-spacing: 4px; }
         
         .exec-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto 30px; }
         .exec-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 20px; text-align: center; position: relative; }
-        .exec-card b { color: var(--gold); font-size: 18px; display: block; font-family: 'Cinzel'; }
+        .exec-card span { font-size: 11px; color: #94a3b8; text-transform: uppercase; display: block; }
+        .exec-card b { color: var(--gold); font-size: 18px; display: block; font-family: 'Cinzel'; margin-top: 5px; }
+        .btn-edit-name { position: absolute; right: 10px; top: 10px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 12px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
-        .stat-val { font-size: 28px; font-weight: 900; font-family: 'Cinzel'; }
+        .stat-val { font-size: 28px; font-weight: 900; font-family: 'Cinzel'; margin-top: 8px; }
 
         .form-hub { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid var(--border); margin-bottom: 30px; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
         input, select { background: #0b0f1a; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 10px; outline: none; }
-        .btn-save { background: var(--gold); color: #000; border: none; padding: 12px 60px; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        .btn-save { background: var(--gold); color: #000; border: none; padding: 12px 60px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; }
 
         .ledger-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .ledger-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        td, th { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); text-align: left; }
+        td, th { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); text-align: left; font-size: 13px; }
+        .btn-mini { padding: 5px 10px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border); background: #1f2937; color: #fff; font-size: 11px; margin-right: 5px; }
 
         /* --- PRINT AREA DESIGN --- */
         #printArea { display: none; }
@@ -55,23 +58,26 @@
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; }
             
-            .print-wrapper { padding: 10mm; background: white; }
-            .single-border { border: 2px solid #000; padding: 20px; min-height: 270mm; position: relative; }
-            
-            .print-header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
-            .print-header h1 { font-size: 26px; font-weight: 900; margin: 0; text-transform: uppercase; }
-            .print-header h2 { font-family: 'Cinzel', serif; font-size: 22px; margin: 8px 0; }
+            /* Official Heading Style */
+            .print-header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid #000; padding-bottom: 15px; }
+            .print-header h1 { font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase; }
+            .print-header h2 { font-family: 'Cinzel', serif; font-size: 24px; margin: 8px 0; }
             .print-header p { font-size: 14px; font-weight: bold; margin: 5px 0; }
 
-            .label-pill { background: #000 !important; color: white !important; padding: 6px 25px; font-weight: bold; font-size: 16px; margin: 15px 0; display: inline-block; -webkit-print-color-adjust: exact; }
-            
-            .report-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-            .report-table th, .report-table td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 14px; }
-            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
+            /* Receipt Original Design */
+            .receipt-frame { border: 2px solid #000; padding: 4px; width: 720px; margin: 20px auto; background: white; }
+            .receipt-inner { border: 6px double #000; padding: 35px; position: relative; }
+            .label-pill { background: #000 !important; color: white !important; padding: 6px 30px; font-weight: bold; font-size: 18px; margin: 15px 0; display: inline-block; -webkit-print-color-adjust: exact; }
+            .data-line { font-size: 19px; margin: 20px 0; border-bottom: 1px dotted #666; padding-bottom: 6px; }
+            .amt-big { border: 3px solid #000; padding: 12px 45px; font-size: 32px; font-weight: 900; margin: 25px 0; display: inline-block; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; text-align: right; margin-top: 30px; }
 
-            .sig-area { position: absolute; bottom: 30px; width: calc(100% - 40px); display: flex; justify-content: space-between; align-items: flex-end; }
-            .sig-box { text-align: center; width: 200px; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 32px; margin-bottom: -5px; }
+            /* Ledger Report Design */
+            .report-wrapper { padding: 10mm; border: 2px solid #000; min-height: 270mm; position: relative; }
+            .report-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; }
+            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
+            .sig-area { position: absolute; bottom: 40px; width: calc(100% - 40px); display: flex; justify-content: space-between; align-items: flex-end; }
         }
     </style>
 </head>
@@ -89,8 +95,16 @@
     </header>
 
     <div class="exec-row">
-        <div class="exec-card"><span>Principal Treasurer</span><b id="disp_tName">Loading...</b><button onclick="editTreasurer('tName')" style="font-size:10px; cursor:pointer;">Edit</button></div>
-        <div class="exec-card"><span>Assistant Treasurer</span><b id="disp_atName">Loading...</b><button onclick="editTreasurer('atName')" style="font-size:10px; cursor:pointer;">Edit</button></div>
+        <div class="exec-card">
+            <button class="btn-edit-name" onclick="editTreasurer('tName')">✏️</button>
+            <span>Principal Treasurer</span>
+            <b id="disp_tName">Loading...</b>
+        </div>
+        <div class="exec-card">
+            <button class="btn-edit-name" onclick="editTreasurer('atName')">✏️</button>
+            <span>Assistant Treasurer</span>
+            <b id="disp_atName">Loading...</b>
+        </div>
     </div>
 
     <div class="stats-grid">
@@ -113,16 +127,16 @@
         <div class="ledger-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin:0;">🟢 Collections</h3>
-                <button onclick="printReport('don')">Print Report</button>
+                <button class="btn-mini" onclick="printReport('don')">Print Report</button>
             </div>
-            <table id="tblDon"><thead><tr><th>Date</th><th>Donor</th><th>Amt</th></tr></thead><tbody id="bodyDon"></tbody></table>
+            <table id="tblDon"><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
         </div>
         <div class="ledger-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin:0;">🔴 Expenses</h3>
-                <button onclick="printReport('exp')">Print Report</button>
+                <button class="btn-mini" onclick="printReport('exp')">Print Report</button>
             </div>
-            <table id="tblExp"><thead><tr><th>Date</th><th>Purpose</th><th>Amt</th></tr></thead><tbody id="bodyExp"></tbody></table>
+            <table id="tblExp"><thead><tr><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
         </div>
     </div>
 </div>
@@ -130,6 +144,21 @@
 <div id="printArea"></div>
 
 <script>
+    // Utility: Number to Words
+    function inWords(num) {
+        var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
+        var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
+        if ((num = num.toString()).length > 9) return 'overflow';
+        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!n) return; var str = '';
+        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only' : '';
+        return str;
+    }
+
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -158,9 +187,11 @@
         const fYear = document.getElementById('yearFilter').value;
         const bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
-        Object.entries(localData.donations).forEach(([k, x]) => { if(x.year == fYear) { tIn += Number(x.amt); bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td></tr>`; } });
-        Object.entries(localData.expenses).forEach(([k, x]) => { if(x.year == fYear) { tOut += Number(x.amt); bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td></tr>`; } });
-        document.getElementById('sumIn').innerText = '₹ ' + tIn; document.getElementById('sumOut').innerText = '₹ ' + tOut; document.getElementById('sumBal').innerText = '₹ ' + (tIn - tOut);
+        Object.entries(localData.donations).forEach(([k, x]) => { if(x.year == fYear) { tIn += Number(x.amt); bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button></td></tr>`; } });
+        Object.entries(localData.expenses).forEach(([k, x]) => { if(x.year == fYear) { tOut += Number(x.amt); bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt}</td><td>-</td></tr>`; } });
+        document.getElementById('sumIn').innerText = '₹ ' + tIn.toLocaleString();
+        document.getElementById('sumOut').innerText = '₹ ' + tOut.toLocaleString();
+        document.getElementById('sumBal').innerText = '₹ ' + (tIn - tOut).toLocaleString();
     }
 
     function saveEntry() {
@@ -169,7 +200,32 @@
         db.ref(type === 'donation' ? 'donations/' : 'expenses/').push({ date, name, amt: Number(amt), year: new Date(date).getFullYear() });
     }
 
-    function editTreasurer(field) { let n = prompt("Enter Name:"); if(n) db.ref('config/' + field).set(n); }
+    function editTreasurer(field) { let n = prompt("Enter Official Name:"); if(n) db.ref('config/' + field).set(n); }
+
+    function printReceipt(key) {
+        const item = localData.donations[key];
+        const words = inWords(item.amt);
+        document.getElementById('printArea').innerHTML = `
+            <div class="receipt-container">
+                <div class="receipt-inner">
+                    <div class="print-header">
+                        <h1>52<sup>nd</sup> Sahid Diwas 2026</h1>
+                        <h2>B.B.C MARANG BUNDU</h2>
+                        <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
+                        <div class="label-pill">DONATION RECEIPT</div>
+                    </div>
+                    <div class="data-line"><b>No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span></div>
+                    <div class="data-line">Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b></div>
+                    <div class="data-line">Sum of Rupees: <b style="text-transform:capitalize;">${words}</b></div>
+                    <div class="data-line">Towards: <b>52nd Sahid Diwas Celebration Donation</b></div>
+                    <center><div class="amt-big">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px;">"Sahid Diwas Samaroh ko safal banane mein aapke yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi."</p>
+                    <div class="sig-font">${localData.config.tName}</div>
+                    <div style="text-align:right; font-weight:bold; border-top:1px solid #000; width:200px; margin-left:auto; padding-top:5px;">Principal Treasurer</div>
+                </div>
+            </div>`;
+        window.print();
+    }
 
     function printReport(type) {
         const fYear = document.getElementById('yearFilter').value;
@@ -177,27 +233,25 @@
         let rows = ""; let total = 0;
         Object.values(data).filter(x => x.year == fYear).forEach(x => {
             total += Number(x.amt);
-            rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹ ${x.amt}</td></tr>`;
+            rows += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`;
         });
 
         document.getElementById('printArea').innerHTML = `
-            <div class="print-wrapper">
-                <div class="single-border">
-                    <div class="print-header">
-                        <h1>52<sup>nd</sup> Sahid Diwas 2026</h1>
-                        <h2>B.B.C MARANG BUNDU</h2>
-                        <p>Reg.no :- MBJ8750 - 13 Of 2022 | Session: ${fYear}</p>
-                    </div>
-                    <center><div class="label-pill">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div></center>
-                    <table class="report-table">
-                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
-                        <tbody>${rows}</tbody>
-                        <tfoot><tr style="font-weight:bold;"><td></td><td>TOTAL:</td><td>₹ ${total}</td></tr></tfoot>
-                    </table>
-                    <div class="sig-area">
-                        <div class="sig-box"><div class="sig-font">${localData.config.atName}</div><div style="border-top:1px solid #000;">Asst. Treasurer</div></div>
-                        <div class="sig-box"><div class="sig-font">${localData.config.tName}</div><div style="border-top:1px solid #000;">Principal Treasurer</div></div>
-                    </div>
+            <div class="report-wrapper">
+                <div class="print-header">
+                    <h1>52<sup>nd</sup> Sahid Diwas 2026</h1>
+                    <h2>B.B.C MARANG BUNDU</h2>
+                    <p>Reg.no :- MBJ8750 - 13 Of 2022 | Session: ${fYear}</p>
+                </div>
+                <center><div class="label-pill">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div></center>
+                <table class="report-table">
+                    <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                    <tfoot><tr style="font-weight:bold; background:#f2f2f2;"><td colspan="2" style="text-align:right">TOTAL AMOUNT:</td><td>₹ ${total.toLocaleString()}</td></tr></tfoot>
+                </table>
+                <div class="sig-area">
+                    <div class="sig-box"><div class="sig-font">${localData.config.atName}</div><div style="border-top:1px solid #000;">Asst. Treasurer</div></div>
+                    <div class="sig-box"><div class="sig-font">${localData.config.tName}</div><div style="border-top:1px solid #000;">Principal Treasurer</div></div>
                 </div>
             </div>`;
         window.print();
