@@ -77,7 +77,6 @@
         .act-btn { border: none; padding: 10px 15px; border-radius: 12px; color: white; cursor: pointer; font-size: 11px; font-weight: 800; margin-right: 6px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
-        /* 🚀 PRINT FIX SECTION */
         #printArea { display: none; }
         
         @media print {
@@ -86,39 +85,42 @@
             #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .premium-frame, .no-print { display: none !important; }
 
-            /* 📜 Simple Professional Ledger Print Design 📜 */
+            /* 📜 Simple Professional Ledger 📜 */
             .ledger-container { padding: 10mm; min-height: 280mm; width: 100%; box-sizing: border-box; background: white; display: flex; flex-direction: column; overflow: hidden; page-break-after: avoid; }
             .ledger-border { border: 2px solid #000; padding: 15px; min-height: 250mm; position: relative; display: flex; flex-direction: column; flex-grow: 1; }
-            
             .print-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 15px; padding-bottom: 10px; }
             .print-header h1 { font-size: 28px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
-            .print-header h2 { font-size: 20px; margin: 5px 0; color: #000; }
             .print-type-label { font-size: 18px; font-weight: 900; text-decoration: underline; margin: 10px 0; display: block; text-transform: uppercase; text-align: center; color: #000; }
             
-            /* Professional Security Watermark */
+            /* Professional Security Watermark - Smaller & Fit */
             .ledger-watermark { 
                 position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); 
-                font-size: 40px; color: rgba(0,0,0,0.035) !important; font-weight: 900; z-index: 0; white-space: nowrap; text-align: center; pointer-events: none;
+                font-size: 38px; color: rgba(0,0,0,0.035) !important; font-weight: 900; z-index: 0; white-space: nowrap; text-align: center; pointer-events: none;
             }
 
             .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 2; flex-grow: 1; }
-            .print-table th { background: #f0f0f0 !important; color: #000 !important; padding: 10px; border: 1px solid #000; -webkit-print-color-adjust: exact; font-size: 12px; text-transform: uppercase; }
+            .print-table th { background: #f0f0f0 !important; color: #000 !important; padding: 10px; border: 1px solid #000; -webkit-print-color-adjust: exact; font-size: 12px; }
             .print-table td { border: 1px solid #000; padding: 8px; font-size: 13px; font-weight: 600; color: #000; }
-
             .total-summary-print { margin-top: 20px; border: 2px solid #000; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 15px; font-weight: 900; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
             .summary-item { border-right: 1px solid #000; } .summary-item:last-child { border-right: none; }
-
             .signature-section-ledger { margin-top: auto; padding-top: 40px; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; padding-left: 30px; padding-right: 30px; }
             .sig-box-ledger { text-align: center; width: 230px; }
             .sig-line-ledger { border-top: 1.5px solid #000; margin-top: 10px; padding-top: 5px; font-weight: 900; font-size: 14px; text-transform: uppercase; }
 
-            /* Receipt Section (Already favorite design) */
+            /* 📜 Royal Receipt Design (Locked) 📜 */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; visibility: visible; }
             .receipt-card { border: 2.5px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden; }
             .receipt-inner-border { border: 6px double #000; padding: 40px; position: relative; }
             .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 55px; color: rgba(0,0,0,0.035); font-weight: 900; z-index: 0; white-space: nowrap; }
-            .amt-box-royal { background: #1a1a1a !important; color: #fff !important; padding: 12px 35px; font-size: 28px; font-weight: 900; border-radius: 10px; display: inline-block; -webkit-print-color-adjust: exact; border: 3px solid #000; }
+            .receipt-title-box { border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; font-size: 18px; text-transform: uppercase; background: #fff; z-index: 2; letter-spacing: 2px;}
+            .data-row { display: flex; margin-bottom: 15px; border-bottom: 1.5px dotted #000; padding-bottom: 6px; z-index: 2; position: relative; }
+            .data-label { font-weight: 800; min-width: 170px; font-size: 15px; text-transform: uppercase; }
+            .data-value { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; flex-grow: 1; }
+            .amt-box-royal { background: #1a1a1a !important; color: #fff !important; padding: 12px 35px; font-size: 28px; font-weight: 900; border-radius: 10px; display: inline-block; -webkit-print-color-adjust: exact; border: 3px solid #000; margin-top: 10px;}
+            .amt-words-row { margin-top: 20px; padding: 15px; background: #f4f4f4 !important; border-left: 6px solid #000; font-family: 'Playfair Display', serif; font-style: italic; -webkit-print-color-adjust: exact; font-size: 18px; }
+            .thank-you-note { margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; line-height: 1.6; text-align: center; color: #000; z-index: 2; position: relative; }
             .official-signature-pen { font-family: 'Dancing Script', cursive; font-size: 45px; color: #081c5e !important; display: block; margin-bottom: -15px; transform: rotate(-2deg); font-weight: 600; -webkit-print-color-adjust: exact; }
+            .sig-line-royal { border-top: 2.5px solid #000; width: 250px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -319,7 +321,7 @@
                 <div class="total-summary-print"><div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div></div>
                 <div class="signature-section-ledger">
                     <div class="sig-box-ledger"><div class="sig-line-ledger">General Secretary</div></div>
-                    <div class="sig-box-ledger"><span class="official-signature-pen" style="font-size:30px;">${document.getElementById('tName').innerText}</span><div class="sig-line-ledger">Principal Treasurer</div></div>
+                    <div class="sig-box-ledger"><span class="official-signature-pen" style="font-size:32px;">${document.getElementById('tName').innerText}</span><div class="sig-line-ledger">Principal Treasurer</div></div>
                 </div>
             </div>
         </div>`;
