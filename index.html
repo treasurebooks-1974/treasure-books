@@ -19,7 +19,6 @@
             margin: 0; padding: 15px; color: #333; display: flex; justify-content: center;
         }
 
-        /* --- UI Styles --- */
         .premium-frame {
             position: relative; width: 100%; max-width: 1100px; padding: 4px;
             background: linear-gradient(90deg, #060b26, #b8860b, #00d2ff, #b8860b, #060b26);
@@ -69,12 +68,11 @@
         .act-btn { border: none; padding: 6px 10px; border-radius: 6px; color: white; cursor: pointer; font-size: 10px; margin-right: 3px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
-        /* --- 🛠️ PRINT LOGIC --- */
         #printArea { display: none; }
         @media print {
             body * { visibility: hidden !important; }
             #printArea, #printArea * { visibility: visible !important; }
-            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; }
             .ledger-container { padding: 15mm; }
             .ledger-border { border: 2px solid #000; padding: 15px; min-height: 260mm; }
             .print-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; }
@@ -83,6 +81,10 @@
             .total-summary-print { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid #000; padding: 10px; text-align: center; }
             .signature-row { margin-top: 60px; display: flex; justify-content: space-between; }
             .sig-box-p { width: 200px; border-top: 1.5px solid #000; text-align: center; padding-top: 5px; }
+
+            .receipt-card { border: 2px solid #000; width: 600px; padding: 15px; margin: 30mm auto; }
+            .receipt-inner { border: 4px double #000; padding: 20px; }
+            .amt-box { border: 2px solid #000; padding: 10px 20px; font-size: 20px; font-weight: 900; margin: 15px 0; display: inline-block; }
         }
     </style>
 </head>
@@ -153,7 +155,6 @@
                     <option value="Other Govt Service">Other Govt Service</option>
                 </select>
 
-                <input type="text" id="eRecBy" placeholder="Received By" style="display:none;">
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
             <button class="btn-save-compact" id="saveBtn" onclick="saveEntry()">CONFIRM TRANSACTION</button>
@@ -196,12 +197,28 @@
     function formatDate(d) { if(!d) return "-"; const [y, m, d1] = d.split('-'); return `${d1}/${m}/${y}`; }
     function getSahidYear(y) { return `${y - 1974}th SAHID DIWAS ${y}`; }
 
+    function numberToWords(num) {
+        const a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+        const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!n) return '';
+        let str = '';
+        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only' : '';
+        return str;
+    }
+
     dbRef.ref().on('value', (snap) => {
         const val = snap.val() || {};
         currentData.donations = val.donations || {};
         currentData.expenses = val.expenses || {};
-        document.getElementById('tName').innerText = val.config?.tName || "Treasurer";
-        document.getElementById('atName').innerText = val.config?.atName || "Asst Treasurer";
+        if(val.config) {
+            document.getElementById('tName').innerText = val.config.tName || "Treasurer";
+            document.getElementById('atName').innerText = val.config.atName || "Asst Treasurer";
+        }
         loadView();
     });
 
@@ -232,7 +249,7 @@
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), occ = document.getElementById('eOcc').value, subOcc = document.getElementById('eSubOcc').value;
         const editKey = document.getElementById('editKey').value;
-        const oldType = document.getElementById('editDataType').value;
+        const oldDataType = document.getElementById('editDataType').value;
 
         if(!date || !name || isNaN(amt)) return alert("Data bhariye!");
 
@@ -242,12 +259,11 @@
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
 
         if(editKey) {
-            dbRef.ref((oldType === 'don' ? 'donations/' : 'expenses/') + editKey).remove();
+            dbRef.ref((oldDataType === 'don' ? 'donations/' : 'expenses/') + editKey).remove();
         }
 
         dbRef.ref(type === 'donation' ? 'donations/' : 'expenses/').push(entry);
         
-        // Reset Form
         document.getElementById('editKey').value = '';
         document.getElementById('editDataType').value = '';
         document.getElementById('eName').value = ''; 
@@ -282,6 +298,20 @@
 
     function deleteEntry(t, k) { if(confirm("Delete?")) dbRef.ref((t==='don'?'donations/':'expenses/')+k).remove(); }
 
+    function printReceipt(k) {
+        const x = currentData.donations[k];
+        document.getElementById('printArea').innerHTML = `
+        <div class="receipt-card"><div class="receipt-inner">
+            <div class="print-header"><h1>${getSahidYear(x.year)}</h1><h2>B.B.C MARANG BUNDU</h2><br><b>DONATION RECEIPT</b></div>
+            <p><b>Donor:</b> ${x.name} | <b>Date:</b> ${formatDate(x.date)}</p>
+            <p><b>Occupation:</b> ${x.occ}</p>
+            <div class="amt-box">₹ ${x.amt}/-</div>
+            <p><i>Rupees ${numberToWords(x.amt)} only</i></p>
+            <div style="text-align:right; margin-top:30px;"><b>Principal Treasurer</b></div>
+        </div></div>`;
+        window.print();
+    }
+
     function printReport(type) {
         const year = document.getElementById('yearFilter').value;
         const title = type === 'don' ? "CREDIT LEDGER (COLLECTION)" : "DEBIT LEDGER (EXPENDITURE)";
@@ -314,4 +344,4 @@
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
 </body>
-                        </html>
+</html>
