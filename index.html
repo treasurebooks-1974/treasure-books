@@ -69,48 +69,20 @@
         .act-btn { border: none; padding: 6px 10px; border-radius: 6px; color: white; cursor: pointer; font-size: 10px; margin-right: 3px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
-        /* --- 🛠️ FIX: PRINT LOGIC (NO OVERLAY) --- */
+        /* --- 🛠️ PRINT LOGIC --- */
         #printArea { display: none; }
-
         @media print {
-            /* Hide everything on the screen */
             body * { visibility: hidden !important; }
-            .no-print, .premium-frame, .container, body { background: white !important; padding: 0 !important; margin: 0 !important; }
-
-            /* Show ONLY the print area */
             #printArea, #printArea * { visibility: visible !important; }
-            #printArea { 
-                display: block !important; 
-                position: absolute !important; 
-                left: 0 !important; 
-                top: 0 !important; 
-                width: 100% !important; 
-                background: white !important;
-            }
-
-            .ledger-container { padding: 15mm; background: white; width: 100%; box-sizing: border-box; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            .ledger-container { padding: 15mm; }
             .ledger-border { border: 2px solid #000; padding: 15px; min-height: 260mm; }
-            .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-            .print-header h1 { font-size: 28px; margin: 0; }
-            .print-type-label { font-size: 18px; font-weight: bold; text-decoration: underline; margin: 15px 0; display: block; text-align: center; }
-
+            .print-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; }
             .print-table { width: 100%; border-collapse: collapse; border: 1px solid #000; }
-            .print-table th { background: #eee !important; color: #000 !important; border: 1px solid #000; padding: 8px; font-size: 12px; -webkit-print-color-adjust: exact; }
-            .print-table td { border: 1px solid #000; padding: 8px; font-size: 12px; color: #000; font-weight: bold; }
-
-            .total-summary-print { 
-                margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); 
-                border: 2px solid #000; background: #f0f0f0 !important; padding: 10px; text-align: center; -webkit-print-color-adjust: exact;
-            }
-            .summary-item { font-weight: 900; font-size: 14px; }
+            .print-table th, .print-table td { border: 1px solid #000; padding: 8px; font-size: 12px; color: #000; }
+            .total-summary-print { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid #000; padding: 10px; text-align: center; }
             .signature-row { margin-top: 60px; display: flex; justify-content: space-between; }
-            .sig-box-p { width: 200px; border-top: 1.5px solid #000; text-align: center; padding-top: 5px; font-weight: bold; }
-
-            /* Receipt Styles */
-            .receipt-centered { display: flex; justify-content: center; padding-top: 30mm; }
-            .receipt-card { border: 2px solid #000; width: 600px; padding: 15px; }
-            .receipt-inner { border: 4px double #000; padding: 20px; }
-            .amt-box { border: 2px solid #000; padding: 10px 20px; font-size: 20px; font-weight: 900; margin: 15px 0; display: inline-block; }
+            .sig-box-p { width: 200px; border-top: 1.5px solid #000; text-align: center; padding-top: 5px; }
         }
     </style>
 </head>
@@ -132,15 +104,55 @@
 
         <div class="entry-section">
             <div class="form-grid">
-                <input type="hidden" id="editKey"><input type="hidden" id="editType">
-                <select id="eType" onchange="handleFormChange()"><option value="donation">CREDIT (Collection)</option><option value="expense">DEBIT (Expenditure)</option></select>
+                <input type="hidden" id="editKey">
+                <input type="hidden" id="editDataType">
+                <select id="eType" onchange="handleFormChange()">
+                    <option value="donation">CREDIT (Collection)</option>
+                    <option value="expense">DEBIT (Expenditure)</option>
+                </select>
                 <input type="date" id="eDate">
                 <input type="text" id="eName" placeholder="Full Name / Particulars">
+                
                 <select id="eOcc" onchange="checkExService()">
                     <option value="">Occupation</option>
-                    <option value="Teacher">Teacher</option><option value="Police">Police</option><option value="Army">Army</option><option value="Railway">Railway</option><option value="Student">Student</option><option value="Farmer">Farmer</option><option value="Business">Business</option><option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
+                    <option value="Farmer">Farmer</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Police">Police</option>
+                    <option value="Army">Army</option>
+                    <option value="Navy">Navy</option>
+                    <option value="Air Force">Air Force</option>
+                    <option value="BSF">BSF</option>
+                    <option value="CRPF">CRPF</option>
+                    <option value="CISF">CISF</option>
+                    <option value="ITBP">ITBP</option>
+                    <option value="SSB">SSB</option>
+                    <option value="Railway">Railway</option>
+                    <option value="Student">Student</option>
+                    <option value="Business">Business</option>
+                    <option value="Social Worker">Social Worker</option>
+                    <option value="Doctor">Doctor</option>
+                    <option value="Engineer">Engineer</option>
+                    <option value="Advocate">Advocate</option>
+                    <option value="Ex-Service">Ex-Service</option>
+                    <option value="Other">Other</option>
                 </select>
-                <select id="eSubOcc" style="display:none;"><option value="">Branch List</option><option value="Army">Army</option><option value="Police">Police</option><option value="Teacher">Teacher</option></select>
+
+                <select id="eSubOcc" style="display:none;">
+                    <option value="">Ex-Service Branch</option>
+                    <option value="Army">Army</option>
+                    <option value="Navy">Navy</option>
+                    <option value="Air Force">Air Force</option>
+                    <option value="Police">Police</option>
+                    <option value="BSF">BSF</option>
+                    <option value="CRPF">CRPF</option>
+                    <option value="CISF">CISF</option>
+                    <option value="ITBP">ITBP</option>
+                    <option value="SSB">SSB</option>
+                    <option value="Railway">Railway</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Other Govt Service">Other Govt Service</option>
+                </select>
+
                 <input type="text" id="eRecBy" placeholder="Received By" style="display:none;">
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
@@ -168,7 +180,6 @@
 <div id="printArea"></div>
 
 <script>
-    // Firebase Setup
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -182,23 +193,7 @@
     const dbRef = firebase.database();
     let currentData = { donations: {}, expenses: {} };
 
-    // Functions
     function formatDate(d) { if(!d) return "-"; const [y, m, d1] = d.split('-'); return `${d1}/${m}/${y}`; }
-    
-    function numberToWords(num) {
-        const a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
-        const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n) return '';
-        let str = '';
-        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
-        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
-        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
-        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
-        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only' : '';
-        return str;
-    }
-
     function getSahidYear(y) { return `${y - 1974}th SAHID DIWAS ${y}`; }
 
     dbRef.ref().on('value', (snap) => {
@@ -214,16 +209,18 @@
         const y = document.getElementById('yearFilter').value;
         let bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bD.innerHTML = ''; bE.innerHTML = '';
-        
+        let slDon = 1, slExp = 1;
+
         Object.entries(currentData.donations).forEach(([k, x]) => {
             if(x.year == y) {
-                bD.innerHTML += `<tr><td>#</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
+                bD.innerHTML += `<tr><td>${slDon++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>${x.occ}</td><td>₹${x.amt}</td><td><button class="act-btn btn-r" onclick="printReceipt('${k}')">Bill</button><button class="act-btn btn-edit" onclick="editEntry('don', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('don', '${k}')">X</button></td></tr>`;
                 tIn += x.amt;
             }
         });
+
         Object.entries(currentData.expenses).forEach(([k, x]) => {
             if(x.year == y) {
-                bE.innerHTML += `<tr><td>#</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>₹${x.amt}</td><td><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
+                bE.innerHTML += `<tr><td>${slExp++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td><td>₹${x.amt}</td><td><button class="act-btn btn-edit" onclick="editEntry('exp', '${k}')">E</button><button class="act-btn btn-del" onclick="deleteEntry('exp', '${k}')">X</button></td></tr>`;
                 tOut += x.amt;
             }
         });
@@ -233,11 +230,54 @@
     }
 
     function saveEntry() {
-        const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), occ = document.getElementById('eOcc').value;
+        const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), occ = document.getElementById('eOcc').value, subOcc = document.getElementById('eSubOcc').value;
+        const editKey = document.getElementById('editKey').value;
+        const oldType = document.getElementById('editDataType').value;
+
         if(!date || !name || isNaN(amt)) return alert("Data bhariye!");
-        const entry = { date, name, occ: (type==='donation'?occ:'-'), amt, year: new Date(date).getFullYear() };
+
+        let finalOcc = occ;
+        if(occ === "Ex-Service") finalOcc = "Ex-Service (" + subOcc + ")";
+
+        const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, year: new Date(date).getFullYear() };
+
+        if(editKey) {
+            dbRef.ref((oldType === 'don' ? 'donations/' : 'expenses/') + editKey).remove();
+        }
+
         dbRef.ref(type === 'donation' ? 'donations/' : 'expenses/').push(entry);
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
+        
+        // Reset Form
+        document.getElementById('editKey').value = '';
+        document.getElementById('editDataType').value = '';
+        document.getElementById('eName').value = ''; 
+        document.getElementById('eAmount').value = '';
+        document.getElementById('saveBtn').innerText = "CONFIRM TRANSACTION";
+        handleFormChange();
+    }
+
+    function editEntry(type, key) {
+        const item = type === 'don' ? currentData.donations[key] : currentData.expenses[key];
+        document.getElementById('editKey').value = key;
+        document.getElementById('editDataType').value = type;
+        document.getElementById('eType').value = type === 'don' ? 'donation' : 'expense';
+        document.getElementById('eDate').value = item.date;
+        document.getElementById('eName').value = item.name;
+        document.getElementById('eAmount').value = item.amt;
+        
+        if(type === 'don') {
+            if(item.occ.includes("Ex-Service")) {
+                document.getElementById('eOcc').value = "Ex-Service";
+                let branch = item.occ.match(/\(([^)]+)\)/);
+                if(branch) document.getElementById('eSubOcc').value = branch[1];
+            } else {
+                document.getElementById('eOcc').value = item.occ;
+            }
+        }
+        
+        document.getElementById('saveBtn').innerText = "UPDATE TRANSACTION";
+        handleFormChange();
+        window.scrollTo(0,0);
     }
 
     function deleteEntry(t, k) { if(confirm("Delete?")) dbRef.ref((t==='don'?'donations/':'expenses/')+k).remove(); }
@@ -246,47 +286,32 @@
         const year = document.getElementById('yearFilter').value;
         const title = type === 'don' ? "CREDIT LEDGER (COLLECTION)" : "DEBIT LEDGER (EXPENDITURE)";
         let rows = ""; let data = type === 'don' ? currentData.donations : currentData.expenses;
-        
         Object.values(data).filter(x => x.year == year).forEach((x, i) => { 
             rows += `<tr><td>${i+1}</td><td>${formatDate(x.date)}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td>`:''}<td>₹${x.amt}</td></tr>`; 
         });
-
-        document.getElementById('printArea').innerHTML = `
-        <div class="ledger-container"><div class="ledger-border">
-            <div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><span class="print-type-label">${title}</span></div>
-            <table class="print-table">
-                <thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead>
-                <tbody>${rows}</tbody>
-            </table>
-            <div class="total-summary-print">
-                <div class="summary-item">COLLECTION: ₹${document.getElementById('sumIn').innerText}</div>
-                <div class="summary-item">EXPENSE: ₹${document.getElementById('sumOut').innerText}</div>
-                <div class="summary-item">BALANCE: ₹${document.getElementById('sumBal').innerText}</div>
-            </div>
-            <div class="signature-row"><div class="sig-box-p">General Secretary</div><div class="sig-box-p">Principal Treasurer</div></div>
-        </div></div>`;
+        document.getElementById('printArea').innerHTML = `<div class="ledger-container"><div class="ledger-border"><div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><h3>${title}</h3></div><table class="print-table"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead><tbody>${rows}</tbody></table><div class="total-summary-print"><div>COLLECTION: ₹${document.getElementById('sumIn').innerText}</div><div>EXPENSE: ₹${document.getElementById('sumOut').innerText}</div><div>BALANCE: ₹${document.getElementById('sumBal').innerText}</div></div><div class="signature-row"><div class="sig-box-p">General Secretary</div><div class="sig-box-p">Principal Treasurer</div></div></div></div>`;
         window.print();
     }
 
-    function printReceipt(k) {
-        const x = currentData.donations[k];
-        document.getElementById('printArea').innerHTML = `
-        <div class="receipt-centered"><div class="receipt-card"><div class="receipt-inner">
-            <div class="print-header"><h1>${getSahidYear(x.year)}</h1><h2>B.B.C MARANG BUNDU</h2><br><b>DONATION RECEIPT</b></div>
-            <p><b>Donor:</b> ${x.name} | <b>Date:</b> ${formatDate(x.date)}</p>
-            <p><b>Occupation:</b> ${x.occ}</p>
-            <div class="amt-box">₹ ${x.amt}/-</div>
-            <p><i>Rupees ${numberToWords(x.amt)} only</i></p>
-            <div style="text-align:right; margin-top:30px;"><b>Principal Treasurer</b></div>
-        </div></div></div>`;
-        window.print();
+    function buildYearDropdown() { 
+        const s = document.getElementById('yearFilter'); 
+        for(let i=2022; i<=2050; i++) { 
+            let o = document.createElement('option'); 
+            o.value=i; o.text=i; 
+            if(i==new Date().getFullYear()) o.selected=true; 
+            s.appendChild(o); 
+        } 
     }
 
-    function buildYearDropdown() { const s = document.getElementById('yearFilter'); for(let i=2024; i<=2030; i++) { let o = document.createElement('option'); o.value=i; o.text=i; if(i==new Date().getFullYear()) o.selected=true; s.appendChild(o); } }
     function editMember(id, f) { let v = prompt("New Name?"); if(v) dbRef.ref('config/'+f).set(v); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service" ? "inline-block" : "none"); }
-    function handleFormChange() { const isD = document.getElementById('eType').value === 'donation'; document.getElementById('eOcc').style.display = isD ? "inline-block" : "none"; }
+    function handleFormChange() { 
+        const isD = document.getElementById('eType').value === 'donation'; 
+        document.getElementById('eOcc').style.display = isD ? "inline-block" : "none"; 
+        if(!isD) document.getElementById('eSubOcc').style.display = "none";
+        else checkExService();
+    }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
 </body>
-    </html>
+                        </html>
