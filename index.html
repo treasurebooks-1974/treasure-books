@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Master Edition</title>
+    <title>TREASURE BOOK - Premium Master Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -34,15 +34,15 @@
             backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);
         }
         
-        /* Dashboard Right Corner Year Control */
+        /* Dashboard Tiny Year Control */
         .year-control-nano {
-            position: absolute; top: 25px; right: 35px;
-            background: var(--navy); color: var(--premium-gold); padding: 4px 10px;
-            border-radius: 8px; font-size: 10px; font-weight: 900;
-            border: 1px solid var(--gold); display: flex; align-items: center; gap: 4px;
-            z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: absolute; top: 12px; right: 20px;
+            background: var(--navy); color: var(--premium-gold); padding: 2px 6px;
+            border-radius: 4px; font-size: 8px; font-weight: 900;
+            border: 1px solid var(--gold); display: flex; align-items: center; gap: 2px;
+            z-index: 100;
         }
-        .year-control-nano select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; font-size: 10px; }
+        .year-control-nano select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; font-size: 8px; }
 
         .brand-header { text-align: center; margin-bottom: 45px; }
         .brand-header h1 { color: var(--navy); font-size: 46px; font-weight: 900; letter-spacing: 8px; margin: 0; text-transform: uppercase; }
@@ -66,10 +66,10 @@
         .bg-red { background: linear-gradient(135deg, #7f1d1d, #ef4444); border-bottom: 4px solid #fca5a5; }
         .bg-green { background: linear-gradient(135deg, #064e3b, #10b981); border-bottom: 4px solid #6ee7b7; }
 
-        .list-section { background: white; border-radius: 35px; padding: 30px; border: 1.5px solid #f1f5f9; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.04); }
+        .list-section { background: white; border-radius: 35px; padding: 30px; border: 1.5px solid #f1f5f9; margin-bottom: 40px; }
         .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f8fafc; padding-bottom: 15px; }
         .list-title { font-size: 15px; font-weight: 900; color: var(--navy); text-transform: uppercase; }
-        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 14px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 14px; cursor: pointer; font-size: 18px; }
 
         table { width: 100%; border-collapse: collapse; }
         th { background: #f8fafc; color: #64748b; padding: 20px; text-align: left; font-size: 11px; text-transform: uppercase; font-weight: 900; }
@@ -86,15 +86,15 @@
             #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .premium-frame, .no-print { display: none !important; }
 
-            .ledger-container { padding: 10mm; min-height: 275mm; width: 100%; box-sizing: border-box; background: white; display: flex; flex-direction: column; }
-            .ledger-border { border: 4px double #000; padding: 15px; min-height: 260mm; position: relative; display: flex; flex-direction: column; flex-grow: 1; }
+            .ledger-container { padding: 10mm; min-height: 275mm; width: 100%; box-sizing: border-box; background: white; display: flex; flex-direction: column; overflow: hidden; }
+            .ledger-border { border: 4px double #000; padding: 15px; min-height: 260mm; position: relative; z-index: 1; display: flex; flex-direction: column; flex-grow: 1; }
             .print-header { text-align: center; border-bottom: 4px solid #000; margin-bottom: 15px; padding-bottom: 10px; }
-            .print-header h1 { font-size: 32px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
-            .print-header h2 { font-size: 20px; margin: 5px 0; color: #000; font-weight: 800; }
+            .print-header h1 { font-size: 32px; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
             .print-type-label { font-size: 18px; font-weight: 900; text-decoration: underline; margin: 10px 0; display: block; text-transform: uppercase; text-align: center; color: #000; }
+            .ledger-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 28px; color: rgba(0,0,0,0.035) !important; font-weight: 900; white-space: nowrap; z-index: 0; }
             .print-table { width: 100%; border-collapse: collapse; margin-top: 5px; flex-grow: 1; }
             .print-table th { background: #000 !important; color: #fff !important; padding: 8px; border: 1.5px solid #000; -webkit-print-color-adjust: exact; font-size: 11px; }
-            .print-table td { border: 1.5px solid #000; padding: 6px; font-size: 12px; font-weight: 700; color: #000; }
+            .print-table td { border: 1.5px solid #000; padding: 6px; font-size: 12px; font-weight: 700; }
             .total-summary-print { margin-top: 20px; border: 2.5px solid #000; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 14px; font-weight: 900; background: #f1f1f1 !important; -webkit-print-color-adjust: exact; }
             .summary-item { border-right: 2px solid #000; } .summary-item:last-child { border-right: none; }
             .signature-section-ledger { margin-top: auto; padding-top: 40px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; padding-left: 20px; padding-right: 20px; }
@@ -103,7 +103,7 @@
 
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; }
             .receipt-card { border: 2px solid #000; padding: 5px; width: 680px; background: #fff; position: relative; }
-            .receipt-inner-border { border: 6px double #000; padding: 35px; }
+            .receipt-inner-border { border: 6px double #000; padding: 35px; position: relative; }
             .official-signature-pen { font-family: 'Dancing Script', cursive; font-size: 40px; color: #081c5e !important; display: block; margin-bottom: -12px; transform: rotate(-2deg); font-weight: 600; -webkit-print-color-adjust: exact; }
         }
     </style>
@@ -112,10 +112,7 @@
 
 <div class="premium-frame no-print">
     <div class="container">
-        
-        <div class="year-control-nano">
-            YR <select id="yearFilter" onchange="loadView()"></select>
-        </div>
+        <div class="year-control-nano">YR <select id="yearFilter" onchange="loadView()"></select></div>
 
         <div class="brand-header">
             <h1>TREASURE BOOK</h1>
@@ -140,12 +137,15 @@
                     <option value="Navy">Navy</option><option value="Air Force">Air Force</option><option value="BSF">BSF</option>
                     <option value="CRPF">CRPF</option><option value="CISF">CISF</option><option value="ITBP">ITBP</option>
                     <option value="SSB">SSB</option><option value="Railway">Railway</option><option value="Student">Student</option>
-                    <option value="Farmer">Farmer</option><option value="Business">Business</option><option value="Ex-Service">Ex-Service</option>
+                    <option value="Farmer">Farmer</option><option value="Business">Business</option><option value="Social Worker">Social Worker</option>
+                    <option value="Ex-Service">Ex-Service</option><option value="Other">Other</option>
                 </select>
                 <select id="eSubOcc" style="display:none;">
-                    <option value="">Branch</option>
+                    <option value="">Branch List</option>
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
-                    <option value="Police">Police</option><option value="BSF">BSF</option><option value="Railway">Railway</option>
+                    <option value="Police">Police</option><option value="BSF">BSF</option><option value="CRPF">CRPF</option>
+                    <option value="CISF">CISF</option><option value="ITBP">ITBP</option><option value="SSB">SSB</option>
+                    <option value="Railway">Railway</option><option value="Teacher">Teacher</option><option value="Govt Service">Govt Service</option>
                 </select>
                 <input type="text" id="eRecBy" placeholder="Received By (Optional)" style="display:none;">
                 <input type="number" id="eAmount" placeholder="Amount ₹">
@@ -273,12 +273,12 @@
                 <div class="receipt-inner-border">
                     <div class="receipt-watermark">OFFICIAL RECEIPT</div>
                     <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><br><div class="receipt-title-box">DONATION RECEIPT</div></div>
-                    <div style="margin-top:30px; position:relative; z-index:2;">
+                    <div style="margin-top:35px; position:relative; z-index:2;">
                         <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
                         <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
                         <div class="data-row"><span class="data-label">Date:</span><span class="data-value">${formatDate(item.date)}</span></div>
                         <div class="amt-words-row">Rupees ${amtWords}</div>
-                        <div style="text-align:center; margin-top:20px;"><div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div></div>
+                        <div style="text-align:center; margin-top:25px;"><div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div></div>
                     </div>
                     <div class="thank-you-msg">"Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."<br><strong>🙏 Thank You!</strong></div>
                     <div style="text-align:right; margin-top:40px;"><span class="official-signature-pen">${trName}</span><div class="sig-line-ledger">Principal Treasurer</div><div style="font-size:11px; font-weight:900; margin-top:5px; margin-right: 50px;">DATE: ${formatDate(item.date)}</div></div>
@@ -291,7 +291,7 @@
     function printReport(type) {
         const year = document.getElementById('yearFilter').value;
         const watermarkText = type === 'don' ? "OFFICIAL DONATIONS REPORT" : "OFFICIAL EXPENDITURE REPORT";
-        let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
+        let rows = ""; let sl = 1; let data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { 
             rows += `<tr><td>${sl++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td><td>${x.recBy || '-'}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; 
         });
@@ -301,7 +301,10 @@
             <div class="ledger-border">
                 <div class="ledger-watermark">${watermarkText}</div>
                 <div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label">${watermarkText}</span></div>
-                <table class="print-table"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead><tbody>${rows}</tbody></table>
+                <table class="print-table">
+                    <thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead>
+                    <tbody>${rows}</tbody>
+                </table>
                 <div class="total-summary-print"><div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div></div>
                 <div class="signature-section-ledger">
                     <div class="sig-box-ledger"><div class="sig-line-ledger">General Secretary</div></div>
@@ -313,7 +316,7 @@
     }
 
     function buildYearDropdown() { const sel = document.getElementById('yearFilter'); for (let y = 2024; y <= 2050; y++) { let opt = document.createElement('option'); opt.value = y; opt.text = y; if(y === new Date().getFullYear()) opt.selected = true; sel.appendChild(opt); } }
-    function editMember(elId, field) { let v = prompt("Enter Official Name:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
+    function editMember(elId, field) { let v = prompt("Official Full Name:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
