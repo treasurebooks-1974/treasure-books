@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOK - Final Premium Edition</title>
+    <title>TREASURE BOOK - Ultra Premium Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -63,7 +63,7 @@
         .card { padding: 22px; border-radius: 28px; color: white; text-align: center; font-weight: 900; font-size: 13px; }
         .bg-blue { background: linear-gradient(135deg, #060b26, #1a2a6c); border-bottom: 4px solid var(--neon-blue); }
         .bg-red { background: linear-gradient(135deg, #7f1d1d, #ef4444); border-bottom: 4px solid #fca5a5; }
-        .bg-green { background: linear-gradient(135deg, #064e3b, #10b981); border-bottom: 4px solid #6ee7b7; }
+        .bg-green { background: linear-gradient(135deg, #064e3b, #10 b981); border-bottom: 4px solid #6ee7b7; }
 
         .list-section { background: white; border-radius: 35px; padding: 30px; border: 1.5px solid #f1f5f9; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.04); }
         .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f8fafc; padding-bottom: 15px; }
@@ -82,44 +82,61 @@
         @media print {
             body * { visibility: hidden; background: white !important; }
             #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
-            .premium-frame, .no-print { display: none !important; }
-
-            /* 📜 Ledger Printout (Kal jaisa Simple Design) 📜 */
-            .ledger-container { padding: 10mm; min-height: 280mm; width: 100%; box-sizing: border-box; background: white; display: flex; flex-direction: column; overflow: hidden; page-break-after: avoid; }
-            .ledger-border { border: 2px solid #000; padding: 15px; min-height: 250mm; position: relative; display: flex; flex-direction: column; flex-grow: 1; }
-            .print-header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 15px; padding-bottom: 10px; }
-            .print-header h1 { font-size: 28px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
-            .print-type-label { font-size: 18px; font-weight: 900; text-decoration: underline; margin: 10px 0; display: block; text-transform: uppercase; text-align: center; color: #000; }
-            
-            .ledger-watermark { 
-                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); 
-                font-size: 38px; color: rgba(0,0,0,0.035) !important; font-weight: 900; z-index: 0; white-space: nowrap; text-align: center; 
+            #printArea { 
+                position: absolute; left: 0; top: 0; width: 100%; display: block !important;
+                background: white !important;
             }
 
-            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 2; flex-grow: 1; }
-            .print-table th { background: #f0f0f0 !important; color: #000 !important; padding: 10px; border: 1px solid #000; -webkit-print-color-adjust: exact; font-size: 12px; }
-            .print-table td { border: 1px solid #000; padding: 8px; font-size: 13px; font-weight: 600; color: #000; }
-            .total-summary-print { margin-top: 20px; border: 2px solid #000; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 15px; font-weight: 900; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
-            .summary-item { border-right: 1px solid #000; } .summary-item:last-child { border-right: none; }
-            .signature-section-ledger { margin-top: auto; padding-top: 40px; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; padding-left: 30px; padding-right: 30px; }
-            .sig-box-ledger { text-align: center; width: 230px; }
-            .sig-line-ledger { border-top: 1.5px solid #000; margin-top: 10px; padding-top: 5px; font-weight: 900; font-size: 14px; text-transform: uppercase; }
+            /* --- 🚀 ULTRA-PREMIUM PRO MAX LEDGER DESIGN --- */
+            .ledger-container { 
+                padding: 10mm; min-height: 285mm; width: 100%; box-sizing: border-box; 
+                background: white; display: flex; flex-direction: column; overflow: hidden;
+            }
+            .ledger-border { 
+                border: 4px double #000; padding: 20px; min-height: 265mm; 
+                position: relative; z-index: 1; display: flex; flex-direction: column; flex-grow: 1; 
+            }
+            
+            /* Professional Security Watermark */
+            .ledger-watermark { 
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); 
+                font-size: 38px; color: rgba(0,0,0,0.035) !important; font-weight: 900; z-index: 0; 
+                white-space: nowrap; text-align: center; pointer-events: none; text-transform: uppercase;
+            }
 
-            /* 📜 Royal Receipt Design (Aaj wala Royal Design) 📜 */
-            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; visibility: visible; }
+            .print-header { text-align: center; border-bottom: 4px solid #000; margin-bottom: 20px; padding-bottom: 15px; }
+            .print-header h1 { font-size: 34px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 4px; font-weight: 900; }
+            .print-header h2 { font-size: 22px; margin: 8px 0; color: #000; }
+            .print-type-label { font-size: 24px; font-weight: 900; text-decoration: underline; margin: 15px 0; display: block; text-transform: uppercase; text-align: center; color: #000; letter-spacing: 1px;}
+            
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 2; flex-grow: 1; }
+            .print-table th { background: #000 !important; color: #fff !important; padding: 10px; border: 1.5px solid #000; -webkit-print-color-adjust: exact; font-size: 13px; text-transform: uppercase; }
+            .print-table td { border: 1.5px solid #000; padding: 8px; font-size: 14px; font-weight: 700; color: #000; }
+
+            /* Professional Audit Summary Box */
+            .total-summary-print { 
+                margin-top: 30px; border: 3px solid #000; padding: 15px; 
+                display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; 
+                font-size: 16px; font-weight: 900; background: #f1f1f1 !important; -webkit-print-color-adjust: exact;
+                position: relative; z-index: 2;
+            }
+            .summary-item { border-right: 2px solid #000; } .summary-item:last-child { border-right: none; }
+
+            /* Signature Setup */
+            .signature-section-ledger { 
+                margin-top: auto; padding-top: 50px; padding-bottom: 20px; 
+                display: flex; justify-content: space-between; align-items: flex-end; padding-left: 30px; padding-right: 30px;
+            }
+            .sig-box-ledger { text-align: center; width: 230px; }
+            .sig-line-ledger { border-top: 2.5px solid #000; margin-top: 10px; padding-top: 8px; font-weight: 900; font-size: 15px; text-transform: uppercase; }
+
+            /* Receipt Styles (Maintained) */
+            .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; }
             .receipt-card { border: 2.5px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden; }
             .receipt-inner-border { border: 6px double #000; padding: 40px; position: relative; }
             .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 55px; color: rgba(0,0,0,0.035); font-weight: 900; z-index: 0; white-space: nowrap; }
-            .receipt-title-box { border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; font-size: 18px; text-transform: uppercase; background: #fff; z-index: 2; letter-spacing: 2px;}
-            .data-row { display: flex; margin-bottom: 15px; border-bottom: 1.5px dotted #000; padding-bottom: 6px; z-index: 2; position: relative; }
-            .data-label { font-weight: 800; min-width: 170px; font-size: 15px; text-transform: uppercase; }
-            .data-value { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; flex-grow: 1; }
             .amt-box-royal { background: #1a1a1a !important; color: #fff !important; padding: 12px 35px; font-size: 28px; font-weight: 900; border-radius: 10px; display: inline-block; -webkit-print-color-adjust: exact; border: 3px solid #000; margin-top: 10px;}
-            .amt-words-row { margin-top: 20px; padding: 15px; background: #f4f4f4 !important; border-left: 6px solid #000; font-family: 'Playfair Display', serif; font-style: italic; -webkit-print-color-adjust: exact; font-size: 18px; }
-            .thank-you-note { margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; line-height: 1.6; text-align: center; color: #000; z-index: 2; position: relative; }
             .official-signature-pen { font-family: 'Dancing Script', cursive; font-size: 45px; color: #081c5e !important; display: block; margin-bottom: -15px; transform: rotate(-2deg); font-weight: 600; -webkit-print-color-adjust: exact; }
-            .sig-line-royal { border-top: 2.5px solid #000; width: 250px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -224,12 +241,6 @@
         return str.trim();
     }
 
-    function getSahidYear(year) {
-        let count = parseInt(year) - 1974;
-        let suffix = (count % 10 == 1 && count != 11) ? "st" : (count % 10 == 2 && count != 12) ? "nd" : (count % 10 == 3 && count != 13) ? "rd" : "th";
-        return `${count}${suffix} SAHID DIWAS ${year}`;
-    }
-
     dbRef.ref().on('value', (snap) => {
         const val = snap.val() || {};
         currentData.donations = val.donations || {};
@@ -287,7 +298,7 @@
             <div class="receipt-card">
                 <div class="receipt-inner-border">
                     <div class="receipt-watermark">OFFICIAL RECEIPT</div>
-                    <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><br><div class="receipt-title-box">DONATION RECEIPT</div></div>
+                    <div class="print-header"><h1>52nd SAHID DIWAS 2026</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><br><div class="receipt-title-box">DONATION RECEIPT</div></div>
                     <div style="margin-top:35px; position:relative; z-index:2;">
                         <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
                         <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
@@ -315,12 +326,17 @@
         <div class="ledger-container">
             <div class="ledger-border">
                 <div class="ledger-watermark">${watermarkText}</div>
-                <div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label">${watermarkText}</span></div>
-                <table class="print-table"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead><tbody>${rows}</tbody></table>
-                <div class="total-summary-print"><div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div></div>
+                <div class="print-header"><h1>52nd SAHID DIWAS 2026</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label">${watermarkText}</span></div>
+                <table class="print-table">
+                    <thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                <div class="total-summary-print">
+                    <div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div>
+                </div>
                 <div class="signature-section-ledger">
                     <div class="sig-box-ledger"><div class="sig-line-ledger">General Secretary</div></div>
-                    <div class="sig-box-ledger"><span class="official-signature-pen" style="font-size:32px;">${document.getElementById('tName').innerText}</span><div class="sig-line-ledger">Principal Treasurer</div></div>
+                    <div class="sig-box-ledger"><span class="official-signature-pen" style="font-size:30px;">${document.getElementById('tName').innerText}</span><div class="sig-line-ledger">Principal Treasurer</div></div>
                 </div>
             </div>
         </div>`;
