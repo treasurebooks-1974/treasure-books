@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS | OFFICIAL LEDGER</title>
+    <title>TREASURE BOOKS | OFFICIAL</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -18,22 +18,20 @@
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: #f3f4f6; padding: 15px; }
 
-        /* --- YEAR ICON --- */
         .year-floating {
             position: fixed; top: 15px; right: 15px; z-index: 1000;
-            background: linear-gradient(135deg, var(--gold), #854d0e);
-            padding: 4px 10px; border-radius: 50px; display: flex; align-items: center;
+            background: var(--gold); padding: 5px 12px; border-radius: 50px; display: flex; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
         }
         .year-floating select { background: transparent; border: none; color: #000; font-weight: 900; font-size: 11px; cursor: pointer; outline: none; }
 
         header { text-align: center; margin: 30px 0; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
         .main-title { font-family: 'Cinzel', serif; font-size: clamp(28px, 5vw, 45px); letter-spacing: 4px; margin: 0; color: #fff; }
-        .sub-event { color: var(--gold); font-size: clamp(16px, 2vw, 20px); margin: 8px 0; font-weight: 600; }
+        .sub-event { color: var(--gold); font-size: 18px; margin: 8px 0; font-weight: 600; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; }
-        .stat-val { font-size: 24px; font-weight: 900; margin-top: 5px; font-family: 'Cinzel'; }
+        .stat-val { font-size: 24px; font-weight: 900; margin-top: 5px; font-family: 'Cinzel'; color: var(--gold); }
 
         .form-hub { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 30px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
@@ -49,43 +47,54 @@
         td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 13px; }
         .btn-act { padding: 4px 8px; border-radius: 5px; cursor: pointer; border: 1px solid #444; background: #1f2937; color: #fff; font-size: 11px; margin-right: 4px; }
 
-        /* --- PRINTING DESIGN --- */
+        /* --- PRINT AREA --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; }
-            .receipt-frame { border: 2px solid #000; padding: 5px; width: 680px; margin: 20px auto; position: relative; }
-            .receipt-inner { border: 5px double #000; padding: 30px; position: relative; }
-            .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 55px; color: rgba(0,0,0,0.04); font-weight: 900; z-index: 0; white-space: nowrap; }
-            .receipt-head { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; position: relative; z-index: 1; }
-            .receipt-logo { font-family: 'Cinzel', serif; font-size: 24px; margin: 0; font-weight: 900; }
-            .label-box { background: #000 !important; color: white !important; -webkit-print-color-adjust: exact; padding: 5px 25px; font-weight: bold; margin: 15px 0; display: inline-block; }
-            .data-row { font-size: 18px; margin: 20px 0; border-bottom: 1px dotted #888; padding-bottom: 5px; position: relative; z-index: 1; }
-            .amt-box { border: 2px solid #000; padding: 10px 40px; font-size: 30px; font-weight: 900; margin: 20px 0; display: inline-block; background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
-            .thank-you { margin-top: 30px; font-size: 14px; color: #333; font-style: italic; border-left: 4px solid #000; padding-left: 15px; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 36px; text-align: right; margin-top: 20px; }
+            
+            .receipt-frame { border: 2px solid #000; padding: 4px; width: 720px; margin: 20px auto; position: relative; overflow: hidden; background: white; }
+            .receipt-inner { border: 4px double #000; padding: 35px; position: relative; z-index: 2; background: transparent; }
+            
+            /* Enhanced Watermark */
+            .watermark-container { 
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); 
+                width: 120%; text-align: center; pointer-events: none; z-index: 0; opacity: 0.06;
+            }
+            .watermark-text { font-size: 32px; font-weight: 900; color: #000; line-height: 1.5; text-transform: uppercase; white-space: nowrap; }
+
+            .receipt-top-header { text-align: center; margin-bottom: 15px; }
+            .event-heading { font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px; }
+            
+            .receipt-mid-head { text-align: center; margin-top: 10px; }
+            .org-name-bill { font-family: 'Cinzel', serif; font-size: 22px; margin: 5px 0; }
+            .label-bill { background: #000 !important; color: white !important; -webkit-print-color-adjust: exact; padding: 4px 30px; font-weight: bold; margin: 15px 0; display: inline-block; font-size: 18px; }
+            
+            .data-row { font-size: 19px; margin: 18px 0; border-bottom: 1px dotted #444; padding-bottom: 6px; position: relative; }
+            .amt-box-bill { border: 3px solid #000; padding: 12px 45px; font-size: 32px; font-weight: 900; margin: 25px 0; display: inline-block; background: #f8f8f8 !important; -webkit-print-color-adjust: exact; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; text-align: right; margin-top: 30px; }
+            .thanks-note { margin-top: 35px; font-size: 14px; border-top: 1px solid #000; padding-top: 15px; font-style: italic; color: #222; }
         }
     </style>
 </head>
 <body>
 
 <div class="year-floating no-print">
-    <span style="font-size: 10px;">📅</span>
     <select id="yearFilter" onchange="loadView()"></select>
 </div>
 
 <div class="no-print">
     <header>
         <h1 class="main-title">TREASURE BOOKS</h1>
-        <div class="sub-event">52<sup>nd</sup> SAHID DIWAS 2026</div>
+        <div class="sub-event">52<sup>nd</sup> Sahid Diwas 2026</div>
         <div style="font-weight: 900; font-size: 22px; color: #9ca3af;">B.B.C MARANG BUNDU</div>
         <div style="font-size: 11px; color: #6b7280; margin-top: 5px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
     </header>
 
     <div class="stats-grid">
-        <div class="stat-card" style="border-bottom: 3px solid #10b981;">COLLECTION<div class="stat-val" id="sumIn" style="color: #10b981;">₹ 0</div></div>
-        <div class="stat-card" style="border-bottom: 3px solid #ef4444;">EXPENSE<div class="stat-val" id="sumOut" style="color: #ef4444;">₹ 0</div></div>
-        <div class="stat-card" style="border-bottom: 3px solid var(--gold);">BALANCE<div class="stat-val" id="sumBal" style="color: var(--gold);">₹ 0</div></div>
+        <div class="stat-card">COLLECTION<div class="stat-val" id="sumIn">₹ 0</div></div>
+        <div class="stat-card">EXPENSE<div class="stat-val" id="sumOut" style="color:#ef4444">₹ 0</div></div>
+        <div class="stat-card">BALANCE<div class="stat-val" id="sumBal">₹ 0</div></div>
     </div>
 
     <div class="form-hub">
@@ -171,7 +180,7 @@
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value,
               name = document.getElementById('eName').value, amt = document.getElementById('eAmount').value,
               key = document.getElementById('editKey').value;
-        if(!date || !name || !amt) return alert("All fields required!");
+        if(!date || !name || !amt) return alert("Details bharein!");
         const entry = { date, name, amt: Number(amt), year: new Date(date).getFullYear() };
         const path = type === 'donation' ? 'donations/' : 'expenses/';
         if(key) db.ref(path + key).set(entry).then(() => resetForm());
@@ -192,28 +201,39 @@
         const words = inWords(item.amt);
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-frame">
-                <div class="watermark">TREASURE BOOKS</div>
+                <div class="watermark-container">
+                    <div class="watermark-text">52<sup>nd</sup> Sahid Diwas 2026</div>
+                    <div class="watermark-text">B.B.C MARANG BUNDU</div>
+                    <div class="watermark-text">Reg.no :- MBJ8750 - 13 Of 2022</div>
+                    <div class="watermark-text" style="margin-top:20px">52<sup>nd</sup> Sahid Diwas 2026</div>
+                    <div class="watermark-text">B.B.C MARANG BUNDU</div>
+                </div>
+
                 <div class="receipt-inner">
-                    <div class="receipt-head">
-                        <div class="receipt-logo">B.B.C MARANG BUNDU</div>
-                        <small>Reg.no :- MBJ8750 - 13 Of 2022</small>
-                        <div style="font-size:24px; font-weight:900; margin-top:5px;">52<sup>nd</sup> Sahid Diwas 2026</div>
-                        <div class="label-box">DONATION RECEIPT</div>
+                    <div class="receipt-top-header">
+                        <div class="event-heading">52<sup>nd</sup> Sahid Diwas 2026</div>
                     </div>
-                    <div class="data-row"><b>No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span></div>
-                    <div class="data-row">Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b></div>
-                    <div class="data-row">Sum of Rupees <b style="text-transform:capitalize">${words}</b></div>
-                    <div class="data-row">Towards: <b>52nd Sahid Diwas Celebration Donation</b></div>
-                    <center><div class="amt-box">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
                     
-                    <div class="thank-you">
-                        <b>MESSAGE:</b> Sahid Diwas Samaroh ko safal banane mein aapke yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. <br>
-                        <i>"Thank you for your generous contribution towards our social cause."</i>
+                    <div class="receipt-mid-head">
+                        <div class="org-name-bill">B.B.C MARANG BUNDU</div>
+                        <div style="font-size:11px; letter-spacing:1px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
+                        <div class="label-bill">DONATION RECEIPT</div>
+                    </div>
+
+                    <div class="data-row" style="margin-top:30px;"><b>Receipt No:</b> #${key.substr(-5).toUpperCase()} <span style="float:right"><b>Date:</b> ${item.date}</span></div>
+                    <div class="data-row">Received with thanks from Mr./Ms. <b style="font-size:22px">${item.name}</b></div>
+                    <div class="data-row">Sum of Rupees: <b style="text-transform:capitalize">${words}</b></div>
+                    <div class="data-row">Towards: <b>52nd Sahid Diwas Celebration Donation</b></div>
+                    
+                    <center><div class="amt-box-bill">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                    
+                    <div class="thanks-note">
+                        <b>THANK YOU:</b> Sahid Diwas Samaroh ko safal banane mein aapke yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi.
                     </div>
 
                     <div class="sig-area">
                         <div class="sig-font">Principal Treasurer</div>
-                        <div style="font-size:12px; margin-right:15px; font-weight:bold; font-family:sans-serif">Authorized Sign</div>
+                        <div style="font-size:12px; font-weight:bold; font-family:sans-serif; margin-right:10px;">Authorized Signature</div>
                     </div>
                 </div>
             </div>`;
@@ -223,7 +243,7 @@
     (function init() {
         const sel = document.getElementById('yearFilter');
         for (let y = 2026; y <= 2050; y++) {
-            let opt = document.createElement('option'); opt.value = y; opt.text = y;
+            let opt = document.createElement('option'); opt.value = y; opt.text = "Session " + y;
             if(y === 2026) opt.selected = true;
             sel.appendChild(opt);
         }
