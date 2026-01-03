@@ -34,15 +34,15 @@
             backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);
         }
         
-        /* Dashboard Nano Year Control */
+        /* Dashboard Nano Year Control - Top Right Corner */
         .year-control-nano {
-            position: absolute; top: 10px; right: 15px;
-            background: var(--navy); color: var(--premium-gold); padding: 2px 6px;
-            border-radius: 5px; font-size: 8px; font-weight: 900;
-            border: 1px solid var(--gold); display: flex; align-items: center; gap: 2px;
+            position: absolute; top: 20px; right: 30px;
+            background: var(--navy); color: var(--premium-gold); padding: 3px 8px;
+            border-radius: 6px; font-size: 9px; font-weight: 900;
+            border: 1px solid var(--gold); display: flex; align-items: center; gap: 3px;
             z-index: 100;
         }
-        .year-control-nano select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; font-size: 8px; padding: 0; }
+        .year-control-nano select { background: transparent; color: #fff; border: none; font-weight: 800; outline: none; cursor: pointer; font-size: 9px; }
 
         .brand-header { text-align: center; margin-bottom: 45px; }
         .brand-header h1 { color: var(--navy); font-size: 46px; font-weight: 900; letter-spacing: 8px; margin: 0; text-transform: uppercase; }
@@ -50,7 +50,7 @@
         .brand-header p { color: #444; font-size: 13px; font-weight: 700; margin: 0; background: rgba(184, 134, 11, 0.1); display: inline-block; padding: 6px 25px; border-radius: 30px; border: 1.5px solid rgba(184, 134, 11, 0.2); }
 
         .executive-info { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
-        .exec-card { background: linear-gradient(145deg, #ffffff, #f1f5f9); padding: 20px; border-radius: 22px; border: 1.5px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: 5px 5px 15px rgba(0,0,0,0.05); }
+        .exec-card { background: linear-gradient(145deg, #ffffff, #f1f5f9); padding: 20px; border-radius: 22px; border: 1.5px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .exec-card span { font-size: 10px; color: #64748b; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
         .exec-card b { font-size: 18px; color: var(--navy); border-bottom: 3px solid var(--gold); padding: 0 10px; }
         .exec-edit { position: absolute; right: 15px; top: 15px; font-size: 10px; cursor: pointer; color: #ef4444; border: none; background: none; font-weight: 900; }
@@ -66,10 +66,10 @@
         .bg-red { background: linear-gradient(135deg, #7f1d1d, #ef4444); border-bottom: 4px solid #fca5a5; }
         .bg-green { background: linear-gradient(135deg, #064e3b, #10b981); border-bottom: 4px solid #6ee7b7; }
 
-        .list-section { background: white; border-radius: 35px; padding: 30px; border: 1.5px solid #f1f5f9; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.04); }
+        .list-section { background: white; border-radius: 35px; padding: 30px; border: 1.5px solid #f1f5f9; margin-bottom: 40px; }
         .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f8fafc; padding-bottom: 15px; }
         .list-title { font-size: 15px; font-weight: 900; color: var(--navy); text-transform: uppercase; }
-        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 14px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-print-icon { background: var(--navy); color: var(--premium-gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 14px; cursor: pointer; font-size: 18px; }
 
         table { width: 100%; border-collapse: collapse; }
         th { background: #f8fafc; color: #64748b; padding: 20px; text-align: left; font-size: 11px; text-transform: uppercase; font-weight: 900; }
@@ -78,15 +78,15 @@
         .act-btn { border: none; padding: 10px 15px; border-radius: 12px; color: white; cursor: pointer; font-size: 11px; font-weight: 800; margin-right: 6px; }
         .btn-r { background: var(--gold); } .btn-edit { background: #38bdf8; } .btn-del { background: #f87171; }
 
+        /* --- 🚀 ULTRA-PREMIUM PRO MAX PRINT STYLES --- */
         #printArea { display: none; }
-        
         @media print {
             body { background: white !important; margin: 0; padding: 0; display: block !important; }
             .premium-frame, .no-print { display: none !important; }
             #printArea { display: block !important; width: 100%; }
 
-            /* LEDGER WATERMARK DESIGN */
-            .ledger-container { padding: 40px; min-height: 297mm; position: relative; background: white; overflow: hidden;}
+            /* Professional Ledger Print Design */
+            .ledger-container { padding: 40px; min-height: 297mm; position: relative; background: white; overflow: hidden; }
             .ledger-border { border: 4px double #000; padding: 20px; min-height: 265mm; position: relative; z-index: 1; }
             .print-header { text-align: center; border-bottom: 3.5px solid #000; margin-bottom: 30px; padding-bottom: 15px; }
             .print-header h1 { font-size: 38px; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 5px; }
@@ -105,29 +105,23 @@
             .summary-item { border-right: 2px solid #000; } .summary-item:last-child { border-right: none; }
             .sig-box-p { text-align: center; width: 220px; border-top: 2.5px solid #000; padding-top: 8px; font-weight: 900; color: #000; }
 
-            /* 📜 ROYAL RECEIPT CHEQUE-LEAF DESIGN 📜 */
+            /* 📜 ROYAL RECEIPT DESIGN 📜 */
             .receipt-centered { display: flex; align-items: center; justify-content: center; height: 100vh; }
             .receipt-card { border: 2px solid #000; padding: 5px; width: 700px; background: #fff; position: relative; overflow: hidden; }
             .receipt-inner-border { border: 6px double #000; padding: 40px; position: relative;}
-            
             .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 60px; color: rgba(0,0,0,0.03); font-weight: 900; z-index: 0; white-space: nowrap; }
-            
             .receipt-title-box { border: 2px solid #000; display: inline-block; padding: 5px 30px; font-weight: 900; font-size: 20px; text-transform: uppercase; background: #fff; z-index: 2; position: relative; }
-            
             .data-row { display: flex; margin-bottom: 18px; font-size: 19px; border-bottom: 1.5px dotted #000; padding-bottom: 5px; z-index: 2; position: relative; }
             .data-label { font-weight: 800; min-width: 170px; font-size: 15px; text-transform: uppercase; color: #222; }
             .data-value { font-weight: 700; color: #000; flex-grow: 1; font-family: 'Playfair Display', serif; }
 
             /* Cheque Box Design */
-            .amt-box-royal { 
-                background: url('https://www.transparenttextures.com/patterns/cubes.png'), #111 !important; 
-                color: #fff !important; padding: 15px 40px; font-size: 32px; font-weight: 900; 
-                border-radius: 8px; display: inline-block; -webkit-print-color-adjust: exact; 
-                box-shadow: inset 0 0 10px rgba(255,255,255,0.2); border: 2px solid #000;
-            }
+            .amt-box-royal { background: #111 !important; color: #fff !important; padding: 15px 40px; font-size: 32px; font-weight: 900; border-radius: 8px; display: inline-block; -webkit-print-color-adjust: exact; border: 2px solid #000; }
             .amt-words-row { margin-top: 20px; padding: 12px; background: #f4f4f4 !important; border-left: 6px solid #000; font-weight: 700; -webkit-print-color-adjust: exact; font-family: 'Playfair Display', serif; font-style: italic; }
             
+            /* Pen Style Signature */
             .official-signature-pen { font-family: 'Dancing Script', cursive; font-size: 44px; color: #081c5e !important; display: block; margin-bottom: -15px; transform: rotate(-2deg); font-weight: 600; padding-right: 15px; -webkit-print-color-adjust: exact; }
+            .sig-line-royal { border-top: 2.5px solid #000; width: 240px; margin-left: auto; padding-top: 10px; font-weight: 900; font-size: 14px; text-align: center; text-transform: uppercase; }
         }
     </style>
 </head>
@@ -136,6 +130,10 @@
 <div class="premium-frame no-print">
     <div class="container">
         
+        <div class="year-control-nano">
+            YR <select id="yearFilter" onchange="loadView()"></select>
+        </div>
+
         <div class="brand-header">
             <h1>TREASURE BOOK</h1>
             <h2>B.B.C MARANG BUNDU</h2>
@@ -144,10 +142,7 @@
         
         <div class="executive-info">
             <div class="exec-card"><span>Principal Treasurer</span><b id="tName">...</b><button class="exec-edit" onclick="editMember('tName', 'tName')">Edit</button></div>
-            <div class="exec-card">
-                <div class="year-control-nano">YR <select id="yearFilter" onchange="loadView()"></select></div>
-                <span>Asst Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button>
-            </div>
+            <div class="exec-card"><span>Asst Treasurer</span><b id="atName">...</b><button class="exec-edit" onclick="editMember('atName', 'atName')">Edit</button></div>
         </div>
 
         <div class="entry-section">
@@ -169,7 +164,7 @@
                     <option value="Army">Army</option><option value="Navy">Navy</option><option value="Air Force">Air Force</option>
                     <option value="Police">Police</option><option value="BSF">BSF</option><option value="Teacher">Teacher</option><option value="Govt Service">Govt Service</option>
                 </select>
-                <input type="text" id="eRecBy" placeholder="Received By (Credit Only)" style="display:none;">
+                <input type="text" id="eRecBy" placeholder="Amount Received By" style="display:none;">
                 <input type="number" id="eAmount" placeholder="Amount ₹">
             </div>
             <button class="btn-save-compact" id="saveBtn" onclick="saveEntry()">CONFIRM TRANSACTION</button>
@@ -258,17 +253,10 @@
         document.getElementById('sumIn').innerText = tIn.toLocaleString(); document.getElementById('sumOut').innerText = tOut.toLocaleString(); document.getElementById('sumBal').innerText = (tIn - tOut).toLocaleString();
     }
 
-    function handleFormChange() {
-        const type = document.getElementById('eType').value;
-        document.getElementById('eOcc').style.display = (type === 'donation') ? "inline-block" : "none";
-        document.getElementById('eRecBy').style.display = (type === 'donation') ? "inline-block" : "none";
-        checkExService();
-    }
-
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = parseFloat(document.getElementById('eAmount').value), editKey = document.getElementById('editKey').value, occ = document.getElementById('eOcc').value;
         let recBy = document.getElementById('eRecBy').value;
-        if(!date || !name || isNaN(amt)) return alert("Fill data!");
+        if(!date || !name || isNaN(amt)) return alert("Data bharein!");
         if(type === 'donation' && !recBy) recBy = document.getElementById('tName').innerText;
         let finalOcc = (occ === "Ex-Service") ? "Ex-Service (" + document.getElementById('eSubOcc').value + ")" : (occ || "-");
         const entry = { date, name, occ: (type==='donation'?finalOcc:'-'), amt, recBy: (type==='donation'?recBy:''), year: new Date(date).getFullYear() };
@@ -284,7 +272,7 @@
         document.getElementById('saveBtn').innerText = "UPDATE NOW"; handleFormChange(); window.scrollTo(0,0);
     }
 
-    function deleteEntry(type, key) { if(confirm("Delete?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
+    function deleteEntry(type, key) { if(confirm("Permanently Delete?")) dbRef.ref((type === 'don' ? 'donations/' : 'expenses/') + key).remove(); }
 
     function printReceipt(key) {
         const item = currentData.donations[key], trName = document.getElementById('tName').innerText;
@@ -295,12 +283,12 @@
                 <div class="receipt-inner-border">
                     <div class="receipt-watermark">OFFICIAL RECEIPT</div>
                     <div class="print-header"><h1>${getSahidYear(item.year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><br><div class="receipt-title-box">DONATION RECEIPT</div></div>
-                    <div style="margin-top:35px; position:relative; z-index:2;">
+                    <div style="margin-top:35px; position:relative;">
                         <div class="data-row"><span class="data-label">Donor Name:</span><span class="data-value">${item.name}</span></div>
                         <div class="data-row"><span class="data-label">Occupation:</span><span class="data-value">${item.occ}</span></div>
                         <div class="data-row"><span class="data-label">Date:</span><span class="data-value">${formatDate(item.date)}</span></div>
-                        <div class="amt-words-row"><span style="font-size:10px; color:#555; font-style: normal;">AMOUNT IN WORDS:</span><br>Rupees ${amtWords}</div>
-                        <div style="text-align:center; margin-top:25px;"><div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div></div>
+                        <div class="amt-words-row"><span style="font-size:10px; color:#555;">AMOUNT IN WORDS:</span><br>Rupees ${amtWords}</div>
+                        <div style="text-align:center; margin-top:20px;"><div class="amt-box-royal">₹ ${item.amt.toLocaleString()} /-</div></div>
                     </div>
                     <div class="thank-you-msg">"Aapka ye yogdaan hamari samiti ke liye atyant mahatvapurn hai. Sahid Diwas samaroh ko safal banane mein aapki sahayata ke liye hum aapke sadaiv abhari rahenge."<br><strong>🙏 Thank You!</strong></div>
                     <div style="text-align:right; margin-top:45px;"><span class="official-signature-pen">${trName}</span><div class="sig-line-royal">Principal Treasurer</div><div style="font-size:11px; font-weight:900; margin-top:5px; margin-right: 50px;">DATE: ${formatDate(item.date)}</div></div>
@@ -311,20 +299,27 @@
     }
 
     function printReport(type) {
-        const year = document.getElementById('yearFilter').value, reportTitle = type === 'don' ? "OFFICIAL DONATIONS REPORT" : "OFFICIAL EXPENDITURE REPORT";
+        const year = document.getElementById('yearFilter').value;
+        const watermarkText = type === 'don' ? "OFFICIAL DONATIONS REPORT" : "OFFICIAL EXPENDITURE REPORT";
         let rows = "", sl = 1, data = type === 'don' ? currentData.donations : currentData.expenses;
         Object.values(data).filter(x => x.year == year).sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(x => { 
             rows += `<tr><td>${sl++}</td><td>${formatDate(x.date)}</td><td>${x.name}</td>${type==='don'?`<td>${x.occ}</td><td>${x.recBy || '-'}</td>`:''}<td>₹${x.amt.toLocaleString()}</td></tr>`; 
         });
         const sIn = document.getElementById('sumIn').innerText, sOut = document.getElementById('sumOut').innerText, sBal = document.getElementById('sumBal').innerText;
         document.getElementById('printArea').innerHTML = `
-        <div class="ledger-container"><div class="ledger-border"><div class="ledger-watermark">${reportTitle}</div><div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label">${reportTitle}</span></div><table class="print-table"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead><tbody>${rows}</tbody></table><div class="total-summary-print"><div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div></div><div class="signature-row"><div class="sig-box-p" style="margin-left:40px;">General Secretary</div><div class="sig-box-p">Principal Treasurer</div></div></div></div>`;
+        <div class="ledger-container"><div class="ledger-border"><div class="ledger-watermark">${watermarkText}</div><div class="print-header"><h1>${getSahidYear(year)}</h1><h2>B.B.C MARANG BUNDU</h2><p>Reg.no :- MBJ8750 - 13 Of 2022</p><span class="print-type-label">${watermarkText}</span></div><table class="print-table"><thead>${type==='don'?'<tr><th>Sl</th><th>Date</th><th>Donor Name</th><th>Occupation</th><th>Received By</th><th>Amount</th></tr>':'<tr><th>Sl</th><th>Date</th><th>Particulars</th><th>Amount</th></tr>'}</thead><tbody>${rows}</tbody></table><div class="total-summary-print"><div class="summary-item">COLLECTION<br>₹ ${sIn}</div><div class="summary-item">EXPENDITURE<br>₹ ${sOut}</div><div class="summary-item">NET BALANCE<br>₹ ${sBal}</div></div><div class="signature-row"><div class="sig-box-p">General Secretary</div><div class="sig-box-p">Principal Treasurer</div></div></div></div>`;
         window.print();
     }
 
     function buildYearDropdown() { const sel = document.getElementById('yearFilter'); for (let y = 2024; y <= 2050; y++) { let opt = document.createElement('option'); opt.value = y; opt.text = y; if(y === new Date().getFullYear()) opt.selected = true; sel.appendChild(opt); } }
     function editMember(elId, field) { let v = prompt("Official Full Name:", document.getElementById(elId).innerText); if(v) dbRef.ref('config/' + field).set(v); }
     function checkExService() { document.getElementById('eSubOcc').style.display = (document.getElementById('eOcc').value === "Ex-Service") ? "inline-block" : "none"; }
+    function handleFormChange() {
+        const type = document.getElementById('eType').value;
+        document.getElementById('eOcc').style.display = (type === 'donation') ? "inline-block" : "none";
+        document.getElementById('eRecBy').style.display = (type === 'donation') ? "inline-block" : "none";
+        checkExService();
+    }
     window.onload = () => { buildYearDropdown(); document.getElementById('eDate').valueAsDate = new Date(); handleFormChange(); };
 </script>
 </body>
