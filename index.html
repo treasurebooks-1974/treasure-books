@@ -51,17 +51,15 @@
         .falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-        /* Modal */
+        /* Edit Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; padding: 30px; border-radius: 25px; border: 1px solid var(--gold); width: 90%; max-width: 400px; }
 
-        /* --- PROFESSIONAL PRINT STYLES --- */
+        /* --- PRINT AREA --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
-            
-            /* Page setup for one page receipt */
             @page { size: A4 portrait; margin: 15mm; }
             
             .print-page { width: 100%; position: relative; }
@@ -69,29 +67,30 @@
             .print-header-final h1 { font-size: 24px; font-weight: 900; margin: 0; text-transform: uppercase; }
             .print-header-final h2 { font-family: 'Cinzel', serif; font-size: 22px; margin: 5px 0; }
 
-            /* Receipt Royal Design */
             .receipt-frame-final { border: 2.5px solid #000; padding: 3px; width: 180mm; margin: auto; page-break-inside: avoid; }
             .receipt-inner-final { border: 6px double #000; padding: 30px; }
             .label-pill-final { background: #000 !important; color: #fff !important; padding: 8px 30px; font-weight: bold; font-size: 18px; display: inline-block; margin: 15px 0; -webkit-print-color-adjust: exact; }
             .data-line-final { font-size: 19px; margin: 15px 0; border-bottom: 1.5px dotted #666; padding-bottom: 5px; }
             .amt-box-final { border: 3px solid #000; padding: 10px 40px; font-size: 30px; font-weight: 900; margin: 20px 0; display: inline-block; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
 
-            /* Ledger Report Styles */
             .report-table-final { width: 100%; border-collapse: collapse; margin-top: 15px; }
             .report-table-final th, .report-table-final td { border: 1.5px solid #000; padding: 10px; text-align: left; font-size: 14px; }
             .report-table-final th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
 
-            /* SUMMARY TABLE (Professional Position) */
+            /* Summary Box */
             .summary-table-print { width: 100%; border: 2.5px solid #000; margin-top: 30px; border-collapse: collapse; }
             .summary-table-print td { padding: 12px; border: 1.5px solid #000; text-align: center; width: 33.33%; background: #fafafa !important; -webkit-print-color-adjust: exact; }
             .summary-label { font-size: 11px; font-weight: bold; display: block; margin-bottom: 5px; color: #555; }
             .summary-val-big { font-size: 18px; font-weight: 900; }
 
-            /* Signatures */
+            /* --- PROFESSIONAL DOTTED SIGNATURES --- */
             .sig-area-final { margin-top: 60px; display: flex; justify-content: space-between; text-align: center; align-items: flex-end; }
             .sig-box-final { width: 220px; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; display: block; color: #081c5e !important; margin-bottom: 5px; }
-            .sig-label-final { border-top: 1.5px solid #000; font-weight: bold; font-size: 13px; text-transform: uppercase; padding-top: 5px; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; display: block; color: #081c5e !important; margin-bottom: 3px; }
+            .sig-label-final { 
+                border-top: 2.5px dotted #000; /* DOTTED LINE HERE */
+                font-weight: bold; font-size: 13px; text-transform: uppercase; padding-top: 8px; display: block;
+            }
         }
     </style>
 </head>
@@ -106,7 +105,7 @@
     <header>
         <h1 class="main-title">TREASURE BOOKS</h1>
         <div style="font-weight: 900; font-size: 22px; color: var(--gold); margin-top:10px;">B.B.C MARANG BUNDU</div>
-        <div style="font-size: 11px; color: #6b7280;">Reg.no :- MBJ8750 - 13 Of 2022</div>
+        <div style="font-size: 11px; color: #6b7280; margin-top:5px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
     </header>
 
     <div class="exec-row">
@@ -123,9 +122,9 @@
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card">COLLECTION<div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
-        <div class="stat-card">EXPENSE<div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
-        <div class="stat-card">BALANCE<div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
+        <div class="stat-card" style="border-left: 4px solid var(--green);">COLLECTION<div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
+        <div class="stat-card" style="border-left: 4px solid var(--red);">EXPENDITURE<div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
+        <div class="stat-card" style="border-left: 4px solid var(--gold);">BALANCE<div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
     </div>
 
     <div class="form-hub">
@@ -142,14 +141,14 @@
         <div class="ledger-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin:0; font-size:16px;">🟢 Collections</h3>
-                <button class="btn-mini" onclick="printReport('don')">Print List</button>
+                <button class="btn-mini" onclick="printReport('don')">Print Report</button>
             </div>
             <table id="tblDon"><thead><tr><th style="width:30px;">Sl</th><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
         </div>
         <div class="ledger-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin:0; font-size:16px;">🔴 Expenditures</h3>
-                <button class="btn-mini" onclick="printReport('exp')">Print List</button>
+                <button class="btn-mini" onclick="printReport('exp')">Print Report</button>
             </div>
             <table id="tblExp"><thead><tr><th style="width:30px;">Sl</th><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
         </div>
@@ -158,11 +157,11 @@
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3 style="color:var(--gold); margin-top:0;">✏️ Update Record</h3>
+        <h3 style="color:var(--gold); margin-top:0;">✏️ Edit Data</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
         <div style="display:grid; gap:15px;">
             <input type="date" id="mDate"><input type="text" id="mName"><input type="number" id="mAmount">
-            <button class="btn-save" style="width:100%" onclick="updateData()">Update Now</button>
+            <button class="btn-save" style="width:100%" onclick="updateData()">UPDATE NOW</button>
             <button onclick="closeModal()" style="background:none; border:none; color:#9ca3af; cursor:pointer;">Cancel</button>
         </div>
     </div>
@@ -215,7 +214,7 @@
         const val = snap.val() || {};
         localData.donations = val.donations || {};
         localData.expenses = val.expenses || {};
-        localData.config = val.config || { tName: "Set Name", atName: "Set Name" };
+        localData.config = val.config || { tName: "Principal Treasurer", atName: "Asst Treasurer" };
         document.getElementById('disp_tName').innerText = localData.config.tName;
         document.getElementById('disp_atName').innerText = localData.config.atName;
         loadView();
@@ -245,7 +244,7 @@
     function openEditModal(type, key) { const data = type === 'donation' ? localData.donations[key] : localData.expenses[key]; document.getElementById('editKey').value = key; document.getElementById('editType').value = type; document.getElementById('mDate').value = data.date; document.getElementById('mName').value = data.name; document.getElementById('mAmount').value = data.amt; document.getElementById('editModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('editModal').style.display = 'none'; }
     function updateData() { const key = document.getElementById('editKey').value, type = document.getElementById('editType').value; db.ref((type === 'donation' ? 'donations/' : 'expenses/') + key).set({ date: document.getElementById('mDate').value, name: document.getElementById('mName').value, amt: Number(document.getElementById('mAmount').value), year: new Date(document.getElementById('mDate').value).getFullYear() }); closeModal(); }
-    function deleteEntry(path, key) { if(confirm("Permanently Delete?")) db.ref(path + '/' + key).remove(); }
+    function deleteEntry(path, key) { if(confirm("Confirm Delete?")) db.ref(path + '/' + key).remove(); }
 
     function printReceipt(key) {
         const item = localData.donations[key];
