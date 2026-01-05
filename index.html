@@ -47,28 +47,33 @@
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
         .btn-mini { padding: 5px 10px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: #020617; color: #fff; font-size: 10px; margin-right: 4px; }
 
-        /* Modal popup */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
         .modal-content { background: #1e293b; padding: 30px; border-radius: 25px; border: 1px solid var(--gold); width: 400px; }
 
-        /* --- PRINT AREA --- */
+        /* --- PRINT AREA DESIGN --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
             
             .receipt-frame-elite { border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; background: white; position: relative; overflow: hidden; page-break-inside: avoid; }
-            .receipt-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); font-size: 80px; font-weight: 900; color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; z-index: 0; }
-            .receipt-inner-elite { border: 2px solid #000; padding: 40px; position: relative; z-index: 1; background: rgba(255,255,255,0.8); }
             
-            /* UPDATED METALLIC LABEL DESIGN */
+            /* Watermark Logic for all prints */
+            .print-watermark {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+                font-family: 'Outfit', sans-serif; font-size: 60px; font-weight: 900;
+                color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; z-index: 0; pointer-events: none; letter-spacing: 2px;
+            }
+
+            .receipt-inner-elite { border: 2px solid #000; padding: 40px; position: relative; z-index: 1; background: rgba(255,255,255,0.8); }
+            .badge-main { font-family: 'Cinzel', serif; font-size: 30px; font-weight: 900; text-align: center; margin: 0; }
+            
             .label-pill-metallic { 
                 background: linear-gradient(135deg, #000 0%, #444 50%, #000 100%) !important; 
                 color: #fff !important; padding: 10px 60px; display: inline-block; 
                 margin: 20px 0; -webkit-print-color-adjust: exact; 
-                font-family: 'Outfit'; font-weight: 900; letter-spacing: 3px;
+                font-family: 'Outfit'; font-weight: 900; letter-spacing: 2px;
                 border: 2px solid #fff; outline: 2px solid #000;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             }
             
             .data-line { font-size: 19px; margin: 15px 0; line-height: 1.8; font-family: 'Outfit'; }
@@ -76,10 +81,10 @@
             .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 48px; color: #000 !important; display: block; margin-bottom: -10px; transform: rotate(-2deg); }
             .sig-post { font-weight: 900; font-size: 14px; text-transform: uppercase; border-top: 2px solid #000; padding-top: 5px; font-family: 'Outfit'; }
 
-            .report-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .report-table { width: 100%; border-collapse: collapse; margin: 20px 0; position: relative; z-index: 1; }
             .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; font-size: 13px; }
             .report-table th { background: #eee !important; -webkit-print-color-adjust: exact; }
-            .summary-table-print { width: 100%; border: 2.5px solid #000; margin-top: 20px; border-collapse: collapse; }
+            .summary-table-print { width: 100%; border: 2.5px solid #000; margin-top: 20px; border-collapse: collapse; position: relative; z-index: 1; }
             .summary-table-print td { padding: 12px; border: 1.5px solid #000; text-align: center; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; font-weight: 900; }
         }
     </style>
@@ -174,7 +179,7 @@
         let tIn = 0, tOut = 0, slDon = 1, slExp = 1;
         bDon.innerHTML = ''; bExp.innerHTML = '';
         Object.entries(localData.donations).forEach(([k, x]) => { if(x.year == fYear) { tIn += Number(x.amt); bDon.innerHTML += `<tr><td>${slDon++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button><button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button></td></tr>`; } });
-        Object.entries(localData.expenses).forEach(([k, x]) => { if(x.year == fYear) { tOut += Number(x.amt); bExp.innerHTML += `<tr><td>${slExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button></td></tr>`; } });
+        Object.entries(localData.expenses).forEach(([k, x]) => { if(x.year == fYear) { tOut += Number(x.amt); bExp.innerHTML += `<tr><td>${slExp++}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button><button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`; } });
         document.getElementById('sumIn').innerText = '₹ ' + tIn.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tOut.toLocaleString();
         document.getElementById('sumBal').innerText = '₹ ' + (tIn - tOut).toLocaleString();
@@ -201,6 +206,7 @@
     }
 
     function editTreasurer(field) { let n = prompt("Name:"); if(n) db.ref('config/' + field).set(n); }
+    function deleteEntry(path, key) { if(confirm("Delete?")) db.ref(path + '/' + key).remove(); }
     function openEditModal(type, key) { const data = type === 'donation' ? localData.donations[key] : localData.expenses[key]; document.getElementById('editKey').value = key; document.getElementById('editType').value = type; document.getElementById('mDate').value = data.date; document.getElementById('mName').value = data.name; document.getElementById('mAmount').value = data.amt; document.getElementById('editModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('editModal').style.display = 'none'; }
     function updateData() { const key = document.getElementById('editKey').value, type = document.getElementById('editType').value; db.ref((type === 'donation' ? 'donations/' : 'expenses/') + key).update({ date: document.getElementById('mDate').value, name: document.getElementById('mName').value, amt: Number(document.getElementById('mAmount').value), year: new Date(document.getElementById('mDate').value).getFullYear() }); closeModal(); }
@@ -209,7 +215,7 @@
         const item = localData.donations[key]; const words = inWords(item.amt);
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-frame-elite">
-                <div class="receipt-watermark">OFFICIAL RECEIPT</div>
+                <div class="print-watermark">OFFICIAL RECEIPT</div>
                 <div class="receipt-inner-elite">
                     <center>
                         <h1 class="badge-main" style="text-decoration:underline; font-size:24px;">52nd SAHID DIWAS 2026</h1>
@@ -222,7 +228,7 @@
                     <div class="data-line">The sum of Rupees <span class="ink-data" style="text-transform:capitalize;">${words}</span></div>
                     <div class="data-line">Towards <span class="ink-data">52nd Sahid Diwas Celebration Donation</span></div>
                     <center><div style="border:4px solid #000; padding:15px 60px; font-size:32px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px;">"Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye samiti dhanyawad karti hai."<br><b>Thank You!</b></p>
+                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px;">"Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"<br><b>Thank You!</b></p>
                     <div style="display:flex; justify-content:flex-end; margin-top:20px;"><div style="width:250px; text-align:center;"><span class="sig-font-running">${localData.config.tName}</span><div class="sig-post" style="border-top:2px dotted #000;">Principal Treasurer</div></div></div>
                 </div>
             </div>`;
@@ -231,6 +237,7 @@
 
     function printReport(type) {
         const fYear = document.getElementById('yearFilter').value;
+        const watermarkText = type === 'don' ? "OFFICIAL COLLECTION REPORT" : "OFFICIAL EXPENDITURE REPORT";
         let tCol = 0, tExp = 0;
         Object.values(localData.donations).filter(x => x.year == fYear).forEach(x => tCol += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fYear).forEach(x => tExp += Number(x.amt));
@@ -238,17 +245,20 @@
             .filter(x => x.year == fYear).map((x, i) => `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`).join('');
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:20px;">
-                <center>
-                    <h1 class="badge-main" style="font-size:24px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
-                    <div class="label-pill-metallic" style="font-size:16px;">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div>
-                </center>
-                <table class="report-table"><thead><tr><th>Sl</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
-                <table class="summary-table-print"><tr><td>COLLECTION<br>₹ ${tCol.toLocaleString()}</td><td>EXPENSE<br>₹ ${tExp.toLocaleString()}</td><td>BALANCE<br>₹ ${(tCol - tExp).toLocaleString()}</td></tr></table>
-                <div style="display:flex; justify-content:space-between; margin-top:50px;">
-                    <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:30px;">${localData.config.atName}</span><div class="sig-post" style="border-top:2px dotted #000;">Asst. Treasurer</div></div>
-                    <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:30px;">${localData.config.tName}</span><div class="sig-post" style="border-top:2px dotted #000;">Principal Treasurer</div></div>
+            <div class="receipt-frame-elite">
+                <div class="print-watermark" style="font-size:35px;">${watermarkText}</div>
+                <div style="padding:20px; position:relative; z-index:1;">
+                    <center>
+                        <h1 class="badge-main" style="font-size:24px;">52nd SAHID DIWAS 2026</h1>
+                        <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
+                        <div class="label-pill-metallic" style="font-size:16px;">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div>
+                    </center>
+                    <table class="report-table"><thead><tr><th>Sl</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
+                    <table class="summary-table-print"><tr><td>COLLECTION<br>₹ ${tCol.toLocaleString()}</td><td>EXPENSE<br>₹ ${tExp.toLocaleString()}</td><td>BALANCE<br>₹ ${(tCol - tExp).toLocaleString()}</td></tr></table>
+                    <div style="display:flex; justify-content:space-between; margin-top:50px;">
+                        <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:30px;">${localData.config.atName}</span><div class="sig-post" style="border-top:2px dotted #000;">Asst. Treasurer</div></div>
+                        <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:30px;">${localData.config.tName}</span><div class="sig-post" style="border-top:2px dotted #000;">Principal Treasurer</div></div>
+                    </div>
                 </div>
             </div>`;
         window.print();
