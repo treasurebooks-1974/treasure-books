@@ -253,4 +253,31 @@
                         <h2 style="font-family:'Cinzel'; font-size:26px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                         <div class="label-pill-metallic" style="font-size:16px;">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div>
                     </center>
-                    <table class="report-table"><thead><tr><th>Sl</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>${ro
+                    <table class="report-table"><thead><tr><th>Sl</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
+                    <table class="summary-table-print"><tr><td>COLLECTION<br>₹ ${tCol.toLocaleString()}</td><td>EXPENSE<br>₹ ${tExp.toLocaleString()}</td><td>BALANCE<br>₹ ${(tCol - tExp).toLocaleString()}</td></tr></table>
+                    <div class="sig-area-final" style="margin-top:50px;">
+                        <div class="sig-box-final">
+                            <span class="sig-font-running" style="font-size:34px;">${localData.config.atName}</span>
+                            <div class="sig-line-final">Asst. Treasurer</div>
+                        </div>
+                        <div class="sig-box-final">
+                            <span class="sig-font-running" style="font-size:34px;">${localData.config.tName}</span>
+                            <div class="sig-line-final">Principal Treasurer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        window.print();
+    }
+
+    (function init() {
+        const sel = document.getElementById('yearFilter');
+        for (let y = 2026; y <= 2030; y++) {
+            let opt = document.createElement('option'); opt.value = y; opt.text = "Session " + y;
+            if(y === 2026) opt.selected = true; sel.appendChild(opt);
+        }
+        document.getElementById('eDate').valueAsDate = new Date();
+    })();
+</script>
+</body>
+</html>
