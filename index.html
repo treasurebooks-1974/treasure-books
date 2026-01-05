@@ -21,7 +21,7 @@
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #1e293b, #020617); color: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* --- DASHBOARD UI (STAYS SAME) --- */
+        /* --- DASHBOARD UI --- */
         .session-floating { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--sidebar); border: 1px solid var(--gold); padding: 8px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
         .session-floating select { background: transparent; border: none; color: #fff; font-weight: 700; cursor: pointer; outline: none; }
         .dash-header { text-align: center; padding: 40px 20px 20px; }
@@ -51,40 +51,18 @@
         .falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-        /* --- UPDATED PRINT AREA (RECEIPT ONLY) --- */
+        /* --- PRINT AREA --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
-            
             .receipt-frame-elite { border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; background: white; }
             .receipt-inner-elite { border: 2px solid #000; padding: 40px; }
-            
             .badge-main { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900; text-align: center; margin: 0; }
             .label-pill-highlight { background: #000 !important; color: #fff !important; padding: 10px 50px; display: inline-block; margin: 20px 0; -webkit-print-color-adjust: exact; font-family: 'Outfit'; font-weight: 900; }
-            
-            /* Professional Data Font & Dotted Logic */
             .data-line { font-size: 19px; margin: 15px 0; line-height: 1.8; font-family: 'Outfit'; color: #000; }
-            .ink-data { 
-                font-family: 'Crimson Text', serif; 
-                font-style: italic; 
-                font-size: 22px; 
-                color: #000; 
-                border-bottom: 1.5px dotted #000; /* Only data has dotted line */
-                padding: 0 10px;
-                display: inline-block;
-            }
-
-            /* Natural Running Signature */
-            .sig-font-running { 
-                font-family: 'Dancing Script', cursive; 
-                font-size: 48px; 
-                color: #000 !important; 
-                -webkit-print-color-adjust: exact;
-                display: block;
-                margin-bottom: -10px;
-                transform: rotate(-2deg); /* Slant for pen effect */
-            }
+            .ink-data { font-family: 'Crimson Text', serif; font-style: italic; font-size: 22px; color: #000; border-bottom: 1.5px dotted #000; padding: 0 10px; display: inline-block; }
+            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 48px; color: #000 !important; display: block; margin-bottom: -10px; transform: rotate(-2deg); -webkit-print-color-adjust: exact; }
             .sig-post { font-weight: 900; font-size: 14px; text-transform: uppercase; border-top: 2px solid #000; padding-top: 5px; font-family: 'Outfit'; }
         }
     </style>
@@ -247,11 +225,16 @@
                     <div class="data-line">The sum of Rupees <span class="ink-data" style="text-transform:capitalize; width:70%;">${words}</span></div>
                     <div class="data-line">Towards <span class="ink-data">52nd Sahid Diwas Celebration Donation</span></div>
                     <center><div style="border:4px solid #000; padding:15px 60px; font-size:32px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px;">"Sahid Diwas Samaroh ko safal banane mein aapke is yogdaan ke liye samiti dhanyawad karti hai."</p>
-                    <div style="display:flex; justify-content:flex-end; margin-top:30px;">
+                    
+                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px; font-family:'Outfit'; line-height:1.5;">
+                        "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"
+                        <br><b style="font-size:18px; font-style:normal;">Thank You!</b>
+                    </p>
+
+                    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
                         <div style="width:250px; text-align:center;">
                             <span class="sig-font-running">${localData.config.tName}</span>
-                            <div class="sig-post">Principal Treasurer</div>
+                            <div class="sig-post">Principal Treasurer Signature</div>
                         </div>
                     </div>
                 </div></div>
