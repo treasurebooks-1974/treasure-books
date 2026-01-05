@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS | ELITE SYSTEM</title>
+    <title>TREASURE BOOKS | OFFICIAL ELITE</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -15,69 +15,58 @@
             --green: #10b981; --red: #f43f5e; --border: rgba(255, 255, 255, 0.08);
         }
 
-        body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #082f49, #05080a); color: #f8fafc; min-height: 100vh; }
+        body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #082f49, #05080a); color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
 
-        /* --- DASHBOARD ELEMENTS --- */
+        /* --- DASHBOARD UI --- */
         .dash-header { text-align: center; padding: 40px 20px 10px; }
-        .main-title { font-family: 'Cinzel', serif; font-size: 48px; font-weight: 900; letter-spacing: 6px; margin: 0; background: linear-gradient(to bottom, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-title { font-family: 'Cinzel', serif; font-size: 42px; font-weight: 900; letter-spacing: 5px; margin: 0; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .sub-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); margin: 8px 0; }
-        .reg-no { font-size: 11px; color: var(--neon-teal); letter-spacing: 3px; font-weight: 900; opacity: 0.8; margin-bottom: 10px; }
+        .reg-no { font-size: 11px; color: var(--neon-teal); letter-spacing: 3px; font-weight: 900; opacity: 0.8; }
 
-        .year-card-pinned { background: var(--glass); border: 1px solid var(--neon-teal); width: fit-content; margin: 0 auto 20px; padding: 8px 20px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
-        .year-card-pinned select { background: transparent; border: none; color: white; font-weight: 900; outline: none; cursor: pointer; }
+        .pinned-panel { background: var(--glass); border: 1px solid var(--border); max-width: 900px; margin: 20px auto; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .config-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 15px; align-items: end; }
+        .field-group { display: flex; flex-direction: column; gap: 5px; }
+        .field-group label { font-size: 10px; color: var(--gold); font-weight: 900; text-transform: uppercase; }
+        .field-group input, .field-group select { background: #1e293b; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 12px; outline: none; }
 
-        /* --- PROFESSIONAL TREASURER CONFIG PANEL --- */
-        .config-panel { 
-            background: linear-gradient(145deg, rgba(15,23,42,0.8), rgba(2,6,23,0.9));
-            max-width: 800px; margin: 0 auto 20px; padding: 15px 25px; border-radius: 20px;
-            border: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-        .config-field { display: flex; flex-direction: column; gap: 5px; }
-        .config-field label { font-size: 10px; text-transform: uppercase; color: var(--gold); letter-spacing: 1.5px; font-weight: 900; }
-        .config-field input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 10px; outline: none; transition: 0.3s; }
-        .config-field input:focus { border-color: var(--neon-teal); background: rgba(255,255,255,0.1); }
-
-        .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 1100px; margin: 0 auto 20px; width: 95%; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 900px; margin: 20px auto; }
         .stat-card { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
         .stat-val { font-size: 28px; font-weight: 900; font-family: 'Cinzel'; margin-top: 5px; }
 
-        .form-box { background: #0f172a; padding: 25px; border-radius: 25px; border: 1px solid var(--border); max-width: 800px; margin: 10px auto; }
+        .form-box { background: #0f172a; padding: 25px; border-radius: 25px; border: 1px solid var(--border); max-width: 900px; margin: 20px auto; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 12px; }
-        .form-grid input, .form-grid select { background: #1e293b; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 10px; outline: none; }
-        .btn-save { grid-column: span 3; background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn-save { grid-column: span 3; background: var(--gold); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
 
         .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1300px; margin: 20px auto; padding: 0 20px; }
         .ledger-box { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th { text-align: left; color: #64748b; padding: 10px; border-bottom: 2px solid var(--border); }
         td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .btn-mini { padding: 5px 8px; border-radius: 5px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; }
+        .btn-mini { padding: 6px 10px; border-radius: 6px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; margin-right: 3px; }
 
-        /* --- PRINT DESIGNS --- */
+        /* --- PROFESSIONAL PRINT CSS --- */
         #printArea { display: none; }
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; }
             @page { size: A4 portrait; margin: 0; }
             
-            .receipt-main-frame { border: 15px double #000; padding: 10px; margin: 25px; height: 92vh; position: relative; box-sizing: border-box; background: white; }
-            .receipt-content { border: 2px solid #000; padding: 40px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
-            .header-badge { background: black !important; color: white !important; padding: 10px 60px; display: inline-block; font-family: 'Outfit'; font-weight: 900; margin-top: 15px; -webkit-print-color-adjust: exact; }
-            .ink-line { border-bottom: 1.5px dotted #000; display: inline-block; font-family: 'Crimson Text'; font-style: italic; font-size: 24px; padding: 0 10px; }
-            .amount-box { border: 5px solid #000; padding: 20px 60px; font-size: 38px; font-weight: 900; background: #f2f2f2 !important; margin: 30px 0; -webkit-print-color-adjust: exact; display: inline-block; }
-            .thank-you-note { text-align: center; font-size: 15px; font-style: italic; line-height: 1.6; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
-            .sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 20px; }
-            .sig-block { text-align: center; width: 220px; }
-            .sig-line { border-top: 2px solid #000; padding-top: 5px; font-weight: 900; font-size: 13px; text-transform: uppercase; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 40px; display: block; height: 45px; }
+            .print-frame { border: 15px double #000; padding: 10px; margin: 25px; height: 93vh; box-sizing: border-box; background: white; }
+            .print-content { border: 2px solid #000; padding: 40px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+            .badge { background: black !important; color: white !important; padding: 8px 50px; display: inline-block; font-weight: 900; margin: 15px 0; -webkit-print-color-adjust: exact; }
+            .dotted-line { border-bottom: 1.5px dotted #000; display: inline-block; font-family: 'Crimson Text'; font-style: italic; font-size: 22px; padding: 0 8px; }
+            .amount-tag { border: 5px solid #000; padding: 15px 50px; font-size: 34px; font-weight: 900; background: #eee !important; margin: 25px 0; -webkit-print-color-adjust: exact; display: inline-block; }
             
-            /* Report Print */
-            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; }
-            .summary-strip { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid #000; margin-top: -1px; background: #eee !important; -webkit-print-color-adjust: exact; font-weight: 900; text-align: center; }
-            .summary-strip div { padding: 12px; border-right: 1px solid #000; }
+            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid #000; }
+            .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; color: #000; }
+            .summary-bar { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid #000; border-top: none; background: #f0f0f0 !important; -webkit-print-color-adjust: exact; font-weight: 900; text-align: center; }
+            .summary-bar div { padding: 12px; border-right: 1px solid #000; }
+            
+            .sig-row { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 30px; }
+            .sig-box { text-align: center; width: 200px; }
+            .sig-line { border-top: 2px solid #000; padding-top: 5px; font-weight: 900; font-size: 12px; text-transform: uppercase; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 36px; display: block; height: 40px; }
         }
     </style>
 </head>
@@ -89,23 +78,24 @@
     <div class="reg-no">Reg.no :- MBJ8750 - 13 Of 2022</div>
 </div>
 
-<div class="year-card-pinned no-print">
-    <span>SELECTED SESSION:</span>
-    <select id="yearFilter" onchange="loadView()"></select>
+<div class="pinned-panel no-print">
+    <div class="config-grid">
+        <div class="field-group">
+            <label>Session Year</label>
+            <select id="yearFilter" onchange="loadView()"></select>
+        </div>
+        <div class="field-group">
+            <label>Asst. Treasurer</label>
+            <input type="text" id="cfgAT" placeholder="Name" onchange="updateCfg()">
+        </div>
+        <div class="field-group">
+            <label>Principal Treasurer</label>
+            <input type="text" id="cfgT" placeholder="Name" onchange="updateCfg()">
+        </div>
+    </div>
 </div>
 
-<div class="config-panel no-print">
-    <div class="config-field">
-        <label>Assistant Treasurer</label>
-        <input type="text" id="cfgAT" placeholder="Enter Name" onchange="updateCfg()">
-    </div>
-    <div class="config-field">
-        <label>Principal Treasurer</label>
-        <input type="text" id="cfgT" placeholder="Enter Name" onchange="updateCfg()">
-    </div>
-</div>
-
-<div class="stats-container no-print">
+<div class="stats-grid no-print">
     <div class="stat-card"><div style="color:var(--green)">COLLECTIONS</div><div class="stat-val" id="sumIn">₹ 0</div></div>
     <div class="stat-card"><div style="color:var(--red)">EXPENDITURES</div><div class="stat-val" id="sumOut">₹ 0</div></div>
     <div class="stat-card"><div style="color:var(--gold)">CASH BALANCE</div><div class="stat-val" id="sumBal">₹ 0</div></div>
@@ -116,18 +106,18 @@
         <select id="eType" style="grid-column: span 3;"><option value="donation">CREDIT (Collection)</option><option value="expense">DEBIT (Expenditure)</option></select>
         <input type="date" id="eDate">
         <input type="number" id="eAmount" placeholder="Amount ₹">
-        <input type="text" id="eName" placeholder="Donor Name / Particulars">
-        <button class="btn-save" onclick="saveEntry()">Save Transaction</button>
+        <input type="text" id="eName" placeholder="Donor Name / Purpose Details">
+        <button class="btn-save" onclick="saveEntry()">Commit Transaction</button>
     </div>
 </div>
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="display:flex; justify-content:space-between; color:var(--green)">Collections <button class="btn-mini" onclick="printReport('don')">Report</button></h3>
+        <h3 style="display:flex; justify-content:space-between; color:var(--green)">🟢 Collections <button class="btn-mini" onclick="printReport('don')">Report</button></h3>
         <table><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="display:flex; justify-content:space-between; color:var(--red)">Expenditures <button class="btn-mini" onclick="printReport('exp')">Report</button></h3>
+        <h3 style="display:flex; justify-content:space-between; color:var(--red)">🔴 Expenditures <button class="btn-mini" onclick="printReport('exp')">Report</button></h3>
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
@@ -191,12 +181,12 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Pura data bharein!");
+        if(!d || !n || !a) return alert("Fill all details!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function deleteEntry(p, k) { if(confirm("Humesha ke liye delete karein?")) db.ref(p + '/' + k).remove(); }
+    function deleteEntry(p, k) { if(confirm("Permanently Delete?")) db.ref(p + '/' + k).remove(); }
 
     function numToWords(n) {
         const a = ['','One ','Two ','Three ','Four ','Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
@@ -214,36 +204,31 @@
     function printReceipt(key) {
         const item = localData.donations[key];
         document.getElementById('printArea').innerHTML = `
-            <div class="receipt-main-frame">
-                <div class="receipt-content">
+            <div class="print-frame">
+                <div class="print-content">
                     <center>
                         <h1 style="font-family:Cinzel; font-size:38px; margin:0; text-decoration:underline;">52nd SAHID DIWAS 2026</h1>
                         <h2 style="font-family:Cinzel; font-size:28px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
                         <div style="font-weight:900; letter-spacing:2px; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
-                        <div class="header-badge">OFFICIAL DONATION RECEIPT</div>
+                        <div class="badge">OFFICIAL DONATION RECEIPT</div>
                     </center>
-                    
                     <div style="font-size:20px; margin:40px 0 20px;">
-                        Receipt No: <span class="ink-line" style="min-width:150px;">#${key.substr(-6).toUpperCase()}</span> 
-                        <span style="float:right">Date: <span class="ink-line">${item.date}</span></span>
+                        Receipt No: <span class="dotted-line" style="min-width:150px;">#${key.substr(-6).toUpperCase()}</span> 
+                        <span style="float:right">Date: <span class="dotted-line">${item.date}</span></span>
                     </div>
-                    
-                    <div style="font-size:22px; line-height:2.2; margin-bottom:20px;">
-                        Received with thanks from Mr./Ms. <span class="ink-line" style="min-width:400px;">${item.name}</span><br>
-                        The sum of Rupees <span class="ink-line" style="text-transform:capitalize; min-width:450px;">${numToWords(item.amt)}</span><br>
-                        Towards <span class="ink-line" style="min-width:480px;">Sahid Diwas Celebration Donation</span>
+                    <div style="font-size:22px; line-height:2.4; margin-bottom:20px;">
+                        Received with thanks from Mr./Ms. <span class="dotted-line" style="min-width:400px;">${item.name}</span><br>
+                        The sum of Rupees <span class="dotted-line" style="text-transform:capitalize; min-width:450px;">${numToWords(item.amt)}</span><br>
+                        Towards <span class="dotted-line" style="min-width:480px;">Sahid Diwas Celebration Donation</span>
                     </div>
-
-                    <center><div class="amount-box">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    
-                    <div class="thank-you-note">
-                        "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"<br>
+                    <center><div class="amount-tag">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                    <p style="text-align:center; font-style:italic; line-height:1.6; margin-top:30px;">
+                        "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi."<br>
                         <strong style="font-size:24px; display:block; margin-top:10px;">Thank You!</strong>
-                    </div>
-
+                    </p>
                     <div class="sig-row">
-                        <div class="sig-block"><div class="sig-line">Receiver's Signature</div></div>
-                        <div class="sig-block">
+                        <div class="sig-box"><div class="sig-line">Receiver Signature</div></div>
+                        <div class="sig-box">
                             <span class="sig-font">${localData.config.tName}</span>
                             <div class="sig-line">Principal Treasurer</div>
                         </div>
@@ -263,26 +248,26 @@
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; border:15px double #000; margin:20px; background:white; min-height:94vh;">
+            <div style="padding:40px; border:15px double #000; margin:20px; background:white; min-height:95vh;">
                 <center>
                     <h1 style="font-family:Cinzel; font-size:32px; margin:0; text-decoration:underline;">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:Cinzel; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                     <div style="font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</div>
-                    <div class="header-badge" style="font-size:16px;">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER REPORT</div>
+                    <div class="badge" style="font-size:16px;">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER REPORT</div>
                     <div style="margin:10px 0; font-weight:900;">SESSION YEAR: ${fy}</div>
                 </center>
                 <table class="report-table">
-                    <thead><tr style="background:#eee !important; -webkit-print-color-adjust: exact;"><th>S.N</th><th>Date</th><th>Description / Particulars</th><th>Amount (₹)</th></tr></thead>
+                    <thead><tr style="background:#eee !important; -webkit-print-color-adjust: exact;"><th>S.N</th><th>Date</th><th>Particulars / Description</th><th>Amount (₹)</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-                <div class="summary-strip">
-                    <div>TOTAL COLLECTION<br>₹ ${tin.toLocaleString()}</div>
-                    <div>TOTAL EXPENDITURE<br>₹ ${tout.toLocaleString()}</div>
-                    <div>NET BALANCE<br>₹ ${(tin-tout).toLocaleString()}</div>
+                <div class="summary-bar">
+                    <div>TOTAL COLLECTIONS<br>₹ ${tin.toLocaleString()}</div>
+                    <div>TOTAL EXPENDITURES<br>₹ ${tout.toLocaleString()}</div>
+                    <div>CASH BALANCE<br>₹ ${(tin-tout).toLocaleString()}</div>
                 </div>
-                <div class="sig-row" style="margin-top:100px;">
-                    <div class="sig-block"><span class="sig-font">${localData.config.atName}</span><div class="sig-line">Assistant Treasurer</div></div>
-                    <div class="sig-block"><span class="sig-name sig-font">${localData.config.tName}</span><div class="sig-line">Principal Treasurer</div></div>
+                <div class="sig-row" style="margin-top:80px;">
+                    <div class="sig-box"><span class="sig-font">${localData.config.atName}</span><div class="sig-line">Assistant Treasurer</div></div>
+                    <div class="sig-box"><span class="sig-font">${localData.config.tName}</span><div class="sig-line">Principal Treasurer</div></div>
                 </div>
             </div>`;
         window.print();
@@ -291,7 +276,7 @@
     (function init() {
         const s = document.getElementById('yearFilter');
         for (let y = 2026; y <= 2050; y++) {
-            let o = document.createElement('option'); o.value = y; o.text = "SESSION " + y;
+            let o = document.createElement('option'); o.value = y; o.text = "Session " + y;
             if(y === 2026) o.selected = true; s.appendChild(o);
         }
         document.getElementById('eDate').valueAsDate = new Date();
