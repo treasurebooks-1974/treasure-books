@@ -46,7 +46,6 @@
         td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
         .btn-mini { padding: 6px 10px; border-radius: 6px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; margin-right: 3px; }
 
-        /* --- EDIT MODAL --- */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 350px; }
 
@@ -56,21 +55,25 @@
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
             #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; }
-            @page { size: A4 portrait; margin: 15mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             
-            .print-header { text-align: center; margin-bottom: 30px; }
-            .print-h1 { font-family: 'Cinzel'; font-size: 28px; text-decoration: underline; margin: 0; }
+            /* Receipt Double Border */
+            .receipt-border-double { border: 6px double #000; padding: 20px; margin: 10px auto; width: 180mm; }
+            /* Report Single Border */
+            .report-border-single { border: 2px solid #000; padding: 20px; margin: 5px; min-height: 95vh; box-sizing: border-box; }
+            
+            .print-header { text-align: center; margin-bottom: 20px; }
+            .print-h1 { font-family: 'Cinzel'; font-size: 30px; text-decoration: underline; margin: 0; }
             .label-pill { background: black !important; color: white !important; padding: 8px 45px; display: inline-block; margin: 15px 0; font-weight: 900; -webkit-print-color-adjust: exact; }
             .ink-field { font-family: 'Crimson Text'; font-style: italic; font-size: 20px; border-bottom: 1.5px dotted #000; padding: 0 10px; }
             
-            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1.5px solid black; }
             .report-table th, .report-table td { border: 1px solid black; padding: 10px; text-align: left; }
+            .summary-strip { display: flex; justify-content: space-between; border: 2px solid black; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; font-weight: 900; margin-top: 10px; padding: 12px; font-size: 14px; }
             
-            .summary-strip { display: flex; justify-content: space-between; border: 2.5px solid black; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; font-weight: 900; margin-top: 10px; padding: 15px; }
-            
-            .sig-area { display: flex; justify-content: space-between; margin-top: 80px; }
+            .sig-area { display: flex; justify-content: space-between; margin-top: 60px; }
             .sig-box { text-align: center; width: 220px; }
-            .sig-line { border-top: 2px solid black; padding-top: 5px; font-weight: bold; }
+            .sig-line { border-top: 2px solid black; padding-top: 5px; font-weight: bold; font-size: 13px; }
             .sig-font { font-family: 'Dancing Script', cursive; font-size: 35px; display: block; height: 40px; }
         }
     </style>
@@ -124,10 +127,8 @@
         <h3 style="color:var(--gold); margin-top:0;">✏️ Edit Record</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
         <div style="display:flex; flex-direction:column; gap:12px;">
-            <input type="date" id="mDate" style="padding:10px; border-radius:8px;">
-            <input type="text" id="mName" placeholder="Name" style="padding:10px; border-radius:8px;">
-            <input type="number" id="mAmount" placeholder="Amount" style="padding:10px; border-radius:8px;">
-            <button class="btn-save" onclick="updateData()">Update Record</button>
+            <input type="date" id="mDate"><input type="text" id="mName" placeholder="Name"><input type="number" id="mAmount" placeholder="Amount">
+            <button class="btn-save" onclick="updateData()">Update</button>
             <button onclick="closeModal()" style="color:#94a3b8; background:none; border:none; cursor:pointer;">Cancel</button>
         </div>
     </div>
@@ -192,7 +193,7 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Pura data bharein!");
+        if(!d || !n || !a) return alert("Fill data!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
@@ -212,7 +213,7 @@
         }); closeModal();
     }
 
-    function deleteEntry(p, k) { if(confirm("Humesha ke liye delete karein?")) db.ref(p + '/' + k).remove(); }
+    function deleteEntry(p, k) { if(confirm("Delete Permanently?")) db.ref(p + '/' + k).remove(); }
 
     function numToWords(n) {
         const a = ['','One ','Two ','Three ','Four ','Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
@@ -230,7 +231,7 @@
     function printReceipt(key) {
         const item = localData.donations[key];
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px;">
+            <div class="receipt-border-double">
                 <center class="print-header">
                     <h1 class="print-h1">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:Cinzel; margin:5px 0;">B.B.C MARANG BUNDU</h2>
@@ -239,10 +240,10 @@
                 </center>
                 <div style="font-size:18px; margin:20px 0;">No: <span class="ink-field">#${key.substr(-5).toUpperCase()}</span> <span style="float:right">Date: <span class="ink-field">${item.date}</span></span></div>
                 <div style="font-size:19px; margin:30px 0;">Received with thanks from Mr./Ms. <span class="ink-field" style="min-width:300px; display:inline-block;">${item.name}</span></div>
-                <div style="font-size:19px; margin:30px 0;">The sum of Rupees: <span class="ink-field" style="text-transform:capitalize;">${numToWords(item.amt)}</span></div>
-                <div style="font-size:19px; margin:30px 0;">Towards: <span class="ink-field">Sahid Diwas Celebration Donation</span></div>
+                <div style="font-size:19px; margin:30px 0;">Amount in words: <span class="ink-field" style="text-transform:capitalize;">${numToWords(item.amt)}</span></div>
+                <div style="font-size:19px; margin:30px 0;">Towards: <span class="ink-field">Sahid Diwas Celebration Donation Fund</span></div>
                 <center><div style="border:4px solid #000; padding:15px 50px; font-size:32px; font-weight:900; background:#eee !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                <p style="text-align:center; font-style:italic; line-height:1.6; margin-top:30px;">"Sahid Diwas ko safal banane ke liye aapke is yogdaan ka samiti hamesha aabhari rahegi. Aapka bahut-bahut dhanyawad!"<br><b style="font-size:18px;">Thank You!</b></p>
+                <p style="text-align:center; font-style:italic; line-height:1.6; margin-top:30px;">"Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye samiti aapka aabhari rahegi."<br><b style="font-size:18px;">Thank You!</b></p>
                 <div class="sig-area" style="justify-content: flex-end;">
                     <div class="sig-box"><span class="sig-font">${localData.config.tName}</span><div class="sig-line">Principal Treasurer Signature</div></div>
                 </div>
@@ -260,7 +261,7 @@
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:20px;">
+            <div class="report-border-single">
                 <center class="print-header">
                     <h1 class="print-h1">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:Cinzel; margin:5px 0;">B.B.C MARANG BUNDU</h2>
@@ -274,7 +275,7 @@
                 <div class="summary-strip">
                     <div>TOTAL COLLECTIONS: ₹${tin.toLocaleString()}</div>
                     <div>TOTAL EXPENSES: ₹${tout.toLocaleString()}</div>
-                    <div>NET CASH BALANCE: ₹${(tin-tout).toLocaleString()}</div>
+                    <div>CASH BALANCE: ₹${(tin-tout).toLocaleString()}</div>
                 </div>
                 <div class="sig-area">
                     <div class="sig-box"><span class="sig-font">${localData.config.atName}</span><div class="sig-line">Assistant Treasurer Signature</div></div>
