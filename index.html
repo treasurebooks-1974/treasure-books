@@ -7,113 +7,62 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;900&family=Dancing+Script:wght@700&family=Crimson+Text:ital,wght@1,600&family=Mrs+Saint+Delafield&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;900&family=Dancing+Script:wght@700&family=Crimson+Text:ital,wght@1,600&display=swap');
 
         :root {
-            --bg: #05080a; /* Ultra Dark Space */
-            --glass: rgba(15, 23, 42, 0.7);
-            --gold: #eab308;
-            --neon-teal: #06b6d4;
-            --green: #10b981;
-            --red: #f43f5e;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #05080a; --glass: rgba(15, 23, 42, 0.7);
+            --gold: #eab308; --neon-teal: #06b6d4;
+            --green: #10b981; --red: #f43f5e; --border: rgba(255, 255, 255, 0.08);
         }
 
-        body { 
-            margin: 0; font-family: 'Outfit', sans-serif; 
-            background: radial-gradient(circle at top right, #082f49, #05080a); 
-            color: #f8fafc; min-height: 100vh;
-        }
+        body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #082f49, #05080a); color: #f8fafc; min-height: 100vh; }
 
-        /* --- SLEEK COMPACT SESSION ICON --- */
-        .session-floating { 
-            position: fixed; top: 15px; right: 15px; z-index: 1000; 
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            border: 1px solid var(--neon-teal); padding: 5px 12px; border-radius: 50px; 
-            display: flex; align-items: center; gap: 5px; box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-        }
+        /* --- UI COMPONENTS --- */
+        .session-floating { position: fixed; top: 15px; right: 15px; z-index: 1000; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid var(--neon-teal); padding: 5px 12px; border-radius: 50px; display: flex; align-items: center; gap: 5px; }
         .session-floating select { background: transparent; border: none; color: var(--neon-teal); font-weight: 900; outline: none; cursor: pointer; font-size: 11px; }
 
-        /* --- HEADER --- */
         .dash-header { text-align: center; padding: 60px 20px 40px; }
         .main-title { font-family: 'Cinzel', serif; font-size: 48px; font-weight: 900; letter-spacing: 8px; margin: 0; background: linear-gradient(to bottom, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .sub-title { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold); margin: 12px 0; letter-spacing: 3px; }
-        .reg-no { font-size: 10px; color: var(--neon-teal); letter-spacing: 4px; font-weight: 900; opacity: 0.7; }
 
-        /* --- EXECUTIVE CARDS --- */
-        .treasurer-row { display: flex; justify-content: center; gap: 15px; margin: 20px auto; }
-        .t-card { background: var(--glass); border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; text-align: center; position: relative; transition: 0.3s; }
-        .t-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.05); }
-        .t-card span { font-size: 9px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
-        .t-card b { font-family: 'Cinzel'; color: #fff; font-size: 14px; display: block; margin-top: 3px; }
-        .btn-edit-t { position: absolute; right: 5px; top: 5px; background: none; border: none; color: var(--gold); cursor: pointer; font-size: 9px; }
-
-        /* --- STATS GRID --- */
         .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 30px auto; width: 95%; }
-        .stat-card { background: var(--glass); padding: 30px; border-radius: 24px; border: 1px solid var(--border); text-align: center; position: relative; overflow: hidden; }
-        .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; }
-        .st-in::after { background: var(--green); box-shadow: 0 0 15px var(--green); }
-        .st-out::after { background: var(--red); box-shadow: 0 0 15px var(--red); }
-        .st-bal::after { background: var(--gold); box-shadow: 0 0 15px var(--gold); }
-        .stat-val { font-size: 36px; font-weight: 900; font-family: 'Cinzel'; margin-top: 8px; }
+        .stat-card { background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border); text-align: center; position: relative; }
+        .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 8px; }
 
-        /* --- TRANSACTION RECORD HUB (SUNDAR SETUP) --- */
-        .form-middle-container { display: flex; justify-content: center; margin: 50px 0; padding: 0 20px; }
-        .form-box { 
-            background: linear-gradient(145deg, #0f172a, #020617); 
-            padding: 40px; border-radius: 35px; border: 1px solid var(--border); 
-            width: 100%; max-width: 800px; box-shadow: 0 40px 80px rgba(0,0,0,0.6); 
-        }
-        .form-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; }
-        .form-box select, .form-box input { 
-            background: #1e293b; border: 1.5px solid var(--border); color: white; 
-            padding: 16px; border-radius: 16px; outline: none; font-weight: 600; 
-            transition: 0.3s;
-        }
-        .form-box input:focus { border-color: var(--neon-teal); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
-        .btn-save { 
-            grid-column: span 3; background: linear-gradient(90deg, var(--gold), #facc15); 
-            color: #000; border: none; padding: 18px; border-radius: 18px; 
-            font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
-            margin-top: 10px; transition: 0.3s;
-        }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.4); }
+        /* --- FORM & TABLES --- */
+        .form-box { background: #0f172a; padding: 30px; border-radius: 30px; border: 1px solid var(--border); max-width: 800px; margin: 20px auto; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
+        .form-grid select, .form-grid input { background: #1e293b; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 12px; }
+        .btn-save { grid-column: span 3; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; }
 
-        /* --- LISTS --- */
-        .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1300px; margin: 0 auto 80px; padding: 0 25px; }
-        .ledger-box { background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid var(--border); }
-        .ledger-box h3 { margin: 0 0 20px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 10px; color: #64748b; padding: 12px; border-bottom: 2px solid var(--border); text-transform: uppercase; }
-        td { padding: 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; margin-right: 5px; }
-        .btn-mini:hover { border-color: var(--neon-teal); color: var(--neon-teal); }
+        .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .ledger-box { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: #64748b; padding: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
 
-        /* --- PROFESSIONAL PRINT DESIGN --- */
+        .btn-mini { padding: 5px 8px; border-radius: 5px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; margin-right: 2px; }
+        .btn-mini:hover { border-color: var(--neon-teal); }
+
+        /* --- MODAL --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        .modal-content { background: #0f172a; padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 350px; }
+
+        /* --- PRINT STYLES --- */
         #printArea { display: none; }
         @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; color: #000; }
             .no-print { display: none !important; }
-            #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
-            @page { size: A4 portrait; margin: 12mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             
-            .receipt-frame-elite { border: 6px double #000; padding: 8px; width: 185mm; margin: 20px auto; background: white; page-break-inside: avoid; }
-            .receipt-inner-elite { border: 2px solid #000; padding: 35px; background: white; }
-            .badge-main { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900; text-align: center; margin-bottom: 5px; }
-            .label-pill-metallic { background: linear-gradient(135deg, #000 0%, #444 50%, #000 100%) !important; color: #fff !important; padding: 10px 60px; display: inline-block; margin: 15px 0; -webkit-print-color-adjust: exact; font-family: 'Outfit'; font-weight: 900; border: 2px solid #fff; outline: 2px solid #000; }
-            .ink-data { font-family: 'Crimson Text', serif; font-style: italic; font-size: 22px; border-bottom: 1.5px dotted #000; padding: 0 10px; display: inline-block; }
-            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 45px; color: #000 !important; display: block; margin-bottom: -5px; }
-
-            /* Professional Ledger Printout Styles */
-            .report-title-box { text-align: center; border: 2px solid #000; padding: 15px; margin-bottom: 20px; }
-            .report-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-            .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; font-size: 13px; }
-            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; text-transform: uppercase; }
-            .summary-table-print { width: 100%; border: 3px solid #000; border-collapse: collapse; margin-top: 15px; }
-            .summary-table-print td { padding: 15px; border: 1.5px solid #000; text-align: center; font-weight: 900; font-size: 16px; background: #fafafa !important; -webkit-print-color-adjust: exact; }
+            /* Professional Signature Layout */
+            .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 40px; }
+            .sig-box { text-align: center; width: 220px; }
+            .sig-line { border-top: 2px solid #000; margin-top: 5px; font-weight: 900; font-size: 12px; padding-top: 5px; }
+            .sig-name { font-family: 'Dancing Script', cursive; font-size: 32px; display: block; margin-bottom: -5px; }
         }
-
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; }
-        .modal-content { background: #0f172a; padding: 40px; border-radius: 24px; border: 1px solid var(--gold); width: 400px; }
     </style>
 </head>
 <body>
@@ -125,54 +74,45 @@
 <div class="dash-header no-print">
     <h1 class="main-title">TREASURE BOOKS</h1>
     <div class="sub-title">B.B.C MARANG BUNDU</div>
-    <div class="reg-no">REG.NO :- MBJ8750 - 13 OF 2022</div>
-</div>
-
-<div class="treasurer-row no-print">
-    <div class="t-card"><button class="btn-edit-t" onclick="editTreasurer('tName')">✏️</button><span>Principal Treasurer</span><b id="disp_tName">...</b></div>
-    <div class="t-card"><button class="btn-edit-t" onclick="editTreasurer('atName')">✏️</button><span>Assistant Treasurer</span><b id="disp_atName">...</b></div>
 </div>
 
 <div class="stats-container no-print">
-    <div class="stat-card st-in"><div class="stat-label">COLLECTIONS</div><div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
-    <div class="stat-card st-out"><div class="stat-label">EXPENDITURES</div><div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
-    <div class="stat-card st-bal"><div class="stat-label">CASH BALANCE</div><div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--green)">COLLECTIONS</div><div class="stat-val" id="sumIn">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--red)">EXPENDITURES</div><div class="stat-val" id="sumOut">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--gold)">CASH BALANCE</div><div class="stat-val" id="sumBal">₹ 0</div></div>
 </div>
 
-<div class="form-middle-container no-print">
-    <div class="form-box">
-        <div class="form-grid">
-            <select id="eType" style="grid-column: span 3;">
-                <option value="donation">✨ CREDIT (Collection)</option>
-                <option value="expense">🛡️ DEBIT (Expenditure)</option>
-            </select>
-            <input type="date" id="eDate">
-            <input type="number" id="eAmount" placeholder="Amount ₹">
-            <input type="text" id="eName" placeholder="Donor Name or Purpose Details" style="grid-column: span 1.5;">
-            <button class="btn-save" onclick="saveEntry()">Commit Transaction</button>
-        </div>
+<div class="form-box no-print">
+    <div class="form-grid">
+        <select id="eType" style="grid-column: span 3;"><option value="donation">CREDIT (Collection)</option><option value="expense">DEBIT (Expenditure)</option></select>
+        <input type="date" id="eDate">
+        <input type="number" id="eAmount" placeholder="Amount ₹">
+        <input type="text" id="eName" placeholder="Donor Name / Purpose">
+        <button class="btn-save" onclick="saveEntry()">Commit Transaction</button>
     </div>
 </div>
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green);">🟢 Collections <button class="btn-mini" onclick="printReport('don')">Print Report</button></h3>
-        <table id="tblDon"><thead><tr><th style="width:30px;">#</th><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        <h3 style="color:var(--green); display:flex; justify-content:space-between;">Collections <button class="btn-mini" onclick="printReport('don')">Print Report</button></h3>
+        <table><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red);">🔴 Expenditures <button class="btn-mini" onclick="printReport('exp')">Print Report</button></h3>
-        <table id="tblExp"><thead><tr><th style="width:30px;">#</th><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        <h3 style="color:var(--red); display:flex; justify-content:space-between;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Print Report</button></h3>
+        <table><thead><tr><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3 style="color:var(--gold); margin-top:0; font-family:Cinzel;">Modify Entry</h3>
+        <h3 style="color:var(--gold);">Modify Entry</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
-        <div style="display:flex; flex-direction:column; gap:15px;">
-            <input type="date" id="mDate"><input type="text" id="mName" style="background:#020617; color:white; padding:10px; border-radius:8px;"><input type="number" id="mAmount" style="background:#020617; color:white; padding:10px; border-radius:8px;">
-            <button class="btn-save" onclick="updateData()">Update Record</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:#9ca3af; cursor:pointer;">Discard</button>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <input type="date" id="mDate" style="padding:10px;">
+            <input type="text" id="mName" placeholder="Name" style="padding:10px;">
+            <input type="number" id="mAmount" placeholder="Amount" style="padding:10px;">
+            <button class="btn-save" onclick="updateData()">Update</button>
+            <button onclick="closeModal()" style="color:#64748b; background:none; border:none; cursor:pointer;">Cancel</button>
         </div>
     </div>
 </div>
@@ -191,15 +131,13 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let localData = { donations: {}, expenses: {}, config: {} };
+    let localData = { donations: {}, expenses: {}, config: { tName: "Principal", atName: "Assistant" } };
 
     db.ref().on('value', snap => {
         const val = snap.val() || {};
         localData.donations = val.donations || {};
         localData.expenses = val.expenses || {};
-        localData.config = val.config || { tName: "Principal", atName: "Assistant" };
-        document.getElementById('disp_tName').innerText = localData.config.tName;
-        document.getElementById('disp_atName').innerText = localData.config.atName;
+        if(val.config) localData.config = val.config;
         loadView();
     });
 
@@ -207,8 +145,30 @@
         const fYear = document.getElementById('yearFilter').value;
         const bDon = document.getElementById('bodyDon'), bExp = document.getElementById('bodyExp');
         let tIn = 0, tOut = 0; bDon.innerHTML = ''; bExp.innerHTML = '';
-        Object.entries(localData.donations).forEach(([k, x], i) => { if(x.year == fYear) { tIn += Number(x.amt); bDon.innerHTML += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button><button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button></td></tr>`; } });
-        Object.entries(localData.expenses).forEach(([k, x], i) => { if(x.year == fYear) { tOut += Number(x.amt); bExp.innerHTML += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button><button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`; } });
+
+        Object.entries(localData.donations).forEach(([k, x]) => {
+            if(x.year == fYear) {
+                tIn += Number(x.amt);
+                bDon.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td>
+                <td>
+                    <button class="btn-mini" onclick="printReceipt('${k}')">📄</button>
+                    <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button>
+                    <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button>
+                </td></tr>`;
+            }
+        });
+
+        Object.entries(localData.expenses).forEach(([k, x]) => {
+            if(x.year == fYear) {
+                tOut += Number(x.amt);
+                bExp.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td>
+                <td>
+                    <button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button>
+                    <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button>
+                </td></tr>`;
+            }
+        });
+
         document.getElementById('sumIn').innerText = '₹ ' + tIn.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tOut.toLocaleString();
         document.getElementById('sumBal').innerText = '₹ ' + (tIn - tOut).toLocaleString();
@@ -216,97 +176,64 @@
 
     function saveEntry() {
         const type = document.getElementById('eType').value, date = document.getElementById('eDate').value, name = document.getElementById('eName').value, amt = document.getElementById('eAmount').value;
-        if(!date || !name || !amt) return alert("Pura data bharein!");
+        if(!date || !name || !amt) return alert("Fill all details");
         db.ref(type === 'donation' ? 'donations/' : 'expenses/').push({ date, name, amt: Number(amt), year: new Date(date).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function inWords(num) {
-        var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
-        var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
-        if ((num = num.toString()).length > 9) return 'overflow';
-        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n) return; var str = '';
-        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
-        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
-        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
-        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
-        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only' : '';
-        return str;
+    function deleteEntry(path, key) { if(confirm("Permanently Delete?")) db.ref(path + '/' + key).remove(); }
+    function openEditModal(type, key) {
+        const data = type === 'donation' ? localData.donations[key] : localData.expenses[key];
+        document.getElementById('editKey').value = key; document.getElementById('editType').value = type;
+        document.getElementById('mDate').value = data.date; document.getElementById('mName').value = data.name;
+        document.getElementById('mAmount').value = data.amt; document.getElementById('editModal').style.display = 'flex';
     }
-
-    function editTreasurer(field) { let n = prompt("Name:"); if(n) db.ref('config/' + field).set(n); }
-    function openEditModal(type, key) { const data = type === 'donation' ? localData.donations[key] : localData.expenses[key]; document.getElementById('editKey').value = key; document.getElementById('editType').value = type; document.getElementById('mDate').value = data.date; document.getElementById('mName').value = data.name; document.getElementById('mAmount').value = data.amt; document.getElementById('editModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('editModal').style.display = 'none'; }
-    function updateData() { const key = document.getElementById('editKey').value, type = document.getElementById('editType').value; db.ref((type === 'donation' ? 'donations/' : 'expenses/') + key).update({ date: document.getElementById('mDate').value, name: document.getElementById('mName').value, amt: Number(document.getElementById('mAmount').value), year: new Date(document.getElementById('mDate').value).getFullYear() }); closeModal(); }
-    function deleteEntry(path, key) { if(confirm("Delete Permanently?")) db.ref(path + '/' + key).remove(); }
-
-    function printReceipt(key) {
-        const item = localData.donations[key]; const words = inWords(item.amt);
-        document.getElementById('printArea').innerHTML = `
-            <div class="receipt-frame-elite">
-                <div class="receipt-inner-elite">
-                    <center>
-                        <h1 class="badge-main" style="text-decoration:underline;">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
-                        <span style="font-weight:700; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</span>
-                        <br><div class="label-pill-metallic">DONATION RECEIPT</div>
-                    </center>
-                    <div style="font-size:19px; margin:20px 0; font-family:'Outfit';">No: <span class="ink-data">#${key.substr(-5).toUpperCase()}</span> <span style="float:right">Date: <span class="ink-data">${item.date}</span></span></div>
-                    <div style="font-size:19px; margin:15px 0;">Received with thanks from Mr./Ms. <span class="ink-data" style="min-width:300px;">${item.name}</span></div>
-                    <div style="font-size:19px; margin:15px 0;">The sum of Rupees <span class="ink-data" style="text-transform:capitalize;">${words}</span></div>
-                    <div style="font-size:19px; margin:15px 0;">Towards <span class="ink-data">52nd Sahid Diwas Celebration Donation</span></div>
-                    <center><div style="border:4px solid #000; padding:15px 60px; font-size:32px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px;">"Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"<br><b>Thank You!</b></p>
-                    <div style="display:flex; justify-content:flex-end; margin-top:40px;">
-                        <div style="width:260px; text-align:center;">
-                            <span class="sig-font-running">${localData.config.tName}</span>
-                            <div style="border-top:2px dotted #000; width:100%; padding-top:5px; font-weight:900; font-size:13px; text-transform:uppercase;">Principal Treasurer Signature</div>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        window.print();
+    function updateData() {
+        const key = document.getElementById('editKey').value, type = document.getElementById('editType').value;
+        db.ref((type === 'donation' ? 'donations/' : 'expenses/') + key).update({
+            date: document.getElementById('mDate').value, name: document.getElementById('mName').value,
+            amt: Number(document.getElementById('mAmount').value), year: new Date(document.getElementById('mDate').value).getFullYear()
+        }); closeModal();
     }
 
     function printReport(type) {
         const fYear = document.getElementById('yearFilter').value;
-        let tCol = 0, tExp = 0;
-        Object.values(localData.donations).filter(x => x.year == fYear).forEach(x => tCol += Number(x.amt));
-        Object.values(localData.expenses).filter(x => x.year == fYear).forEach(x => tExp += Number(x.amt));
         const rows = Object.values(type === 'don' ? localData.donations : localData.expenses)
             .filter(x => x.year == fYear).map((x, i) => `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`).join('');
 
         document.getElementById('printArea').innerHTML = `
-            <div class="receipt-frame-elite" style="padding:15px;">
-                <div class="receipt-inner-elite" style="padding:20px;">
-                    <center>
-                        <h1 class="badge-main" style="font-size:24px; text-decoration:underline;">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                        <div class="label-pill-metallic" style="font-size:16px;">OFFICIAL ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER</div>
-                        <p style="font-size:12px; margin-bottom:20px;">Financial Statement for the Session Year ${fYear}</p>
-                    </center>
-                    <table class="report-table"><thead><tr><th>#</th><th>Date</th><th>Description / Donor Name</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
-                    <table class="summary-table-print">
-                        <tr>
-                            <td><span style="font-size:10px; display:block; opacity:0.7;">TOTAL COLLECTION</span>₹ ${tCol.toLocaleString()}</td>
-                            <td><span style="font-size:10px; display:block; opacity:0.7;">TOTAL EXPENSE</span>₹ ${tExp.toLocaleString()}</td>
-                            <td><span style="font-size:10px; display:block; opacity:0.7;">NET BALANCE</span>₹ ${(tCol - tExp).toLocaleString()}</td>
-                        </tr>
-                    </table>
-                    <div style="display:flex; justify-content:space-between; margin-top:60px;">
-                        <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:34px;">${localData.config.atName}</span><div style="border-top:2px dotted #000; padding-top:5px; font-weight:900; font-size:12px; text-transform:uppercase;">Asst. Treasurer</div></div>
-                        <div style="width:200px; text-align:center;"><span class="sig-font-running" style="font-size:34px;">${localData.config.tName}</span><div style="border-top:2px dotted #000; padding-top:5px; font-weight:900; font-size:12px; text-transform:uppercase;">Principal Treasurer</div></div>
+            <div style="padding:40px; border:10px double #000; background:#fff;">
+                <center>
+                    <h1 style="font-family:Cinzel; margin:0;">B.B.C MARANG BUNDU</h1>
+                    <h3 style="margin:5px 0;">52nd SAHID DIWAS 2026</h3>
+                    <div style="background:#000; color:#fff; padding:8px 30px; display:inline-block; margin:15px 0; font-weight:900;">
+                        ${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER REPORT (${fYear})
+                    </div>
+                </center>
+                <table style="width:100%; border-collapse:collapse; margin-top:20px;" border="1">
+                    <thead><tr style="background:#f2f2f2;"><th>#</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                <div class="sig-container">
+                    <div class="sig-box">
+                        <span class="sig-name">${localData.config.atName}</span>
+                        <div class="sig-line">Assistant Treasurer</div>
+                    </div>
+                    <div class="sig-box">
+                        <span class="sig-name">${localData.config.tName}</span>
+                        <div class="sig-line">Principal Treasurer</div>
                     </div>
                 </div>
             </div>`;
         window.print();
     }
 
+    // Auto-init Year Filter
     (function init() {
         const sel = document.getElementById('yearFilter');
-        for (let y = 2026; y <= 2030; y++) {
-            let opt = document.createElement('option'); opt.value = y; opt.text = "YR " + y;
+        for (let y = 2024; y <= 2030; y++) {
+            let opt = document.createElement('option'); opt.value = y; opt.text = "Session " + y;
             if(y === 2026) opt.selected = true; sel.appendChild(opt);
         }
         document.getElementById('eDate').valueAsDate = new Date();
