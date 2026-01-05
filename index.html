@@ -21,25 +21,37 @@
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #1e293b, #020617); color: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; }
 
+        /* --- UNLOCKED & PINNED SESSION SELECTOR --- */
+        .session-floating { 
+            position: fixed; top: 20px; right: 20px; z-index: 1000; 
+            background: var(--sidebar); border: 1.5px solid var(--gold); 
+            padding: 10px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
+        }
+        .session-floating label { font-size: 12px; color: var(--gold); font-weight: 900; letter-spacing: 1px; }
+        .session-floating select { background: transparent; border: none; color: #fff; font-weight: 700; cursor: pointer; outline: none; font-size: 14px; }
+
         /* --- DASHBOARD UI --- */
-        .session-floating { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--sidebar); border: 1px solid var(--gold); padding: 8px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-        .session-floating select { background: transparent; border: none; color: #fff; font-weight: 700; cursor: pointer; outline: none; }
         .dash-header { text-align: center; padding: 40px 20px 20px; }
         .main-title { font-family: 'Cinzel', serif; font-size: 45px; font-weight: 900; letter-spacing: 5px; margin: 0; color: #fff; }
         .sub-title { font-family: 'Cinzel', serif; font-size: 24px; color: var(--gold); margin: 8px 0; }
         .reg-no { font-size: 12px; color: #94a3b8; letter-spacing: 2px; }
+
         .treasurer-row { display: flex; justify-content: center; gap: 20px; margin: 20px auto; max-width: 800px; }
         .t-card { background: var(--card); border: 1px solid var(--border); padding: 15px 30px; border-radius: 15px; text-align: center; min-width: 200px; position: relative; }
         .t-card b { font-family: 'Cinzel'; color: #fff; font-size: 16px; display: block; margin-top: 5px; }
         .btn-edit-t { position: absolute; right: 8px; top: 8px; background: none; border: none; color: var(--gold); cursor: pointer; font-size: 10px; }
+
         .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 20px auto; width: 90%; }
         .stat-card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
         .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 10px; }
+
         .form-middle-container { display: flex; justify-content: center; margin: 40px 0; }
         .form-box { background: var(--sidebar); padding: 35px; border-radius: 30px; border: 1.5px solid var(--gold); width: 100%; max-width: 600px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-box input, .form-box select { width: 100%; background: #1e293b; border: 1px solid var(--border); color: white; padding: 14px; border-radius: 14px; margin-bottom: 20px; outline: none; box-sizing: border-box; }
         .btn-save { grid-column: span 2; background: var(--gold); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+
         .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
         .ledger-box { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
@@ -50,15 +62,15 @@
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
         .modal-content { background: #1e293b; padding: 30px; border-radius: 25px; border: 1px solid var(--gold); width: 400px; }
 
-        /* --- PRINT AREA --- */
+        /* --- CLEAN PRINT AREA (NO WATERMARKS) --- */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
             
-            .receipt-frame-elite { border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; background: white; position: relative; overflow: hidden; page-break-inside: avoid; }
-            .print-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 60px; font-weight: 900; color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; z-index: 0; }
-            .receipt-inner-elite { border: 2px solid #000; padding: 40px; position: relative; z-index: 1; background: rgba(255,255,255,0.8); }
+            .receipt-frame-elite { border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; background: white; page-break-inside: avoid; }
+            .receipt-inner-elite { border: 2px solid #000; padding: 40px; background: white; }
+            .badge-main { font-family: 'Cinzel', serif; font-size: 30px; font-weight: 900; text-align: center; margin: 0; }
             
             .label-pill-metallic { 
                 background: linear-gradient(135deg, #000 0%, #444 50%, #000 100%) !important; 
@@ -69,11 +81,10 @@
             .data-line { font-size: 19px; margin: 15px 0; line-height: 1.8; }
             .ink-data { font-family: 'Crimson Text', serif; font-style: italic; font-size: 22px; border-bottom: 1.5px dotted #000; padding: 0 10px; display: inline-block; }
 
-            /* FIXED SIGNATURE SECTION */
             .sig-area-final { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%; }
-            .sig-box-final { width: 260px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 44px; color: #000 !important; display: block; margin-bottom: -8px; transform: rotate(-1deg); }
-            .sig-line-final { border-top: 2px dotted #000; width: 100%; padding-top: 5px; font-weight: 900; font-size: 13px; text-transform: uppercase; font-family: 'Outfit'; }
+            .sig-box-final { width: 260px; text-align: center; }
+            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 44px; color: #000 !important; display: block; margin-bottom: -8px; }
+            .sig-line-final { border-top: 2px dotted #000; padding-top: 5px; font-weight: 900; font-size: 13px; text-transform: uppercase; }
 
             .report-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
             .report-table th, .report-table td { border: 1px solid #000; padding: 10px; text-align: left; }
@@ -86,7 +97,7 @@
 <body>
 
 <div class="session-floating no-print">
-    <span>🔒 SESSION</span>
+    <label>SESSION:</label>
     <select id="yearFilter" onchange="loadView()"></select>
 </div>
 
@@ -209,12 +220,11 @@
         const item = localData.donations[key]; const words = inWords(item.amt);
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-frame-elite">
-                <div class="print-watermark">OFFICIAL RECEIPT</div>
                 <div class="receipt-inner-elite">
                     <center>
                         <h1 class="badge-main" style="text-decoration:underline;">52nd SAHID DIWAS 2026</h1>
                         <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
-                        <span style="font-weight:700;">Reg.no :- MBJ8750 - 13 Of 2022</span>
+                        <span style="font-weight:700; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</span>
                         <br><div class="label-pill-metallic">DONATION RECEIPT</div>
                     </center>
                     <div class="data-line">No: <span class="ink-data">#${key.substr(-5).toUpperCase()}</span> <span style="float:right">Date: <span class="ink-data">${item.date}</span></span></div>
@@ -237,7 +247,6 @@
 
     function printReport(type) {
         const fYear = document.getElementById('yearFilter').value;
-        const watermarkText = type === 'don' ? "OFFICIAL COLLECTION REPORT" : "OFFICIAL EXPENDITURE REPORT";
         let tCol = 0, tExp = 0;
         Object.values(localData.donations).filter(x => x.year == fYear).forEach(x => tCol += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fYear).forEach(x => tExp += Number(x.amt));
@@ -246,7 +255,6 @@
 
         document.getElementById('printArea').innerHTML = `
             <div class="receipt-frame-elite">
-                <div class="print-watermark" style="font-size:35px;">${watermarkText}</div>
                 <div class="receipt-inner-elite" style="padding:20px;">
                     <center>
                         <h1 class="badge-main" style="font-size:24px;">52nd SAHID DIWAS 2026</h1>
