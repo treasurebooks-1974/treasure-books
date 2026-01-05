@@ -56,13 +56,29 @@
         @media print {
             .no-print { display: none !important; }
             #printArea { display: block !important; background: white !important; color: black; padding: 0; margin: 0; }
-            .receipt-frame-elite { border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; background: white; }
-            .receipt-inner-elite { border: 2px solid #000; padding: 40px; }
+            
+            .receipt-frame-elite { 
+                border: 6px double #000; padding: 10px; width: 185mm; margin: 20px auto; 
+                background: white; position: relative; overflow: hidden;
+            }
+            
+            /* --- PROFESSIONAL WATERMARK --- */
+            .receipt-watermark {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg);
+                font-family: 'Outfit', sans-serif; font-size: 80px; font-weight: 900;
+                color: rgba(0, 0, 0, 0.05) !important; /* Extremely faint gray */
+                white-space: nowrap; pointer-events: none; z-index: 0; letter-spacing: 5px;
+            }
+
+            .receipt-inner-elite { border: 2px solid #000; padding: 40px; position: relative; z-index: 1; background: rgba(255,255,255,0.7); }
+            
             .badge-main { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900; text-align: center; margin: 0; }
             .label-pill-highlight { background: #000 !important; color: #fff !important; padding: 10px 50px; display: inline-block; margin: 20px 0; -webkit-print-color-adjust: exact; font-family: 'Outfit'; font-weight: 900; }
+            
             .data-line { font-size: 19px; margin: 15px 0; line-height: 1.8; font-family: 'Outfit'; color: #000; }
             .ink-data { font-family: 'Crimson Text', serif; font-style: italic; font-size: 22px; color: #000; border-bottom: 1.5px dotted #000; padding: 0 10px; display: inline-block; }
-            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 48px; color: #000 !important; display: block; margin-bottom: -10px; transform: rotate(-2deg); -webkit-print-color-adjust: exact; }
+            
+            .sig-font-running { font-family: 'Dancing Script', cursive; font-size: 48px; color: #000 !important; display: block; margin-bottom: -10px; transform: rotate(-2deg); }
             .sig-post { font-weight: 900; font-size: 14px; text-transform: uppercase; border-top: 2px solid #000; padding-top: 5px; font-family: 'Outfit'; }
         }
     </style>
@@ -137,6 +153,7 @@
 <div id="printArea"></div>
 
 <script>
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -210,34 +227,37 @@
         const item = localData.donations[key]; const words = inWords(item.amt);
         document.getElementById('printArea').innerHTML = `
             <div class="print-page">
-                <div class="receipt-frame-elite"><div class="receipt-inner-elite">
-                    <center>
-                        <h1 class="badge-main">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
-                        <span style="font-weight:700; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</span>
-                        <br><div class="label-pill-highlight">DONATION RECEIPT</div>
-                    </center>
-                    <div class="data-line">
-                        No: <span class="ink-data">#${key.substr(-5).toUpperCase()}</span> 
-                        <span style="float:right">Date: <span class="ink-data">${item.date}</span></span>
-                    </div>
-                    <div class="data-line">Received with thanks from Mr./Ms. <span class="ink-data" style="min-width:300px;">${item.name}</span></div>
-                    <div class="data-line">The sum of Rupees <span class="ink-data" style="text-transform:capitalize; width:70%;">${words}</span></div>
-                    <div class="data-line">Towards <span class="ink-data">52nd Sahid Diwas Celebration Donation</span></div>
-                    <center><div style="border:4px solid #000; padding:15px 60px; font-size:32px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    
-                    <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px; font-family:'Outfit'; line-height:1.5;">
-                        "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"
-                        <br><b style="font-size:18px; font-style:normal;">Thank You!</b>
-                    </p>
+                <div class="receipt-frame-elite">
+                    <div class="receipt-watermark">OFFICIAL RECEIPT</div>
+                    <div class="receipt-inner-elite">
+                        <center>
+                            <h1 class="badge-main">52nd SAHID DIWAS 2026</h1>
+                            <h2 style="font-family:'Cinzel'; font-size:26px; margin:10px 0;">B.B.C MARANG BUNDU</h2>
+                            <span style="font-weight:700; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</span>
+                            <br><div class="label-pill-highlight">DONATION RECEIPT</div>
+                        </center>
+                        <div class="data-line">
+                            No: <span class="ink-data">#${key.substr(-5).toUpperCase()}</span> 
+                            <span style="float:right">Date: <span class="ink-data">${item.date}</span></span>
+                        </div>
+                        <div class="data-line">Received with thanks from Mr./Ms. <span class="ink-data" style="min-width:300px;">${item.name}</span></div>
+                        <div class="data-line">The sum of Rupees <span class="ink-data" style="text-transform:capitalize; width:70%;">${words}</span></div>
+                        <div class="data-line">Towards <span class="ink-data">52nd Sahid Diwas Celebration Donation</span></div>
+                        <center><div style="border:4px solid #000; padding:15px 60px; font-size:32px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact; position:relative; z-index:2;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                        
+                        <p style="text-align:center; font-style:italic; font-size:14px; margin-top:20px; font-family:'Outfit'; line-height:1.5;">
+                            "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye B.B.C Marang Bundu samiti aapka sadaiv abhari rahegi. Aapka bahut-bahut dhanyawad!"
+                            <br><b style="font-size:18px; font-style:normal;">Thank You!</b>
+                        </p>
 
-                    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
-                        <div style="width:250px; text-align:center;">
-                            <span class="sig-font-running">${localData.config.tName}</span>
-                            <div class="sig-post">Principal Treasurer Signature</div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                            <div style="width:250px; text-align:center;">
+                                <span class="sig-font-running">${localData.config.tName}</span>
+                                <div class="sig-post">Principal Treasurer Signature</div>
+                            </div>
                         </div>
                     </div>
-                </div></div>
+                </div>
             </div>`;
         window.print();
     }
