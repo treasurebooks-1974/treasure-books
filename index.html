@@ -29,7 +29,7 @@
         .treasurer-config { display: flex; justify-content: center; gap: 15px; margin: 20px auto; }
         .t-box { background: var(--glass); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; text-align: center; }
         .t-box label { font-size: 9px; color: var(--neon-teal); text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .t-box input { background: transparent; border: none; border-bottom: 1px solid #334155; color: #fff; text-align: center; font-family: 'Cinzel'; font-size: 13px; outline: none; width: 160px; }
+        .t-box input { background: transparent; border: none; border-bottom: 1px solid #334155; color: #fff; text-align: center; font-family: 'Cinzel'; font-weight: 900; font-size: 13px; outline: none; width: 160px; }
 
         .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto 30px; width: 95%; }
         .stat-card { background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border); text-align: center; }
@@ -55,27 +55,26 @@
             #printArea, #printArea * { visibility: visible; }
             #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; padding: 10mm; }
 
-            /* Professional Donation Receipt (Landscape) */
             .perfect-receipt { 
-                width: 100%; max-width: 260mm; border: 8px double #000; padding: 40px; margin: auto; 
-                background: #fff; box-sizing: border-box; min-height: 160mm; position: relative;
+                width: 100%; max-width: 260mm; border: 8px double #000; padding: 30px 45px; 
+                margin: auto; background: #fff; box-sizing: border-box; min-height: 165mm; 
+                display: flex; flex-direction: column; justify-content: space-between;
+                position: relative;
             }
-            .header-section { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px; }
+            .header-section { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
             .print-h1 { font-family: 'Cinzel'; font-size: 42px; margin: 0; font-weight: 900; }
-            .print-h2 { font-family: 'Cinzel'; font-size: 28px; margin: 5px 0; font-weight: 700; }
-            .reg-line { font-weight: bold; font-size: 16px; letter-spacing: 1px; }
+            .print-h2 { font-family: 'Cinzel'; font-size: 26px; margin: 5px 0; font-weight: 700; }
+            .reg-line { font-weight: bold; font-size: 14px; letter-spacing: 1px; }
             .label-pill-print { background: black !important; color: white !important; padding: 10px 60px; display: inline-block; margin-top: 15px; font-weight: 900; font-size: 22px; -webkit-print-color-adjust: exact; }
-            .meta-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; margin-bottom: 40px; }
-            .data-body { font-size: 22px; line-height: 2.8; font-family: 'Crimson Text', serif; }
             .ink-underline { border-bottom: 1.5px solid #000; display: inline-block; padding: 0 15px; font-weight: bold; font-style: italic; }
-            .bottom-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; }
-            .amount-box { border: 6px double #000; padding: 20px 50px; font-size: 45px; font-weight: 900; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; }
+            .amount-center-zone { text-align: center; margin: 15px 0; }
+            .amount-box { border: 6px double #000; padding: 15px 50px; font-size: 42px; font-weight: 900; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; display: inline-block; }
+            .sig-row-final { display: flex; justify-content: flex-end; margin-top: 20px; }
             .signature-box { text-align: center; width: 300px; }
             .sig-font { font-family: 'Dancing Script', cursive; font-size: 45px; display: block; margin-bottom: -5px; }
-            .sig-title { border-top: 2px solid #000; padding-top: 8px; font-weight: 900; font-size: 15px; text-transform: uppercase; }
-            .footer-msg { margin-top: 40px; text-align: center; border-top: 1px dashed #000; padding-top: 20px; font-style: italic; font-size: 16px; }
+            .sig-title { border-top: 2px solid #000; padding-top: 8px; font-weight: 900; font-size: 14px; text-transform: uppercase; }
 
-            /* Report Page Setup */
+            /* Report Design */
             .report-border-single { border: 2px solid #000; padding: 20px; min-height: 95vh; box-sizing: border-box; }
             .summary-strip { display: flex; justify-content: space-between; border: 2.5px solid black; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; font-weight: 900; margin-top: 10px; padding: 12px; font-size: 14px; }
         }
@@ -94,8 +93,8 @@
 </div>
 
 <div class="treasurer-config no-print">
-    <div class="t-box"><label>Principal Treasurer</label><input type="text" id="cfgT" onchange="updateCfg()"></div>
-    <div class="t-box"><label>Assistant Treasurer</label><input type="text" id="cfgAT" onchange="updateCfg()"></div>
+    <div class="t-box"><label>Principal Treasurer</label><input type="text" id="cfgT" placeholder="Enter Name" onchange="updateCfg()"></div>
+    <div class="t-box"><label>Assistant Treasurer</label><input type="text" id="cfgAT" placeholder="Enter Name" onchange="updateCfg()"></div>
 </div>
 
 <div class="stats-container no-print">
@@ -159,17 +158,18 @@
     }
 
     function numToWords(n) {
-        const a = ['','One ','Two ','Three ','Four ','Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
-        const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
+        const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
+        const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
         const format = (num) => {
+            if (num == 0) return '';
             if (num < 20) return a[num];
-            if (num < 100) return b[Math.floor(num/10)] + (num%10 !== 0 ? ' ' + a[num%10] : '');
-            if (num < 1000) return a[Math.floor(num/100)] + ' Hundred ' + (num%100 !== 0 ? 'and ' + format(num%100) : '');
-            if (num < 100000) return format(Math.floor(num/1000)) + ' Thousand ' + (num%1000 !== 0 ? format(num%1000) : '');
-            if (num < 10000000) return format(Math.floor(num/100000)) + ' Lakh ' + (num%100000 !== 0 ? format(num%100000) : '');
-            return num;
+            if (num < 100) return b[Math.floor(num / 10)] + (num % 10 !== 0 ? ' ' + a[num % 10] : '');
+            if (num < 1000) return a[Math.floor(num / 100)] + ' Hundred ' + (num % 100 !== 0 ? 'and ' + format(num % 100) : '');
+            if (num < 100000) return format(Math.floor(num / 1000)) + ' Thousand ' + (num % 1000 !== 0 ? format(num % 1000) : '');
+            if (num < 10000000) return format(Math.floor(num / 100000)) + ' Lakh ' + (num % 100000 !== 0 ? format(num % 100000) : '');
+            return format(Math.floor(num / 10000000)) + ' Crore ' + (num % 10000000 !== 0 ? format(num % 10000000) : '');
         }
-        return format(n) + ' Only';
+        return n == 0 ? 'Zero Only' : format(n) + 'Only';
     }
 
     function loadView() {
@@ -207,26 +207,30 @@
                     <div class="reg-line">Reg.no :- MBJ8750 - 13 Of 2022</div>
                     <div class="label-pill-print">DONATION RECEIPT</div>
                 </div>
-                <div class="meta-row">
+                <div style="display:flex; justify-content:space-between; margin:25px 0; font-size:20px; font-weight:bold;">
                     <span>Receipt No: <span class="ink-underline">#${key.substr(-5).toUpperCase()}</span></span>
                     <span>Date: <span class="ink-underline">${item.date}</span></span>
                 </div>
-                <div class="data-body">
-                    Received with thanks from Mr./Ms. <span class="ink-underline" style="min-width:500px;">${item.name}</span> <br>
-                    The sum of Rupees <span class="ink-underline" style="min-width:600px; text-transform: capitalize;">${words}</span> <br>
-                    Towards <span class="ink-underline" style="min-width:625px;">52nd Sahid Diwas Celebration Fund</span>.
+                <div style="font-size:22px; line-height:2.5;">
+                    Received with thanks from Mr./Ms. <span class="ink-underline" style="min-width:450px;">${item.name}</span> <br>
+                    Amount in Words: <span class="ink-underline" style="min-width:550px; text-transform:capitalize;">${words}</span> <br>
+                    Towards <span class="ink-underline" style="min-width:550px;">52nd Sahid Diwas Celebration Fund</span>.
                 </div>
-                <div class="bottom-row">
+                <div class="amount-center-zone">
                     <div class="amount-box">₹ ${Number(item.amt).toLocaleString()} /-</div>
-                    <div class="signature-box">
-                        <span class="sig-font">${localData.config.tName}</span>
-                        <div class="sig-title">Principal Treasurer</div>
-                        <div style="font-size: 12px; font-weight: bold;">B.B.C MARANG BUNDU</div>
-                    </div>
                 </div>
-                <div class="footer-msg">
-                    <p>"Thank you for your valuable contribution towards making this event successful."</p>
-                    <b style="font-size: 22px; letter-spacing: 5px; font-family: Cinzel;">THANK YOU!</b>
+                <div class="footer-container">
+                    <div style="text-align:center; border-top:1px dashed #000; padding-top:15px;">
+                        <p style="font-style:italic; font-size:16px; margin:0;">"Thank you for your valuable contribution towards making this event successful."</p>
+                        <b style="font-size:22px; letter-spacing:5px; font-family:Cinzel; display:block; margin-top:5px;">THANK YOU!</b>
+                    </div>
+                    <div class="sig-row-final">
+                        <div class="signature-box">
+                            <span class="sig-font">${localData.config.tName}</span>
+                            <div class="sig-title">Principal Treasurer</div>
+                            <div style="font-size:11px; font-weight:bold;">B.B.C MARANG BUNDU</div>
+                        </div>
+                    </div>
                 </div>
             </div>`;
         window.print();
@@ -255,8 +259,8 @@
                     <div>BALANCE: ₹${(tin-tout).toLocaleString()}</div>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-top:60px; padding:0 20px;">
-                    <div style="text-align:center;"><span class="sig-font">${localData.config.atName}</span><div class="sig-title" style="border:none;">Asst. Treasurer</div></div>
-                    <div style="text-align:center;"><span class="sig-font">${localData.config.tName}</span><div class="sig-title" style="border:none;">Principal Treasurer</div></div>
+                    <div style="text-align:center;"><span class="sig-font" style="font-size:35px;">${localData.config.atName}</span><div class="sig-title" style="border-top:1px solid #000;">Asst. Treasurer</div></div>
+                    <div style="text-align:center;"><span class="sig-font" style="font-size:35px;">${localData.config.tName}</span><div class="sig-title" style="border-top:1px solid #000;">Principal Treasurer</div></div>
                 </div>
             </div>`;
         window.print();
