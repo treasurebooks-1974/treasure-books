@@ -55,26 +55,30 @@
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
             #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; }
-            @page { size: A4 portrait; margin: 10mm; }
+
+            /* LANDSCAPE RECEIPT DESIGN */
+            .landscape-receipt { 
+                width: 210mm; height: 148mm; /* A5 Landscape */
+                border: 8px double #000; padding: 25px; margin: 5px auto; 
+                box-sizing: border-box; position: relative;
+            }
             
-            /* Receipt Double Border */
-            .receipt-border-double { border: 6px double #000; padding: 20px; margin: 10px auto; width: 180mm; }
-            /* Report Single Border */
+            /* REPORT DESIGN */
             .report-border-single { border: 2px solid #000; padding: 20px; margin: 5px; min-height: 95vh; box-sizing: border-box; }
             
-            .print-header { text-align: center; margin-bottom: 20px; }
-            .print-h1 { font-family: 'Cinzel'; font-size: 30px; text-decoration: underline; margin: 0; }
-            .label-pill { background: black !important; color: white !important; padding: 8px 45px; display: inline-block; margin: 15px 0; font-weight: 900; -webkit-print-color-adjust: exact; }
-            .ink-field { font-family: 'Crimson Text'; font-style: italic; font-size: 20px; border-bottom: 1.5px dotted #000; padding: 0 10px; }
+            @page { size: landscape; margin: 0; }
+            .receipt-page-setup { page-break-after: always; }
+
+            .print-header { text-align: center; margin-bottom: 15px; }
+            .print-h1 { font-family: 'Cinzel'; font-size: 34px; text-decoration: underline; margin: 0; }
+            .label-pill { background: black !important; color: white !important; padding: 8px 50px; display: inline-block; margin: 10px 0; font-weight: 900; -webkit-print-color-adjust: exact; }
+            .ink-field { font-family: 'Crimson Text'; font-style: italic; font-size: 22px; border-bottom: 1.5px dotted #000; padding: 0 10px; }
             
-            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1.5px solid black; }
-            .report-table th, .report-table td { border: 1px solid black; padding: 10px; text-align: left; }
-            .summary-strip { display: flex; justify-content: space-between; border: 2px solid black; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; font-weight: 900; margin-top: 10px; padding: 12px; font-size: 14px; }
-            
-            .sig-area { display: flex; justify-content: space-between; margin-top: 60px; }
+            .summary-strip { display: flex; justify-content: space-between; border: 2.5px solid black; background: #f2f2f2 !important; -webkit-print-color-adjust: exact; font-weight: 900; margin-top: 10px; padding: 12px; font-size: 14px; }
+            .sig-area { display: flex; justify-content: space-between; margin-top: 50px; }
             .sig-box { text-align: center; width: 220px; }
             .sig-line { border-top: 2px solid black; padding-top: 5px; font-weight: bold; font-size: 13px; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 35px; display: block; height: 40px; }
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 38px; display: block; height: 40px; }
         }
     </style>
 </head>
@@ -193,7 +197,7 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Fill data!");
+        if(!d || !n || !a) return alert("Pura data bharein!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
@@ -213,7 +217,7 @@
         }); closeModal();
     }
 
-    function deleteEntry(p, k) { if(confirm("Delete Permanently?")) db.ref(p + '/' + k).remove(); }
+    function deleteEntry(p, k) { if(confirm("Delete?")) db.ref(p + '/' + k).remove(); }
 
     function numToWords(n) {
         const a = ['','One ','Two ','Three ','Four ','Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
@@ -231,22 +235,30 @@
     function printReceipt(key) {
         const item = localData.donations[key];
         document.getElementById('printArea').innerHTML = `
-            <div class="receipt-border-double">
+            <div class="landscape-receipt">
                 <center class="print-header">
                     <h1 class="print-h1">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:Cinzel; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                     <div style="font-weight:bold; font-size:13px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
                     <div class="label-pill">DONATION RECEIPT</div>
                 </center>
-                <div style="font-size:18px; margin:20px 0;">No: <span class="ink-field">#${key.substr(-5).toUpperCase()}</span> <span style="float:right">Date: <span class="ink-field">${item.date}</span></span></div>
-                <div style="font-size:19px; margin:30px 0;">Received with thanks from Mr./Ms. <span class="ink-field" style="min-width:300px; display:inline-block;">${item.name}</span></div>
-                <div style="font-size:19px; margin:30px 0;">Amount in words: <span class="ink-field" style="text-transform:capitalize;">${numToWords(item.amt)}</span></div>
-                <div style="font-size:19px; margin:30px 0;">Towards: <span class="ink-field">Sahid Diwas Celebration Donation Fund</span></div>
-                <center><div style="border:4px solid #000; padding:15px 50px; font-size:32px; font-weight:900; background:#eee !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                <p style="text-align:center; font-style:italic; line-height:1.6; margin-top:30px;">"Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye samiti aapka aabhari rahegi."<br><b style="font-size:18px;">Thank You!</b></p>
-                <div class="sig-area" style="justify-content: flex-end;">
-                    <div class="sig-box"><span class="sig-font">${localData.config.tName}</span><div class="sig-line">Principal Treasurer Signature</div></div>
+                <div style="font-size:18px; margin:10px 0; display:flex; justify-content:space-between;">
+                    <span>No: <span class="ink-field">#${key.substr(-5).toUpperCase()}</span></span>
+                    <span>Date: <span class="ink-field">${item.date}</span></span>
                 </div>
+                <div style="font-size:20px; margin:25px 0;">Received with thanks from Mr./Ms. <span class="ink-field" style="min-width:400px; display:inline-block;">${item.name}</span></div>
+                <div style="font-size:20px; margin:25px 0;">Amount in words: <span class="ink-field" style="text-transform:capitalize;">${numToWords(item.amt)}</span></div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
+                    <div style="border:5px double #000; padding:15px 50px; font-size:36px; font-weight:900; background:#eee !important; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+                    <div class="sig-box">
+                        <span class="sig-font">${localData.config.tName}</span>
+                        <div class="sig-line">Principal Treasurer Signature</div>
+                    </div>
+                </div>
+                <p style="text-align:center; font-style:italic; font-size:14px; margin-top:30px; border-top:1px dashed #000; padding-top:10px;">
+                    "Sahid Diwas Samaroh ko safal banane mein aapke is bahumulya yogdaan ke liye samiti aapka aabhari rahegi. Thank You!"
+                </p>
             </div>`;
         window.print();
     }
@@ -266,16 +278,16 @@
                     <h1 class="print-h1">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:Cinzel; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                     <div style="font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</div>
-                    <div class="label-pill">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER REPORT</div>
+                    <div class="label-pill">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} REPORT - SESSION ${fy}</div>
                 </center>
-                <table class="report-table">
-                    <thead><tr style="background:#eee !important; -webkit-print-color-adjust: exact;"><th>S.N</th><th>Date</th><th>Particulars / Description</th><th>Amount (₹)</th></tr></thead>
+                <table style="width:100%; border-collapse:collapse; border:1px solid #000;">
+                    <thead><tr style="background:#eee !important; -webkit-print-color-adjust: exact;"><th>S.N</th><th>Date</th><th>Particulars</th><th>Amount (₹)</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
                 <div class="summary-strip">
                     <div>TOTAL COLLECTIONS: ₹${tin.toLocaleString()}</div>
                     <div>TOTAL EXPENSES: ₹${tout.toLocaleString()}</div>
-                    <div>CASH BALANCE: ₹${(tin-tout).toLocaleString()}</div>
+                    <div>BALANCE: ₹${(tin-tout).toLocaleString()}</div>
                 </div>
                 <div class="sig-area">
                     <div class="sig-box"><span class="sig-font">${localData.config.atName}</span><div class="sig-line">Assistant Treasurer Signature</div></div>
