@@ -10,49 +10,59 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;900&family=Dancing+Script:wght@700&family=Crimson+Text:ital,wght@1,600&display=swap');
 
         :root {
-            --bg: #05080a; --glass: rgba(10, 15, 25, 0.88);
-            --gold: #eab308; --green: #10b981; --red: #f43f5e; --border: rgba(234, 179, 8, 0.15);
+            --bg: #05080a; 
+            --glass: rgba(5, 8, 10, 0.92);
+            --gold: #eab308; 
+            --green: #10b981; 
+            --red: #f43f5e; 
+            --border: rgba(234, 179, 8, 0.2);
         }
 
         body { 
             margin: 0; font-family: 'Outfit', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop');
-            background-size: cover; background-position: center; background-attachment: fixed;
+            /* Logo as Background */
+            background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)), 
+                        url('https://files.catbox.moe/k36cxt.png'); /* Yeh aapka generated logo image hai */
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
             color: #f8fafc; min-height: 100vh; 
         }
 
         /* --- DASHBOARD UI --- */
-        .dash-header { text-align: center; padding: 40px 20px 10px; }
+        .logo-header { text-align: center; padding: 30px 20px 10px; }
+        .main-logo-img { width: 180px; filter: drop-shadow(0 0 15px var(--gold)); margin-bottom: 10px; }
+        
         .main-title { font-family: 'Cinzel', serif; font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: 8px; margin: 0; background: linear-gradient(to bottom, #fde68a, #b45309); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .year-bg-pin { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--gold); padding: 12px 25px; border-radius: 50px; width: fit-content; margin: 25px auto; backdrop-filter: blur(15px); display: flex; align-items: center; gap: 15px; }
         .year-bg-pin select { background: transparent; border: none; color: #fff; font-weight: 900; font-size: 16px; outline: none; cursor: pointer; }
 
         .treasurer-config { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px auto; padding: 0 15px; }
-        .t-box { background: var(--glass); border: 1px solid var(--border); padding: 12px 15px; border-radius: 15px; flex: 1; min-width: 200px; max-width: 300px; }
+        .t-box { background: var(--glass); border: 1px solid var(--border); padding: 12px 15px; border-radius: 15px; flex: 1; min-width: 200px; max-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .t-box label { font-size: 10px; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 900; }
         .t-box input { background: transparent; border: none; border-bottom: 1.5px solid var(--gold); color: #fff; text-align: center; font-family: 'Cinzel'; font-weight: 900; font-size: 14px; outline: none; width: 100%; }
 
         .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 30px auto; width: 95%; }
-        .stat-card { background: var(--glass); padding: 25px; border-radius: 28px; border: 1px solid var(--border); text-align: center; }
+        .stat-card { background: var(--glass); padding: 25px; border-radius: 28px; border: 1px solid var(--border); text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
         .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 10px; }
 
-        .form-box { background: var(--glass); padding: 30px; border-radius: 35px; border: 1px solid var(--border); max-width: 850px; margin: 30px auto; width: 90%; }
+        .form-box { background: var(--glass); padding: 30px; border-radius: 35px; border: 1px solid var(--border); max-width: 850px; margin: 30px auto; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-grid input, .form-grid select { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 14px; outline: none; }
         .btn-save { grid-column: 1 / -1; background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 
-        .search-bar { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; box-sizing: border-box; }
+        .search-bar { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; }
 
         .lists-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; max-width: 1400px; margin: 40px auto; padding: 0 20px; }
-        .ledger-box { background: var(--glass); padding: 20px; border-radius: 25px; border: 1px solid var(--border); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 400px; }
+        .ledger-box { background: var(--glass); padding: 20px; border-radius: 25px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.5); overflow-x: auto; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2.5px solid var(--border); font-weight: 900; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .btn-mini { padding: 6px 10px; border-radius: 8px; cursor: pointer; border: 1px solid #444; background: #000; color: #fff; font-size: 11px; margin-right: 2px; }
 
         /* Modal styling */
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center; }
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:2000; align-items:center; justify-content:center; }
         .modal-content { background:#0f172a; padding:30px; border-radius:20px; border:1.5px solid var(--gold); width:350px; }
 
         #printArea { display: none; }
@@ -65,9 +75,10 @@
 </head>
 <body>
 
-<div class="dash-header no-print">
+<div class="logo-header no-print">
+    <img src="https://files.catbox.moe/k36cxt.png" alt="Sahid Diwas Logo" class="main-logo-img">
     <h1 class="main-title">TREASURE BOOKS</h1>
-    <div style="color:var(--gold); letter-spacing:3px; font-weight:600;">B.B.C MARANG BUNDU</div>
+    <div style="color:var(--gold); letter-spacing:3px; font-weight:600; margin-top:5px;">B.B.C MARANG BUNDU</div>
 </div>
 
 <div class="year-bg-pin no-print">
@@ -113,11 +124,11 @@
     <div class="modal-content">
         <h3 style="color:var(--gold); margin-top:0;">Edit Transaction</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
-        <input type="date" id="mDate" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
-        <input type="text" id="mName" placeholder="Name" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
-        <input type="number" id="mAmount" placeholder="Amount" style="width:100%; margin-bottom:20px; padding:10px; border-radius:8px;">
-        <button class="btn-save" onclick="updateData()" style="padding:10px; width:100%;">Update</button>
-        <button onclick="closeModal()" style="width:100%; background:none; color:gray; border:none; margin-top:10px; cursor:pointer;">Cancel</button>
+        <input type="date" id="mDate" style="width:100%; margin-bottom:10px; padding:10px;">
+        <input type="text" id="mName" placeholder="Name" style="width:100%; margin-bottom:10px; padding:10px;">
+        <input type="number" id="mAmount" placeholder="Amount" style="width:100%; margin-bottom:20px; padding:10px;">
+        <button class="btn-save" onclick="updateData()" style="width:100%;">Update</button>
+        <button onclick="closeModal()" style="width:100%; background:none; color:gray; border:none; margin-top:10px;">Cancel</button>
     </div>
 </div>
 
@@ -197,7 +208,7 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Pura data bharein!");
+        if(!d || !n || !a) return alert("All fields are required!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
@@ -228,30 +239,18 @@
         document.getElementById('printArea').innerHTML = `
             <div style="width:210mm; min-height:148mm; padding:40px; border:15px double #333; background:white; color:black; font-family:'Outfit'; position:relative; box-sizing:border-box; margin:auto;">
                 <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:15px;">
-                    <h1 style="font-family:'Cinzel'; font-size:38px; margin:0; letter-spacing:2px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#555;">B.B.C MARANG BUNDU</h2>
-                    <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <h1 style="font-family:'Cinzel'; font-size:38px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                 </div>
-                <div style="background:#000; color:#fff; width:300px; margin:15px auto; padding:8px; text-align:center; font-weight:900; letter-spacing:5px; font-size:20px;">DONATION RECEIPT</div>
-                <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:20px;">
-                    <span>Receipt No: <b style="text-decoration:underline;">#${key.substr(-5).toUpperCase()}</b></span>
-                    <span>Date: <b style="text-decoration:underline;">${item.date}</b></span>
-                </div>
+                <div style="background:#000; color:#fff; width:300px; margin:15px auto; padding:8px; text-align:center; font-weight:900; font-size:20px;">RECEIPT</div>
                 <div style="font-size:24px; line-height:2.2; font-family:'Crimson Text'; margin-top:30px;">
-                    Received with heartful thanks from Mr./Ms. <span style="font-weight:bold; border-bottom:1.5px solid #000; padding:0 10px; text-transform:uppercase;">${item.name}</span> <br>
-                    the sum of Rupees <span style="font-weight:bold; border-bottom:1.5px solid #000; padding:0 10px; text-transform:capitalize;">${words}</span> <br>
-                    towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
+                    Received with thanks from Mr./Ms. <span style="font-weight:bold; border-bottom:1.5px solid #000; text-transform:uppercase;">${item.name}</span> <br>
+                    the sum of <span style="font-weight:bold; border-bottom:1.5px solid #000; text-transform:capitalize;">${words}</span> <br>
+                    towards 52nd Sahid Diwas Fund.
                 </div>
                 <div style="font-size:45px; font-weight:900; border:5px double #000; padding:10px 50px; width:fit-content; margin:40px auto; background:#f2f2f2;">₹ ${Number(item.amt).toLocaleString()}/-</div>
-                <div style="text-align:center; margin-top:20px; border-top:1px dashed #777; padding-top:10px;">
-                    <p style="font-style:italic; font-size:18px; margin-bottom:0;">"Your generous contribution is a beacon of hope for our community."</p>
-                    <p style="font-family:'Dancing Script'; font-size:24px; margin-top:5px; font-weight:bold;">We deeply appreciate your kindness!</p>
-                </div>
-                <div style="display:flex; justify-content:flex-end; margin-top:40px;">
-                    <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:28px; display:block;">${localData.config.tName}</span>
-                        <div style="border-top:2px solid #000; font-weight:900; width:220px; font-size:12px; padding-top:5px;">PRINCIPAL TREASURER</div>
-                    </div>
+                <div style="display:flex; justify-content:flex-end; margin-top:40px; text-align:center;">
+                    <div><span style="font-family:'Dancing Script'; font-size:28px;">${localData.config.tName}</span><div style="border-top:2px solid #000; font-weight:900; width:200px; padding-top:5px;">TREASURER</div></div>
                 </div>
             </div>`;
         window.print();
@@ -260,41 +259,30 @@
     function printReport(type) {
         const fy = document.getElementById('yearFilter').value;
         const data = type === 'don' ? localData.donations : localData.expenses;
-        const title = type === 'don' ? 'COLLECTION LEDGER' : 'EXPENDITURE LEDGER';
         let tin = 0, tout = 0;
         Object.values(localData.donations).filter(x => x.year == fy).forEach(x => tin += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
 
-        let rows = Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).map((x, i) => 
+        let rows = Object.values(data).filter(x => x.year == fy).map((x, i) => 
             `<tr><td style="border:1px solid #000; padding:8px;">${i+1}</td><td style="border:1px solid #000; padding:8px;">${x.date}</td><td style="border:1px solid #000; padding:8px;">${x.name}</td><td style="border:1px solid #000; padding:8px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
         ).join('');
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; background:white; color:black; font-family:'Outfit';">
+            <div style="padding:40px; background:white; color:black;">
                 <center>
-                    <h1 style="font-family:'Cinzel'; margin:0; font-size:35px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; margin:5px 0; font-size:22px;">B.B.C MARANG BUNDU</h2>
-                    <p style="margin:5px 0; font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <h2 style="background:black; color:white; padding:10px; margin-top:10px;">${title} REPORT</h2>
+                    <h1 style="font-family:'Cinzel';">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel';">B.B.C MARANG BUNDU</h2>
+                    <h2 style="background:black; color:white; padding:10px;">${type === 'don' ? 'COLLECTIONS' : 'EXPENDITURES'} REPORT</h2>
                 </center>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin:25px 0; border:2px solid #000; background:#f9f9f9; padding:15px; text-align:center;">
-                    <div><b style="font-size:12px;">COLLECTIONS</b><br><span style="font-size:20px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
-                    <div><b style="font-size:12px;">EXPENDITURES</b><br><span style="font-size:20px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
-                    <div><b style="font-size:12px;">NET BALANCE</b><br><span style="font-size:20px; font-weight:bold; color:blue;">₹ ${(tin-tout).toLocaleString()}</span></div>
+                <div style="display:flex; justify-content:space-around; margin:20px 0; border:2px solid #000; padding:10px;">
+                    <div>COLLECTIONS: <b>₹ ${tin.toLocaleString()}</b></div>
+                    <div>EXPENDITURES: <b>₹ ${tout.toLocaleString()}</b></div>
+                    <div>BALANCE: <b>₹ ${(tin-tout).toLocaleString()}</b></div>
                 </div>
                 <table style="width:100%; border-collapse:collapse;">
-                    <thead><tr style="background:#eee;">
-                        <th style="border:1px solid #000; padding:10px;">S.N</th>
-                        <th style="border:1px solid #000; padding:10px;">DATE</th>
-                        <th style="border:1px solid #000; padding:10px;">PARTICULARS</th>
-                        <th style="border:1px solid #000; padding:10px;">AMOUNT (₹)</th>
-                    </tr></thead>
+                    <thead><tr style="background:#eee;"><th style="border:1px solid #000; padding:10px;">S.N</th><th style="border:1px solid #000; padding:10px;">DATE</th><th style="border:1px solid #000; padding:10px;">NAME/PURPOSE</th><th style="border:1px solid #000; padding:10px;">AMOUNT</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-                <div style="display:flex; justify-content:space-between; margin-top:80px;">
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.atName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">ASSISTANT TREASURER</div></div>
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">PRINCIPAL TREASURER</div></div>
-                </div>
             </div>`;
         window.print();
     }
