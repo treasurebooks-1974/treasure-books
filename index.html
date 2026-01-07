@@ -10,13 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;900&family=Dancing+Script:wght@700&family=Crimson+Text:ital,wght@1,600&display=swap');
 
         :root {
-            --bg: #f8fafc; 
-            --glass: #ffffff;
-            --gold: #b45309; 
-            --green: #047857; 
-            --red: #be123c; 
-            --border: #e2e8f0;
-            --text: #1e293b;
+            --bg: #f8fafc; --gold: #b45309; --green: #047857; --red: #be123c; --border: #e2e8f0; --text: #1e293b;
         }
 
         body { 
@@ -25,62 +19,68 @@
             color: var(--text); min-height: 100vh; 
         }
 
+        /* --- FLOATING YEAR SELECTOR --- */
+        .year-floating-box {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: #fff; border: 2px solid var(--gold);
+            padding: 8px 15px; border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .year-floating-box select {
+            border: none; outline: none; font-weight: 900; color: var(--gold); cursor: pointer; background: transparent;
+        }
+
         /* --- DASHBOARD UI --- */
-        .dash-header { text-align: center; padding: 40px 20px 10px; }
-        .main-title { font-family: 'Cinzel', serif; font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: 8px; margin: 0; color: #1e293b; }
-        .sub-header { color: var(--gold); font-weight: 700; letter-spacing: 2px; margin-top: 5px; }
-        .reg-no { font-size: 13px; font-weight: 600; opacity: 0.8; margin-top: 3px; }
+        .dash-header { text-align: center; padding: 60px 20px 10px; }
+        .main-title { font-family: 'Cinzel', serif; font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: 5px; margin: 0; }
+        .sub-header { color: var(--gold); font-weight: 700; letter-spacing: 2px; }
+        .reg-no { font-size: 13px; font-weight: 600; opacity: 0.7; }
 
-        .year-bg-pin { background: #fff; border: 2px solid var(--gold); padding: 10px 25px; border-radius: 50px; width: fit-content; margin: 25px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; }
-        .year-bg-pin select { background: transparent; border: none; color: var(--text); font-weight: 900; font-size: 16px; outline: none; cursor: pointer; }
-
-        .treasurer-config { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px auto; padding: 0 15px; }
-        .t-box { background: var(--glass); border: 1px solid var(--border); padding: 12px 15px; border-radius: 15px; flex: 1; min-width: 200px; max-width: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .t-box label { font-size: 10px; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 900; }
-        .t-box input { background: transparent; border: none; border-bottom: 1.5px solid var(--gold); color: var(--text); text-align: center; font-family: 'Cinzel'; font-weight: 900; font-size: 14px; outline: none; width: 100%; }
+        .treasurer-config { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px auto; }
+        .t-box { background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 15px; flex: 1; min-width: 200px; max-width: 250px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .t-box label { font-size: 10px; color: var(--gold); text-transform: uppercase; display: block; font-weight: 900; }
+        .t-box input { background: transparent; border: none; border-bottom: 1.5px solid var(--gold); color: var(--text); text-align: center; font-weight: 900; width: 100%; outline: none; }
 
         .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 30px auto; width: 95%; }
         .stat-card { background: #fff; padding: 25px; border-radius: 28px; border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 10px; }
+        .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 5px; }
 
         .form-box { background: #fff; padding: 30px; border-radius: 35px; border: 1px solid var(--border); max-width: 850px; margin: 30px auto; width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .form-grid input, .form-grid select { background: #f8fafc; border: 1px solid var(--border); color: #1e293b; padding: 14px; border-radius: 14px; outline: none; }
-        .btn-save { grid-column: 1 / -1; background: #1e293b; color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .btn-save:hover { background: #000; transform: translateY(-2px); }
-
-        .search-bar { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--border); background: #f8fafc; color: #1e293b; outline: none; box-sizing: border-box; }
+        .form-grid input, .form-grid select { background: #f8fafc; border: 1px solid var(--border); padding: 14px; border-radius: 14px; outline: none; }
+        .btn-save { grid-column: 1 / -1; background: #1e293b; color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 
         .lists-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; max-width: 1400px; margin: 40px auto; padding: 0 20px; }
         .ledger-box { background: #fff; padding: 20px; border-radius: 25px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; font-weight: 900; }
+        th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #1e293b; font-size: 11px; font-weight: bold; }
-        .btn-mini:hover { background: #f1f5f9; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; }
 
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index:2000; align-items:center; justify-content:center; }
-        .modal-content { background:#fff; padding:30px; border-radius:25px; border: 2px solid var(--gold); width:350px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        /* Modal styling */
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index: 2000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
+        .modal-content { background:#fff; padding:30px; border-radius:25px; border: 2px solid var(--gold); width:350px; }
 
         #printArea { display: none; }
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; color: black !important; background: white !important; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 
+<div class="year-floating-box no-print">
+    <span style="font-size:12px; font-weight:bold;">📅 SESSION:</span>
+    <select id="yearFilter" onchange="loadView()"></select>
+</div>
+
 <div class="dash-header no-print">
     <h1 class="main-title">TREASURE BOOKS</h1>
     <div class="sub-header">B.B.C MARANG BUNDU</div>
     <div class="reg-no">Reg.no :- MBJ8750 - 13 Of 2022</div>
-</div>
-
-<div class="year-bg-pin no-print">
-    <label style="color:var(--gold); font-weight:bold;">SESSION :</label>
-    <select id="yearFilter" onchange="loadView()"></select>
 </div>
 
 <div class="treasurer-config no-print">
@@ -89,9 +89,9 @@
 </div>
 
 <div class="stats-container no-print">
-    <div class="stat-card"><div style="color:var(--green); font-weight:900; font-size:12px; letter-spacing:1px;">TOTAL COLLECTIONS</div><div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
-    <div class="stat-card"><div style="color:var(--red); font-weight:900; font-size:12px; letter-spacing:1px;">TOTAL EXPENDITURES</div><div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
-    <div class="stat-card"><div style="color:var(--gold); font-weight:900; font-size:12px; letter-spacing:1px;">NET BALANCE</div><div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--green); font-weight:900; font-size:12px;">COLLECTIONS</div><div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--red); font-weight:900; font-size:12px;">EXPENDITURES</div><div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--gold); font-weight:900; font-size:12px;">BALANCE</div><div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
 </div>
 
 <div class="form-box no-print">
@@ -106,28 +106,26 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Report</button></h3>
-        <input type="text" id="searchDon" class="search-bar" placeholder="Search donor name..." onkeyup="loadView()">
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Full Report</button></h3>
+        <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Report</button></h3>
-        <input type="text" id="searchExp" class="search-bar" placeholder="Search purpose..." onkeyup="loadView()">
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
+        <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3 style="color:var(--gold); margin-top:0; font-family:Cinzel;">Edit Transaction</h3>
+        <h3 style="color:var(--gold); margin-top:0;">Edit Entry</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
-        <div style="display:flex; flex-direction:column; gap:12px;">
-            <input type="date" id="mDate" style="padding:12px; border-radius:10px; border:1px solid #ddd;">
-            <input type="text" id="mName" placeholder="Name" style="padding:12px; border-radius:10px; border:1px solid #ddd;">
-            <input type="number" id="mAmount" placeholder="Amount" style="padding:12px; border-radius:10px; border:1px solid #ddd;">
-            <button class="btn-save" onclick="updateData()" style="padding:12px;">Update</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:gray; cursor:pointer; font-weight:bold;">Cancel</button>
-        </div>
+        <input type="date" id="mDate" style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="text" id="mName" style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="number" id="mAmount" style="width:100%; padding:10px; margin-bottom:15px;">
+        <button class="btn-save" onclick="updateData()" style="width:100%;">Update</button>
+        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:gray; margin-top:10px;">Cancel</button>
     </div>
 </div>
 
@@ -181,24 +179,17 @@
     function loadView() {
         const fy = document.getElementById('yearFilter').value;
         const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
-        const sDon = document.getElementById('searchDon').value.toLowerCase();
-        const sExp = document.getElementById('searchExp').value.toLowerCase();
+        const sD = document.getElementById('searchDon').value.toLowerCase();
+        const sE = document.getElementById('searchExp').value.toLowerCase();
         let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
 
-        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sDon)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tin += Number(x.amt);
-            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
-                <button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> 
-                <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button>
-                <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button>
-            </td></tr>`;
+            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button> <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
         });
-        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sExp)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tout += Number(x.amt);
-            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
-                <button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button>
-                <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button>
-            </td></tr>`;
+            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button> <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`;
         });
         document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
@@ -207,7 +198,7 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("All fields are required!");
+        if(!d || !n || !a) return alert("All fields required!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
@@ -230,31 +221,31 @@
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; min-height:148mm; padding:40px; border:15px double #333; background:white; color:black; font-family:'Outfit'; position:relative; box-sizing:border-box; margin:auto;">
+            <div style="width:210mm; padding:40px; border:15px double #000; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box;">
                 <center>
-                    <h1 style="font-family:'Cinzel'; font-size:38px; margin:0; letter-spacing:2px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
+                    <h1 style="font-family:'Cinzel'; font-size:42px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
                     <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <div style="background:black; color:white; padding:8px 60px; font-size:20px; font-weight:bold; margin-top:15px;">DONATION RECEIPT</div>
+                    <div style="background:black; color:white; padding:12px 60px; font-size:24px; font-weight:bold; margin-top:20px; letter-spacing:3px;">DONATION RECEIPT</div>
                 </center>
-                <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:30px;">
                     <span>No: <b>#${key.substr(-5).toUpperCase()}</b></span>
                     <span>Date: <b>${item.date}</b></span>
                 </div>
-                <div style="font-size:22px; line-height:2.2; font-family:'Crimson Text'; margin-top:30px;">
-                    Received with heartful thanks from Mr./Ms. <span style="font-weight:bold; border-bottom:1.5px solid #000; text-transform:uppercase; padding:0 5px;">${item.name}</span> <br>
-                    the sum of Rupees <span style="font-weight:bold; border-bottom:1.5px solid #000; text-transform:capitalize; padding:0 5px;">${words}</span> <br>
+                <div style="font-size:24px; line-height:2.5; font-family:'Crimson Text'; margin-top:40px;">
+                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px;">${item.name}</span> <br>
+                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px;">${words}</span> <br>
                     towards <b>52nd Sahid Diwas Celebration Fund</b>.
                 </div>
-                <div style="font-size:40px; font-weight:900; border:5px double #000; padding:10px 40px; width:fit-content; margin:40px auto; background:#f2f2f2;">₹ ${Number(item.amt).toLocaleString()}/-</div>
-                <div style="text-align:center; margin-top:10px;">
-                    <p style="font-style:italic; font-size:18px;">"Your generosity helps us keep the spirit of Sahid Diwas alive."</p>
-                    <p style="font-family:'Dancing Script'; font-size:24px; font-weight:bold;">Thank You!</p>
+                <div style="font-size:52px; font-weight:900; border:8px double #000; padding:15px 60px; width:fit-content; margin:50px auto; background:#f2f2f2; letter-spacing:2px;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+                <div style="text-align:center; margin-top:30px;">
+                    <p style="font-style:italic; font-size:20px;">"Your generosity helps us keep the memory of Sahid Diwas alive."</p>
+                    <p style="font-family:'Dancing Script'; font-size:32px; font-weight:bold; margin-top:10px;">Thank You!</p>
                 </div>
-                <div style="display:flex; justify-content:flex-end; margin-top:30px;">
+                <div style="display:flex; justify-content:flex-end; margin-top:50px;">
                     <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:26px;">${localData.config.tName}</span>
-                        <div style="border-top:2px solid #000; font-weight:900; width:200px; font-size:12px; padding-top:5px;">PRINCIPAL TREASURER</div>
+                        <span style="font-family:'Dancing Script'; font-size:32px; display:block;">${localData.config.tName}</span>
+                        <div style="border-top:2px solid #000; font-weight:900; width:250px; font-size:13px; padding-top:5px; text-transform:uppercase;">Principal Treasurer</div>
                     </div>
                 </div>
             </div>`;
@@ -264,34 +255,35 @@
     function printReport(type) {
         const fy = document.getElementById('yearFilter').value;
         const data = type === 'don' ? localData.donations : localData.expenses;
+        const title = type === 'don' ? 'COLLECTION LEDGER' : 'EXPENDITURE LEDGER';
         let tin = 0, tout = 0;
         Object.values(localData.donations).filter(x => x.year == fy).forEach(x => tin += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
 
         let rows = Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).map((x, i) => 
-            `<tr><td style="border:1px solid #000; padding:8px;">${i+1}</td><td style="border:1px solid #000; padding:8px;">${x.date}</td><td style="border:1px solid #000; padding:8px;">${x.name}</td><td style="border:1px solid #000; padding:8px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
+            `<tr><td style="border:1px solid #000; padding:10px;">${i+1}</td><td style="border:1px solid #000; padding:10px;">${x.date}</td><td style="border:1px solid #000; padding:10px;">${x.name}</td><td style="border:1px solid #000; padding:10px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
         ).join('');
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; background:white; color:black; font-family:'Outfit';">
+            <div style="padding:50px; background:white; color:black; font-family:'Outfit';">
                 <center>
-                    <h1 style="font-family:'Cinzel'; margin:0; font-size:32px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                    <p style="margin:5px 0; font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <h2 style="background:black; color:white; padding:10px; margin-top:10px;">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER (${fy})</h2>
+                    <h1 style="font-family:'Cinzel'; margin:0; font-size:40px;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; margin:5px 0; font-size:24px;">B.B.C MARANG BUNDU</h2>
+                    <p style="font-weight:bold; font-size:16px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <div style="background:black; color:white; padding:15px; margin-top:20px; font-size:24px; font-weight:900; letter-spacing:3px;">${title} (${fy})</div>
                 </center>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin:25px 0; border:2px solid #000; background:#f9f9f9; padding:15px; text-align:center;">
-                    <div><b>TOTAL COLLECTIONS</b><br>₹ ${tin.toLocaleString()}</div>
-                    <div><b>TOTAL EXPENDITURES</b><br>₹ ${tout.toLocaleString()}</div>
-                    <div><b>NET BALANCE</b><br>₹ ${(tin-tout).toLocaleString()}</div>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin:30px 0; border:3px solid #000; background:#f2f2f2; padding:20px; text-align:center;">
+                    <div><b style="font-size:14px;">TOTAL COLLECTIONS</b><br><span style="font-size:24px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
+                    <div><b style="font-size:14px;">TOTAL EXPENDITURES</b><br><span style="font-size:24px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
+                    <div><b style="font-size:14px;">NET BALANCE</b><br><span style="font-size:24px; font-weight:bold; color:blue;">₹ ${(tin-tout).toLocaleString()}</span></div>
                 </div>
-                <table style="width:100%; border-collapse:collapse;">
-                    <thead><tr style="background:#eee;"><th style="border:1px solid #000; padding:10px;">S.N</th><th style="border:1px solid #000; padding:10px;">DATE</th><th style="border:1px solid #000; padding:10px;">PARTICULARS</th><th style="border:1px solid #000; padding:10px;">AMOUNT (₹)</th></tr></thead>
+                <table style="width:100%; border-collapse:collapse; font-size:16px;">
+                    <thead><tr style="background:#ddd;"><th style="border:1px solid #000; padding:12px;">S.N</th><th style="border:1px solid #000; padding:12px;">DATE</th><th style="border:1px solid #000; padding:12px;">PARTICULARS</th><th style="border:1px solid #000; padding:12px;">AMOUNT (₹)</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-                <div style="display:flex; justify-content:space-between; margin-top:80px;">
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.atName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-size:11px;">ASST. TREASURER</div></div>
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-size:11px;">PRINCIPAL TREASURER</div></div>
+                <div style="display:flex; justify-content:space-between; margin-top:100px;">
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:28px;">${localData.config.atName}</span><div style="border-top:2px solid #000; width:220px; padding-top:5px; font-weight:bold;">ASSISTANT TREASURER</div></div>
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:28px;">${localData.config.tName}</span><div style="border-top:2px solid #000; width:220px; padding-top:5px; font-weight:bold;">PRINCIPAL TREASURER</div></div>
                 </div>
             </div>`;
         window.print();
