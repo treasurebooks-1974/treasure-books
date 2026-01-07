@@ -43,9 +43,8 @@
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-grid input, .form-grid select { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 14px; outline: none; }
         .btn-save { grid-column: 1 / -1; background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .btn-save:active { transform: scale(0.98); }
 
-        .search-bar { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; }
+        .search-bar { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; box-sizing: border-box; }
 
         .lists-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; max-width: 1400px; margin: 40px auto; padding: 0 20px; }
         @media (max-width: 500px) { .lists-container { grid-template-columns: 1fr; } }
@@ -54,7 +53,6 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 400px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2.5px solid var(--border); font-weight: 900; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        tr:hover { background: rgba(255,255,255,0.02); }
         .btn-mini { padding: 6px 10px; border-radius: 8px; cursor: pointer; border: 1px solid #444; background: #000; color: #fff; font-size: 11px; margin-right: 2px; }
 
         /* --- PRINT AREA --- */
@@ -62,7 +60,9 @@
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; color: black !important; background: white !important; }
+            .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            .report-table th, .report-table td { border: 1px solid black; padding: 8px; text-align: left; }
         }
     </style>
 </head>
@@ -104,7 +104,7 @@
     <div class="ledger-box">
         <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">
             Collections 
-            <button class="btn-mini" onclick="printReport('don')" style="background:var(--green); color:black; font-weight:bold;">Print Report</button>
+            <button class="btn-mini" onclick="printReport('don')" style="background:var(--green); color:black; font-weight:bold;">Report</button>
         </h3>
         <input type="text" id="searchDon" class="search-bar" placeholder="Search donor name..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
@@ -112,29 +112,16 @@
     <div class="ledger-box">
         <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">
             Expenditures 
-            <button class="btn-mini" onclick="printReport('exp')" style="background:var(--red); color:white; font-weight:bold;">Print Report</button>
+            <button class="btn-mini" onclick="printReport('exp')" style="background:var(--red); color:white; font-weight:bold;">Report</button>
         </h3>
         <input type="text" id="searchExp" class="search-bar" placeholder="Search purpose..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
-<div id="editModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center;">
-    <div style="background:#0f172a; padding:30px; border-radius:20px; border:1.5px solid var(--gold); width:350px;">
-        <h3 style="color:var(--gold); margin-top:0;">Edit Transaction</h3>
-        <input type="hidden" id="editKey"><input type="hidden" id="editType">
-        <input type="date" id="mDate" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
-        <input type="text" id="mName" placeholder="Name" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
-        <input type="number" id="mAmount" placeholder="Amount" style="width:100%; margin-bottom:20px; padding:10px; border-radius:8px;">
-        <button class="btn-save" onclick="updateData()" style="padding:10px;">Update</button>
-        <button onclick="closeModal()" style="width:100%; background:none; color:gray; border:none; margin-top:10px; cursor:pointer;">Cancel</button>
-    </div>
-</div>
-
 <div id="printArea"></div>
 
 <script>
-    // Firebase Config (Keep these secure in production)
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -146,9 +133,8 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let localData = { donations: {}, expenses: {}, config: { tName: "Principal", atName: "Assistant" } };
+    let localData = { donations: {}, expenses: {}, config: { tName: "", atName: "" } };
 
-    // Sync Data
     db.ref().on('value', snap => {
         const v = snap.val() || {};
         localData.donations = v.donations || {};
@@ -162,81 +148,9 @@
     });
 
     function updateCfg() {
-        db.ref('config').update({ 
-            tName: document.getElementById('cfgT').value, 
-            atName: document.getElementById('cfgAT').value 
-        });
+        db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value });
     }
 
-    function loadView() {
-        const fy = document.getElementById('yearFilter').value;
-        const sDon = document.getElementById('searchDon').value.toLowerCase();
-        const sExp = document.getElementById('searchExp').value.toLowerCase();
-        
-        const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
-        let tin = 0, tout = 0;
-        bD.innerHTML = ''; bE.innerHTML = '';
-
-        // Sort & Display Donations (Newest First)
-        Object.entries(localData.donations)
-            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sDon))
-            .sort((a,b) => new Date(b[1].date) - new Date(a[1].date))
-            .forEach(([k, x]) => {
-                tin += Number(x.amt);
-                bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
-                    <button class="btn-mini" onclick="printReceipt('${k}')">Bill</button>
-                    <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button>
-                    <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button>
-                </td></tr>`;
-            });
-
-        // Sort & Display Expenses
-        Object.entries(localData.expenses)
-            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sExp))
-            .sort((a,b) => new Date(b[1].date) - new Date(a[1].date))
-            .forEach(([k, x]) => {
-                tout += Number(x.amt);
-                bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
-                    <button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button>
-                    <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button>
-                </td></tr>`;
-            });
-
-        document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
-        document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
-        document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
-    }
-
-    function saveEntry() {
-        const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Please fill all fields!");
-        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ 
-            date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() 
-        });
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
-    }
-
-    function deleteEntry(p, k) { if(confirm("Permanently delete this record?")) db.ref(p + '/' + k).remove(); }
-
-    function openEditModal(t, k) {
-        const d = t === 'donation' ? localData.donations[k] : localData.expenses[k];
-        document.getElementById('editKey').value = k; document.getElementById('editType').value = t;
-        document.getElementById('mDate').value = d.date; document.getElementById('mName').value = d.name; document.getElementById('mAmount').value = d.amt;
-        document.getElementById('editModal').style.display = 'flex';
-    }
-    function closeModal() { document.getElementById('editModal').style.display = 'none'; }
-    function updateData() {
-        const k = document.getElementById('editKey').value, t = document.getElementById('editType').value;
-        db.ref((t === 'donation' ? 'donations/' : 'expenses/') + k).update({ 
-            date: document.getElementById('mDate').value, 
-            name: document.getElementById('mName').value, 
-            amt: Number(document.getElementById('mAmount').value), 
-            year: new Date(document.getElementById('mDate').value).getFullYear() 
-        });
-        closeModal();
-    }
-
-    // Number to words logic for receipts
     function numToWords(n) {
         const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
         const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -252,40 +166,119 @@
         return n == 0 ? 'Zero Only' : format(n) + 'Only';
     }
 
-    // Receipt Print
+    function loadView() {
+        const fy = document.getElementById('yearFilter').value;
+        const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
+        const sDon = document.getElementById('searchDon').value.toLowerCase();
+        const sExp = document.getElementById('searchExp').value.toLowerCase();
+        
+        let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
+
+        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sDon)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+            tin += Number(x.amt);
+            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
+        });
+
+        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sExp)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+            tout += Number(x.amt);
+            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`;
+        });
+
+        document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
+        document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
+        document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
+    }
+
+    function saveEntry() {
+        const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
+        if(!d || !n || !a) return alert("All fields are required!");
+        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
+    }
+
+    function deleteEntry(p, k) { if(confirm("Delete permanently?")) db.ref(p + '/' + k).remove(); }
+
     function printReceipt(key) {
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; height:148mm; border:10px double #000; padding:30px; margin:auto; position:relative; background:white; color:black;">
+            <div style="width:100%; max-width:800px; padding:40px; border:8px double #000; background:white; color:black; font-family:'Outfit'; position:relative;">
                 <center>
-                    <h1 style="font-family:Cinzel; font-size:32px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                    <p>Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <div style="background:black; color:white; padding:10px 40px; display:inline-block; font-weight:bold;">DONATION RECEIPT</div>
+                    <h1 style="font-family:'Cinzel'; font-size:35px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
+                    <p style="font-weight:bold; font-size:14px; margin-top:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <div style="background:black; color:white; padding:10px 60px; font-size:24px; font-weight:bold; margin-top:10px;">DONATION RECEIPT</div>
                 </center>
-                <div style="margin-top:30px; font-size:18px;">
-                    <p>Receipt No: <b>#${key.substr(-5).toUpperCase()}</b> <span style="float:right;">Date: <b>${item.date}</b></span></p>
-                    <p style="margin-top:20px; line-height:2;">Received with thanks from Mr./Ms. <span style="border-bottom:1px dotted #000; display:inline-block; min-width:300px;">${item.name}</span></p>
-                    <p>Sum of Rupees <span style="border-bottom:1px dotted #000; display:inline-block; min-width:400px; text-transform:capitalize;">${words}</span></p>
-                    <p>Towards <b>52nd Sahid Diwas Fund</b>.</p>
+
+                <div style="display:flex; justify-content:space-between; margin-top:30px; font-size:18px;">
+                    <span>No: <b style="border-bottom:1px solid #000;">#${key.substr(-5).toUpperCase()}</b></span>
+                    <span>Date: <b style="border-bottom:1px solid #000;">${item.date}</b></span>
                 </div>
-                <div style="font-size:32px; font-weight:900; border:5px double #000; padding:10px; width:fit-content; margin:20px auto;">₹ ${Number(item.amt).toLocaleString()} /-</div>
-                <div style="position:absolute; bottom:40px; right:40px; text-align:center;">
-                    <div style="font-family:'Dancing Script'; font-size:24px;">${localData.config.tName}</div>
-                    <div style="border-top:1px solid #000; font-weight:bold; width:150px;">Treasurer</div>
+
+                <div style="font-size:22px; line-height:2.5; font-family:'Crimson Text'; margin-top:30px;">
+                    Received with heartful thanks from Mr./Ms. <span style="border-bottom:1.5px dotted #000; font-weight:bold; display:inline-block; min-width:350px;">${item.name}</span> <br>
+                    the sum of Rupees <span style="border-bottom:1.5px dotted #000; font-weight:bold; display:inline-block; min-width:400px; text-transform:capitalize;">${words}</span> <br>
+                    towards <b style="text-decoration:underline;">52nd Sahid Diwas Celebration Fund</b>.
+                </div>
+
+                <div style="font-size:38px; font-weight:900; border:4px double #000; padding:15px 40px; width:fit-content; margin:40px auto; background:#f9f9f9;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+
+                <div style="text-align:center; margin-top:20px; border-top:1px dashed #777; padding-top:20px;">
+                    <p style="font-style:italic; font-size:18px; color:#333; margin-bottom:5px;">"Aapka yogdaan humare samaj ke liye ek misaal hai. Hum aapke shukraguzaar hain!"</p>
+                    <h3 style="font-family:'Dancing Script'; font-size:28px; margin:0;">Thank You for your Generosity!</h3>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; margin-top:50px; padding-right:20px;">
+                    <div style="text-align:center;">
+                        <span style="font-family:'Dancing Script'; font-size:28px; display:block;">${localData.config.tName}</span>
+                        <div style="border-top:2px solid #000; font-weight:900; width:200px; font-size:12px; text-transform:uppercase; padding-top:5px;">Principal Treasurer</div>
+                    </div>
                 </div>
             </div>`;
         window.print();
     }
 
-    // Initialize Year Dropdown
+    function printReport(type) {
+        const fy = document.getElementById('yearFilter').value;
+        const data = type === 'don' ? localData.donations : localData.expenses;
+        const title = type === 'don' ? 'COLLECTION REPORT' : 'EXPENDITURE REPORT';
+        let total = 0;
+
+        let rows = Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).map((x, i) => {
+            total += Number(x.amt);
+            return `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`;
+        }).join('');
+
+        document.getElementById('printArea').innerHTML = `
+            <div style="padding:40px; background:white; color:black; font-family:'Outfit';">
+                <center>
+                    <h1 style="font-family:'Cinzel'; margin:0;">B.B.C MARANG BUNDU</h1>
+                    <p style="margin:5px 0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <h2 style="background:black; color:white; padding:10px; text-transform:uppercase;">${title} (${fy})</h2>
+                </center>
+                <table class="report-table">
+                    <thead><tr><th>S.N</th><th>Date</th><th>Particulars</th><th>Amount (₹)</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                    <tfoot>
+                        <tr style="font-weight:bold; background:#eee;">
+                            <td colspan="3" style="text-align:right;">GRAND TOTAL:</td>
+                            <td>₹ ${total.toLocaleString()}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div style="display:flex; justify-content:space-between; margin-top:80px;">
+                    <div style="text-align:center;"><div style="border-top:1px solid #000; width:150px; padding-top:5px;">Asst. Treasurer</div></div>
+                    <div style="text-align:center;"><div style="border-top:1px solid #000; width:150px; padding-top:5px;">Principal Treasurer</div></div>
+                </div>
+            </div>`;
+        window.print();
+    }
+
     (function init() {
         const s = document.getElementById('yearFilter');
         for (let y = 2026; y <= 2035; y++) {
             let o = document.createElement('option'); o.value = y; o.text = "Session " + y;
-            if(y === new Date().getFullYear() || y === 2026) o.selected = true;
-            s.appendChild(o);
+            if(y === 2026) o.selected = true; s.appendChild(o);
         }
         document.getElementById('eDate').valueAsDate = new Date();
     })();
