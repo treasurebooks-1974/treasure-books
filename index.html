@@ -11,8 +11,7 @@
 
         :root {
             --bg: #05080a; --glass: rgba(10, 15, 25, 0.88);
-            --gold: #eab308; --neon-teal: #06b6d4;
-            --green: #10b981; --red: #f43f5e; --border: rgba(234, 179, 8, 0.15);
+            --gold: #eab308; --green: #10b981; --red: #f43f5e; --border: rgba(234, 179, 8, 0.15);
         }
 
         body { 
@@ -35,8 +34,7 @@
         .t-box input { background: transparent; border: none; border-bottom: 1.5px solid var(--gold); color: #fff; text-align: center; font-family: 'Cinzel'; font-weight: 900; font-size: 14px; outline: none; width: 100%; }
 
         .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 30px auto; width: 95%; }
-        .stat-card { background: var(--glass); padding: 25px; border-radius: 28px; border: 1px solid var(--border); text-align: center; transition: 0.3s; }
-        .stat-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .stat-card { background: var(--glass); padding: 25px; border-radius: 28px; border: 1px solid var(--border); text-align: center; }
         .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 10px; }
 
         .form-box { background: var(--glass); padding: 30px; border-radius: 35px; border: 1px solid var(--border); max-width: 850px; margin: 30px auto; width: 90%; }
@@ -53,7 +51,10 @@
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .btn-mini { padding: 6px 10px; border-radius: 8px; cursor: pointer; border: 1px solid #444; background: #000; color: #fff; font-size: 11px; margin-right: 2px; }
 
-        /* --- PRINT AREA --- */
+        /* Modal styling */
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center; }
+        .modal-content { background:#0f172a; padding:30px; border-radius:20px; border:1.5px solid var(--gold); width:350px; }
+
         #printArea { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -105,6 +106,18 @@
         <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
         <input type="text" id="searchExp" class="search-bar" placeholder="Search purpose..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--gold); margin-top:0;">Edit Transaction</h3>
+        <input type="hidden" id="editKey"><input type="hidden" id="editType">
+        <input type="date" id="mDate" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
+        <input type="text" id="mName" placeholder="Name" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">
+        <input type="number" id="mAmount" placeholder="Amount" style="width:100%; margin-bottom:20px; padding:10px; border-radius:8px;">
+        <button class="btn-save" onclick="updateData()" style="padding:10px; width:100%;">Update</button>
+        <button onclick="closeModal()" style="width:100%; background:none; color:gray; border:none; margin-top:10px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
@@ -164,11 +177,18 @@
 
         Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sDon)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tin += Number(x.amt);
-            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
+            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
+                <button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> 
+                <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button>
+                <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button>
+            </td></tr>`;
         });
         Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sExp)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tout += Number(x.amt);
-            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`;
+            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
+                <button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button>
+                <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button>
+            </td></tr>`;
         });
         document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
@@ -182,7 +202,25 @@
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function deleteEntry(p, k) { if(confirm("Permanently delete?")) db.ref(p + '/' + k).remove(); }
+    function openEditModal(t, k) {
+        const d = t === 'donation' ? localData.donations[k] : localData.expenses[k];
+        document.getElementById('editKey').value = k; document.getElementById('editType').value = t;
+        document.getElementById('mDate').value = d.date; document.getElementById('mName').value = d.name; document.getElementById('mAmount').value = d.amt;
+        document.getElementById('editModal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('editModal').style.display = 'none'; }
+    function updateData() {
+        const k = document.getElementById('editKey').value, t = document.getElementById('editType').value;
+        db.ref((t === 'donation' ? 'donations/' : 'expenses/') + k).update({ 
+            date: document.getElementById('mDate').value, 
+            name: document.getElementById('mName').value, 
+            amt: Number(document.getElementById('mAmount').value), 
+            year: new Date(document.getElementById('mDate').value).getFullYear() 
+        });
+        closeModal();
+    }
+
+    function deleteEntry(p, k) { if(confirm("Delete permanently?")) db.ref(p + '/' + k).remove(); }
 
     function printReceipt(key) {
         const item = localData.donations[key];
@@ -194,31 +232,25 @@
                     <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#555;">B.B.C MARANG BUNDU</h2>
                     <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
                 </div>
-
                 <div style="background:#000; color:#fff; width:300px; margin:15px auto; padding:8px; text-align:center; font-weight:900; letter-spacing:5px; font-size:20px;">DONATION RECEIPT</div>
-
                 <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:20px;">
                     <span>Receipt No: <b style="text-decoration:underline;">#${key.substr(-5).toUpperCase()}</b></span>
                     <span>Date: <b style="text-decoration:underline;">${item.date}</b></span>
                 </div>
-
                 <div style="font-size:24px; line-height:2.2; font-family:'Crimson Text'; margin-top:30px;">
                     Received with heartful thanks from Mr./Ms. <span style="font-weight:bold; border-bottom:1.5px solid #000; padding:0 10px; text-transform:uppercase;">${item.name}</span> <br>
                     the sum of Rupees <span style="font-weight:bold; border-bottom:1.5px solid #000; padding:0 10px; text-transform:capitalize;">${words}</span> <br>
                     towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
                 </div>
-
-                <div style="font-size:45px; font-weight:900; border:5px double #000; padding:10px 50px; width:fit-content; margin:40px auto; background:#f2f2f2; letter-spacing:2px;">₹ ${Number(item.amt).toLocaleString()}/-</div>
-
+                <div style="font-size:45px; font-weight:900; border:5px double #000; padding:10px 50px; width:fit-content; margin:40px auto; background:#f2f2f2;">₹ ${Number(item.amt).toLocaleString()}/-</div>
                 <div style="text-align:center; margin-top:20px; border-top:1px dashed #777; padding-top:10px;">
                     <p style="font-style:italic; font-size:18px; margin-bottom:0;">"Your generous contribution is a beacon of hope for our community."</p>
                     <p style="font-family:'Dancing Script'; font-size:24px; margin-top:5px; font-weight:bold;">We deeply appreciate your kindness!</p>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; margin-top:40px;">
                     <div style="text-align:center;">
                         <span style="font-family:'Dancing Script'; font-size:28px; display:block;">${localData.config.tName}</span>
-                        <div style="border-top:2px solid #000; font-weight:900; width:220px; font-size:12px; padding-top:5px; letter-spacing:1px;">PRINCIPAL TREASURER</div>
+                        <div style="border-top:2px solid #000; font-weight:900; width:220px; font-size:12px; padding-top:5px;">PRINCIPAL TREASURER</div>
                     </div>
                 </div>
             </div>`;
@@ -229,7 +261,6 @@
         const fy = document.getElementById('yearFilter').value;
         const data = type === 'don' ? localData.donations : localData.expenses;
         const title = type === 'don' ? 'COLLECTION LEDGER' : 'EXPENDITURE LEDGER';
-        
         let tin = 0, tout = 0;
         Object.values(localData.donations).filter(x => x.year == fy).forEach(x => tin += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
@@ -241,39 +272,29 @@
         document.getElementById('printArea').innerHTML = `
             <div style="padding:40px; background:white; color:black; font-family:'Outfit';">
                 <center>
-                    <h1 style="font-family:'Cinzel'; margin:0; font-size:32px;">B.B.C MARANG BUNDU</h1>
+                    <h1 style="font-family:'Cinzel'; margin:0; font-size:35px;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; margin:5px 0; font-size:22px;">B.B.C MARANG BUNDU</h2>
                     <p style="margin:5px 0; font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <h2 style="background:black; color:white; padding:10px; margin-top:10px; letter-spacing:3px;">${title} REPORT</h2>
-                    <h3 style="margin:10px 0;">SESSION: ${fy}</h3>
+                    <h2 style="background:black; color:white; padding:10px; margin-top:10px;">${title} REPORT</h2>
                 </center>
-
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin:25px 0; border:2px solid #000; background:#f9f9f9; padding:15px; text-align:center;">
-                    <div><b style="font-size:12px;">TOTAL COLLECTIONS</b><br><span style="font-size:20px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
-                    <div><b style="font-size:12px;">TOTAL EXPENDITURES</b><br><span style="font-size:20px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
+                    <div><b style="font-size:12px;">COLLECTIONS</b><br><span style="font-size:20px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
+                    <div><b style="font-size:12px;">EXPENDITURES</b><br><span style="font-size:20px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
                     <div><b style="font-size:12px;">NET BALANCE</b><br><span style="font-size:20px; font-weight:bold; color:blue;">₹ ${(tin-tout).toLocaleString()}</span></div>
                 </div>
-
-                <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                <table style="width:100%; border-collapse:collapse;">
                     <thead><tr style="background:#eee;">
                         <th style="border:1px solid #000; padding:10px;">S.N</th>
                         <th style="border:1px solid #000; padding:10px;">DATE</th>
-                        <th style="border:1px solid #000; padding:10px;">PARTICULARS / NAME</th>
+                        <th style="border:1px solid #000; padding:10px;">PARTICULARS</th>
                         <th style="border:1px solid #000; padding:10px;">AMOUNT (₹)</th>
                     </tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-
                 <div style="display:flex; justify-content:space-between; margin-top:80px;">
-                    <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.atName}</span>
-                        <div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">ASSISTANT TREASURER</div>
-                    </div>
-                    <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span>
-                        <div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">PRINCIPAL TREASURER</div>
-                    </div>
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.atName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">ASSISTANT TREASURER</div></div>
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span><div style="border-top:1px solid #000; width:180px; padding-top:5px; font-weight:bold; font-size:11px;">PRINCIPAL TREASURER</div></div>
                 </div>
-                <div style="margin-top:50px; text-align:center; font-size:10px; border-top:1px solid #ddd; padding-top:10px; font-style:italic;">This is a system-generated financial report by Treasure Books Elite.</div>
             </div>`;
         window.print();
     }
