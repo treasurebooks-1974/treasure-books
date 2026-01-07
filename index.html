@@ -10,46 +10,51 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;900&family=Dancing+Script:wght@700&family=Crimson+Text:ital,wght@1,600&display=swap');
 
         :root {
-            --bg: #05080a; --glass: rgba(15, 23, 42, 0.85);
+            --bg: #05080a; --glass: rgba(10, 15, 25, 0.88);
             --gold: #eab308; --neon-teal: #06b6d4;
-            --green: #10b981; --red: #f43f5e; --border: rgba(255, 255, 255, 0.1);
+            --green: #10b981; --red: #f43f5e; --border: rgba(234, 179, 8, 0.15);
         }
 
         body { 
             margin: 0; font-family: 'Outfit', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1510511459019-5dee997dd1db?q=80&w=2070&auto=format&fit=crop');
+            /* PREMIUM TREASURE THEME BACKGROUND */
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop');
             background-size: cover; background-position: center; background-attachment: fixed;
             color: #f8fafc; min-height: 100vh; 
         }
 
         /* --- DASHBOARD UI --- */
         .dash-header { text-align: center; padding: 40px 20px 10px; }
-        .main-title { font-family: 'Cinzel', serif; font-size: 48px; font-weight: 900; letter-spacing: 6px; margin: 0; background: linear-gradient(to bottom, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .sub-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); margin: 8px 0; }
-        .reg-no { font-size: 11px; color: var(--neon-teal); letter-spacing: 3px; font-weight: 900; opacity: 0.9; }
+        .main-title { font-family: 'Cinzel', serif; font-size: 52px; font-weight: 900; letter-spacing: 8px; margin: 0; background: linear-gradient(to bottom, #fde68a, #b45309); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.3)); }
+        .sub-title { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold); margin: 8px 0; letter-spacing: 3px; }
+        .reg-no { font-size: 11px; color: var(--neon-teal); letter-spacing: 3px; font-weight: 900; opacity: 0.9; text-transform: uppercase; }
 
-        .year-bg-pin { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-teal); padding: 10px 30px; border-radius: 50px; width: fit-content; margin: 20px auto; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px; }
-        .year-bg-pin select { background: transparent; border: none; color: #fff; font-weight: 900; font-size: 16px; outline: none; cursor: pointer; }
+        .year-bg-pin { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--gold); padding: 12px 35px; border-radius: 50px; width: fit-content; margin: 25px auto; backdrop-filter: blur(15px); display: flex; align-items: center; gap: 15px; box-shadow: 0 0 25px rgba(234, 179, 8, 0.1); }
+        .year-bg-pin select { background: transparent; border: none; color: #fff; font-weight: 900; font-size: 18px; outline: none; cursor: pointer; font-family: 'Outfit'; }
 
-        .treasurer-config { display: flex; justify-content: center; gap: 15px; margin: 20px auto; }
-        .t-box { background: var(--glass); border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; text-align: center; }
-        .t-box input { background: transparent; border: none; border-bottom: 1px solid #334155; color: #fff; text-align: center; font-family: 'Cinzel'; font-size: 13px; outline: none; width: 160px; }
+        .treasurer-config { display: flex; justify-content: center; gap: 20px; margin: 25px auto; }
+        .t-box { background: var(--glass); border: 1px solid var(--border); padding: 12px 20px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .t-box label { font-size: 10px; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 900; letter-spacing: 1px; }
+        .t-box input { background: transparent; border: none; border-bottom: 1.5px solid var(--gold); color: #fff; text-align: center; font-family: 'Cinzel'; font-weight: 900; font-size: 15px; outline: none; width: 200px; padding: 5px 0; }
 
-        .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto 30px; width: 95%; }
-        .stat-card { background: var(--glass); padding: 25px; border-radius: 24px; border: 1px solid var(--border); text-align: center; }
-        .stat-val { font-size: 32px; font-weight: 900; font-family: 'Cinzel'; margin-top: 8px; }
+        .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; max-width: 1100px; margin: 30px auto; width: 95%; }
+        .stat-card { background: var(--glass); padding: 30px; border-radius: 28px; border: 1px solid var(--border); text-align: center; transition: 0.4s; }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .stat-val { font-size: 36px; font-weight: 900; font-family: 'Cinzel'; margin-top: 10px; }
 
-        .form-box { background: var(--glass); padding: 30px; border-radius: 30px; border: 1px solid var(--border); max-width: 800px; margin: 20px auto; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
-        .form-grid input, .form-grid select { background: #1e293b; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 12px; outline: none; }
-        .btn-save { grid-column: span 3; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .form-box { background: var(--glass); padding: 35px; border-radius: 35px; border: 1px solid var(--border); max-width: 850px; margin: 30px auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 18px; }
+        .form-grid input, .form-grid select { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 14px; outline: none; font-size: 15px; }
+        .btn-save { grid-column: span 3; background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .btn-save:hover { filter: brightness(1.1); transform: scale(1.01); box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
 
-        .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 20px; }
-        .ledger-box { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; color: #64748b; padding: 10px; border-bottom: 2px solid var(--border); }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .btn-mini { padding: 6px 10px; border-radius: 6px; cursor: pointer; border: 1px solid #334155; background: #000; color: #fff; font-size: 10px; }
+        .lists-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; max-width: 1300px; margin: 40px auto; padding: 0 20px; }
+        .ledger-box { background: var(--glass); padding: 25px; border-radius: 25px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2.5px solid var(--border); font-weight: 900; text-transform: uppercase; }
+        td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .btn-mini { padding: 7px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #444; background: #000; color: #fff; font-size: 11px; margin-right: 5px; }
+        .btn-mini:hover { border-color: var(--gold); color: var(--gold); }
 
         /* --- PRINT DESIGNS --- */
         #printArea { display: none; }
@@ -57,31 +62,32 @@
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
             #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; }
+            @page { margin: 0; }
             
-            /* Professional Ledger Style */
-            .report-wrapper { padding: 15mm; min-height: 280mm; display: flex; flex-direction: column; background: white; box-sizing: border-box; }
-            .report-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-            .report-title { background: #000 !important; color: #fff !important; padding: 5px 30px; display: inline-block; font-weight: 900; -webkit-print-color-adjust: exact; margin: 10px 0; }
+            /* Professional Ledger Style (A4 Portrait) */
+            .report-wrapper { padding: 15mm; min-height: 297mm; display: flex; flex-direction: column; background: white; box-sizing: border-box; position: relative; }
+            .report-header { text-align: center; border-bottom: 2.5px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
+            .report-title { background: #000 !important; color: #fff !important; padding: 8px 40px; display: inline-block; font-weight: 900; -webkit-print-color-adjust: exact; margin: 15px 0; font-size: 20px; border-radius: 5px; }
             
-            .report-table { width: 100%; border-collapse: collapse; margin: 10px 0; border: 2.5px solid #000; }
-            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; border: 1.5px solid #000; padding: 10px; font-weight: 900; font-size: 14px; }
-            .report-table td { border: 1px solid #000; padding: 10px; font-size: 14px; }
+            .report-table { width: 100%; border-collapse: collapse; margin: 15px 0; border: 2.5px solid #000; }
+            .report-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; border: 1.5px solid #000; padding: 12px; font-weight: 900; font-size: 15px; }
+            .report-table td { border: 1px solid #000; padding: 12px; font-size: 15px; }
             
             .report-summary { display: grid; grid-template-columns: repeat(3, 1fr); border: 2.5px solid #000; border-top: none; background: #f9f9f9 !important; -webkit-print-color-adjust: exact; font-weight: 900; }
-            .report-summary div { padding: 15px; text-align: center; border-right: 1px solid #000; }
+            .report-summary div { padding: 18px; text-align: center; border-right: 1px solid #000; font-size: 16px; }
             .report-summary div:last-child { border-right: none; }
 
-            .report-sig-row { display: flex; justify-content: space-between; margin-top: auto; padding: 50px 20px 20px; }
-            .sig-box-final { text-align: center; width: 220px; }
-            .sig-font { font-family: 'Dancing Script', cursive; font-size: 40px; display: block; height: 45px; color: #000; }
-            .sig-line { border-top: 2px solid #000; padding-top: 5px; font-weight: 900; font-size: 13px; text-transform: uppercase; }
+            .report-sig-row { display: flex; justify-content: space-between; margin-top: 100px; padding: 0 40px; }
+            .sig-box-final { text-align: center; width: 260px; } /* Increased width to fix alignment */
+            .sig-font { font-family: 'Dancing Script', cursive; font-size: 42px; display: block; height: 50px; color: #000; }
+            .sig-line { border-top: 2.5px solid #000; padding-top: 8px; font-weight: 900; font-size: 14px; text-transform: uppercase; white-space: nowrap; }
 
-            /* Receipt Logic - Middle Print */
-            .landscape-receipt-wrap { height: 100vh; display: flex; align-items: center; justify-content: center; }
-            .receipt-card { width: 250mm; height: 160mm; border: 8px double #000; padding: 40px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-            @page { margin: 0; }
-            .portrait-page { size: portrait; }
-            .landscape-page { size: landscape; }
+            .system-tag { position: absolute; bottom: 15mm; left: 0; width: 100%; text-align: center; font-size: 12px; font-style: italic; color: #555; border-top: 1px solid #ddd; padding-top: 8px; }
+
+            /* Receipt Logic - Centered Middle Print (Landscape) */
+            .receipt-middle-container { height: 210mm; width: 297mm; display: flex; align-items: center; justify-content: center; }
+            .receipt-card { width: 260mm; min-height: 165mm; border: 10px double #000; padding: 45px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; background: white; }
+            .ink-field { font-family: 'Crimson Text'; font-style: italic; font-size: 24px; border-bottom: 1.5px dotted #000; padding: 0 12px; }
         }
     </style>
 </head>
@@ -94,38 +100,39 @@
 </div>
 
 <div class="year-bg-pin no-print">
+    <label style="color:var(--gold)">SESSION YEAR :</label>
     <select id="yearFilter" onchange="loadView()"></select>
 </div>
 
 <div class="treasurer-config no-print">
-    <div class="t-box"><label style="font-size: 9px; color: var(--neon-teal);">PRINCIPAL TREASURER</label><br><input type="text" id="cfgT" onchange="updateCfg()"></div>
-    <div class="t-box"><label style="font-size: 9px; color: var(--neon-teal);">ASST. TREASURER</label><br><input type="text" id="cfgAT" onchange="updateCfg()"></div>
+    <div class="t-box"><label>Principal Treasurer</label><input type="text" id="cfgT" placeholder="Full Name" onchange="updateCfg()"></div>
+    <div class="t-box"><label>Assistant Treasurer</label><input type="text" id="cfgAT" placeholder="Full Name" onchange="updateCfg()"></div>
 </div>
 
 <div class="stats-container no-print">
-    <div class="stat-card"><div style="color:var(--green)">COLLECTIONS</div><div class="stat-val" id="sumIn">₹ 0</div></div>
-    <div class="stat-card"><div style="color:var(--red)">EXPENDITURES</div><div class="stat-val" id="sumOut">₹ 0</div></div>
-    <div class="stat-card"><div style="color:var(--gold)">CASH BALANCE</div><div class="stat-val" id="sumBal">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--green); font-weight: 900; letter-spacing: 1px;">TOTAL COLLECTIONS</div><div class="stat-val" id="sumIn" style="color:var(--green)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--red); font-weight: 900; letter-spacing: 1px;">TOTAL EXPENDITURES</div><div class="stat-val" id="sumOut" style="color:var(--red)">₹ 0</div></div>
+    <div class="stat-card"><div style="color:var(--gold); font-weight: 900; letter-spacing: 1px;">NET CASH BALANCE</div><div class="stat-val" id="sumBal" style="color:var(--gold)">₹ 0</div></div>
 </div>
 
 <div class="form-box no-print">
     <div class="form-grid">
-        <select id="eType" style="grid-column: span 3;"><option value="donation">CREDIT (Collection)</option><option value="expense">DEBIT (Expenditure)</option></select>
+        <select id="eType" style="grid-column: span 3;"><option value="donation">✨ CREDIT (Collection Entry)</option><option value="expense">🛡️ DEBIT (Expenditure Entry)</option></select>
         <input type="date" id="eDate">
-        <input type="number" id="eAmount" placeholder="Amount ₹">
-        <input type="text" id="eName" placeholder="Donor Name / Purpose">
-        <button class="btn-save" onclick="saveEntry()">Save Transaction</button>
+        <input type="number" id="eAmount" placeholder="Enter Amount ₹">
+        <input type="text" id="eName" placeholder="Donor Name / Specific Purpose">
+        <button class="btn-save" onclick="saveEntry()">Commit To Ledger</button>
     </div>
 </div>
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between;">Collections <button class="btn-mini" onclick="printReport('don')">Report</button></h3>
-        <table><thead><tr><th>Date</th><th>Donor</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; margin-bottom:20px;">🟢 Collections <button class="btn-mini" onclick="printReport('don')">Print Report</button></h3>
+        <table><thead><tr><th>Date</th><th>Donor Name</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Report</button></h3>
-        <table><thead><tr><th>Date</th><th>Purpose</th><th>Amt</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; margin-bottom:20px;">🔴 Expenditures <button class="btn-mini" onclick="printReport('exp')">Print Report</button></h3>
+        <table><thead><tr><th>Date</th><th>Purpose Details</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
@@ -193,61 +200,60 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Pura data bharein!");
+        if(!d || !n || !a) return alert("Fill all data fields!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function deleteEntry(p, k) { if(confirm("Permanently Delete?")) db.ref(p + '/' + k).remove(); }
+    function deleteEntry(p, k) { if(confirm("Permanently remove this entry from ledger?")) db.ref(p + '/' + k).remove(); }
 
     function printReceipt(key) {
-        const item = localData.donations[key];
-        const words = numToWords(item.amt);
+        const item = localData.donations[key]; const words = numToWords(item.amt);
         const style = document.createElement('style');
         style.innerHTML = "@page { size: landscape; margin: 0; }";
         document.head.appendChild(style);
 
         document.getElementById('printArea').innerHTML = `
-            <div class="landscape-receipt-wrap">
+            <div class="receipt-middle-container">
                 <div class="receipt-card">
                     <center>
-                        <h1 style="font-family:Cinzel; font-size:38px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:Cinzel; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                        <div style="font-weight:bold; font-size:14px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
+                        <h1 style="font-family:Cinzel; font-size:42px; margin:0; font-weight:900;">52nd SAHID DIWAS 2026</h1>
+                        <h2 style="font-family:Cinzel; font-size:26px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
+                        <div style="font-weight:bold; font-size:15px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
                         <div class="label-pill">DONATION RECEIPT</div>
                     </center>
-                    <div style="display:flex; justify-content:space-between; margin:20px 0; font-size:18px; font-weight:bold;">
+                    <div style="display:flex; justify-content:space-between; margin:25px 0; font-size:20px; font-weight:bold;">
                         <span>Receipt No: <span class="ink-field">#${key.substr(-5).toUpperCase()}</span></span>
                         <span>Date: <span class="ink-field">${item.date}</span></span>
                     </div>
-                    <div style="font-size:20px; line-height:2.5; font-family:'Crimson Text', serif;">
-                        Received with thanks from Mr./Ms. <span class="ink-field" style="min-width:400px; display:inline-block;">${item.name}</span> <br>
-                        Amount in Words: <span class="ink-field" style="min-width:550px; text-transform:capitalize; display:inline-block;">${words}</span> <br>
+                    <div style="font-size:22px; line-height:2.8; font-family:'Crimson Text', serif;">
+                        Received with thanks from Mr./Ms. <span class="ink-field" style="min-width:450px; display:inline-block;">${item.name}</span> <br>
+                        The sum of Rupees <span class="ink-field" style="min-width:550px; text-transform:capitalize; display:inline-block;">${words}</span> <br>
                         Towards <span class="ink-field" style="min-width:550px; display:inline-block;">52nd Sahid Diwas Celebration Fund</span>.
                     </div>
-                    <center><div style="border:6px double #000; padding:15px 50px; font-size:38px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
-                    <div style="text-align:center; border-top:1px dashed #000; padding-top:15px;">
-                        <p style="font-style:italic; font-size:15px; margin:0;">"Aapka bahumulya yogdaan ke liye B.B.C Marang Bundu samiti sadaiv abhari rahegi."</p>
-                        <b style="font-size:20px; letter-spacing:5px;">THANK YOU!</b>
-                    </div>
-                    <div style="display:flex; justify-content:flex-end;">
-                        <div class="sig-box-final">
-                            <span class="sig-font">${localData.config.tName}</span>
-                            <div class="sig-line">Principal Treasurer</div>
-                            <div style="font-size:11px; font-weight:bold;">B.B.C MARANG BUNDU</div>
+                    <center><div style="border:6px double #000; padding:15px 50px; font-size:42px; font-weight:900; background:#f2f2f2 !important; display:inline-block; margin:20px 0; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div></center>
+                    <div style="margin-top:auto;">
+                        <div style="text-align:center; border-top:1px dashed #000; padding-top:15px;">
+                            <p style="font-style:italic; font-size:16px; margin:0;">"Thank you for your valuable contribution towards making this event successful."</p>
+                            <b style="font-size:22px; letter-spacing:5px; font-family:Cinzel; display:block; margin-top:5px;">THANK YOU!</b>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                            <div class="sig-box-final">
+                                <span class="sig-font">${localData.config.tName}</span>
+                                <div class="sig-line">Principal Treasurer</div>
+                                <div style="font-size:11px; font-weight:bold;">B.B.C MARANG BUNDU</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>`;
-        window.print();
-        style.remove();
+        window.print(); style.remove();
     }
 
     function printReport(type) {
-        const fy = document.getElementById('yearFilter').value;
-        let tin = 0, tout = 0;
+        const fy = document.getElementById('yearFilter').value; let tin = 0, tout = 0;
         const style = document.createElement('style');
-        style.innerHTML = "@page { size: portrait; margin: 10mm; }";
+        style.innerHTML = "@page { size: portrait; margin: 0; }";
         document.head.appendChild(style);
 
         const rows = Object.values(type === 'don' ? localData.donations : localData.expenses).filter(x => x.year == fy).map((x, i) => `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹ ${Number(x.amt).toLocaleString()}</td></tr>`).join('');
@@ -257,9 +263,9 @@
         document.getElementById('printArea').innerHTML = `
             <div class="report-wrapper">
                 <div class="report-header">
-                    <h1 style="font-family:Cinzel; font-size:28px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:Cinzel; font-size:22px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                    <div style="font-weight:bold;">Reg.no :- MBJ8750 - 13 Of 2022</div>
+                    <h1 style="font-family:Cinzel; font-size:32px; margin:0; font-weight:900;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:Cinzel; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
+                    <div style="font-weight:bold; font-size:14px;">Reg.no :- MBJ8750 - 13 Of 2022</div>
                     <div class="report-title">${type === 'don' ? 'COLLECTION' : 'EXPENDITURE'} LEDGER REPORT</div>
                     <div style="font-weight:bold; margin-top:5px;">SESSION YEAR: ${fy}</div>
                 </div>
@@ -270,16 +276,15 @@
                 <div class="report-summary">
                     <div>TOTAL COLLECTIONS<br>₹ ${tin.toLocaleString()}</div>
                     <div>TOTAL EXPENDITURES<br>₹ ${tout.toLocaleString()}</div>
-                    <div>NET BALANCE<br>₹ ${(tin-tout).toLocaleString()}</div>
+                    <div>NET CASH BALANCE<br>₹ ${(tin-tout).toLocaleString()}</div>
                 </div>
                 <div class="report-sig-row">
                     <div class="sig-box-final"><span class="sig-font">${localData.config.atName}</span><div class="sig-line">Assistant Treasurer</div></div>
                     <div class="sig-box-final"><span class="sig-font">${localData.config.tName}</span><div class="sig-line">Principal Treasurer</div></div>
                 </div>
-                <div style="text-align:center; margin-top:auto; font-size:11px; font-style:italic; border-top:1px solid #ccc; padding-top:5px;">This is a system generated report by Treasure Books Elite.</div>
+                <div class="system-tag">This is a system generated report by Treasure Books Elite</div>
             </div>`;
-        window.print();
-        style.remove();
+        window.print(); style.remove();
     }
 
     (function init() {
