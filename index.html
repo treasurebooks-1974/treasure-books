@@ -22,14 +22,12 @@
         /* --- FLOATING YEAR SELECTOR --- */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
-            background: #fff; border: 2px solid var(--gold);
+            background: #fff; border: 2.5px solid var(--gold);
             padding: 8px 15px; border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             display: flex; align-items: center; gap: 8px;
         }
-        .year-floating-box select {
-            border: none; outline: none; font-weight: 900; color: var(--gold); cursor: pointer; background: transparent;
-        }
+        .year-floating-box select { border: none; outline: none; font-weight: 900; color: var(--gold); cursor: pointer; background: transparent; font-size: 15px; }
 
         /* --- DASHBOARD UI --- */
         .dash-header { text-align: center; padding: 60px 20px 10px; }
@@ -73,7 +71,7 @@
 <body>
 
 <div class="year-floating-box no-print">
-    <span style="font-size:12px; font-weight:bold;">📅 SESSION:</span>
+    <span style="font-size:11px; font-weight:900;">SESSION:</span>
     <select id="yearFilter" onchange="loadView()"></select>
 </div>
 
@@ -119,13 +117,13 @@
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3 style="color:var(--gold); margin-top:0;">Edit Entry</h3>
+        <h3 style="color:var(--gold); margin-top:0;">Edit Transaction</h3>
         <input type="hidden" id="editKey"><input type="hidden" id="editType">
-        <input type="date" id="mDate" style="width:100%; padding:10px; margin-bottom:10px;">
-        <input type="text" id="mName" style="width:100%; padding:10px; margin-bottom:10px;">
-        <input type="number" id="mAmount" style="width:100%; padding:10px; margin-bottom:15px;">
-        <button class="btn-save" onclick="updateData()" style="width:100%;">Update</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:gray; margin-top:10px;">Cancel</button>
+        <input type="date" id="mDate" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
+        <input type="text" id="mName" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
+        <input type="number" id="mAmount" style="width:100%; padding:10px; margin-bottom:20px; border-radius:8px; border:1px solid #ddd;">
+        <button class="btn-save" onclick="updateData()" style="width:100%;">Update Entry</button>
+        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
@@ -157,9 +155,7 @@
         loadView();
     });
 
-    function updateCfg() {
-        db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value });
-    }
+    function updateCfg() { db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); }
 
     function numToWords(n) {
         const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
@@ -198,7 +194,7 @@
 
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("All fields required!");
+        if(!d || !n || !a) return alert("All fields are required!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
@@ -221,31 +217,31 @@
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; padding:40px; border:15px double #000; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box;">
+            <div style="width:210mm; padding:40px; border:15px double #000; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative;">
                 <center>
                     <h1 style="font-family:'Cinzel'; font-size:42px; margin:0;">52nd SAHID DIWAS 2026</h1>
                     <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
-                    <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <div style="background:black; color:white; padding:12px 60px; font-size:24px; font-weight:bold; margin-top:20px; letter-spacing:3px;">DONATION RECEIPT</div>
+                    <p style="font-weight:bold; font-size:14px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <div style="background:black; color:white; padding:15px 80px; font-size:26px; font-weight:900; margin-top:20px; letter-spacing:4px; display:inline-block; -webkit-print-color-adjust: exact;">DONATION RECEIPT</div>
                 </center>
                 <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:30px;">
-                    <span>No: <b>#${key.substr(-5).toUpperCase()}</b></span>
-                    <span>Date: <b>${item.date}</b></span>
+                    <span>No: <b style="border-bottom:1px solid #000;">#${key.substr(-5).toUpperCase()}</b></span>
+                    <span>Date: <b style="border-bottom:1px solid #000;">${item.date}</b></span>
                 </div>
                 <div style="font-size:24px; line-height:2.5; font-family:'Crimson Text'; margin-top:40px;">
-                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px;">${item.name}</span> <br>
-                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px;">${words}</span> <br>
-                    towards <b>52nd Sahid Diwas Celebration Fund</b>.
+                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2.5px solid #000; text-transform:uppercase; padding:0 10px;">${item.name}</span> <br>
+                    the sum of Rupees <span style="font-weight:900; border-bottom:2.5px solid #000; text-transform:capitalize; padding:0 10px;">${words}</span> <br>
+                    towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
                 </div>
-                <div style="font-size:52px; font-weight:900; border:8px double #000; padding:15px 60px; width:fit-content; margin:50px auto; background:#f2f2f2; letter-spacing:2px;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+                <div style="font-size:55px; font-weight:900; border:10px double #000; padding:15px 70px; width:fit-content; margin:50px auto; background:#f2f2f2; letter-spacing:3px; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
                 <div style="text-align:center; margin-top:30px;">
-                    <p style="font-style:italic; font-size:20px;">"Your generosity helps us keep the memory of Sahid Diwas alive."</p>
-                    <p style="font-family:'Dancing Script'; font-size:32px; font-weight:bold; margin-top:10px;">Thank You!</p>
+                    <p style="font-style:italic; font-size:20px;">"Your contribution is a beacon of hope for the community."</p>
+                    <p style="font-family:'Dancing Script'; font-size:35px; font-weight:bold; margin-top:10px;">Deeply Thankful!</p>
                 </div>
                 <div style="display:flex; justify-content:flex-end; margin-top:50px;">
                     <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:32px; display:block;">${localData.config.tName}</span>
-                        <div style="border-top:2px solid #000; font-weight:900; width:250px; font-size:13px; padding-top:5px; text-transform:uppercase;">Principal Treasurer</div>
+                        <span style="font-family:'Dancing Script'; font-size:32px;">${localData.config.tName}</span>
+                        <div style="border-top:2.5px solid #000; font-weight:900; width:260px; font-size:14px; padding-top:5px; text-transform:uppercase;">Principal Treasurer</div>
                     </div>
                 </div>
             </div>`;
@@ -261,29 +257,29 @@
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
 
         let rows = Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).map((x, i) => 
-            `<tr><td style="border:1px solid #000; padding:10px;">${i+1}</td><td style="border:1px solid #000; padding:10px;">${x.date}</td><td style="border:1px solid #000; padding:10px;">${x.name}</td><td style="border:1px solid #000; padding:10px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
+            `<tr><td style="border:1px solid #000; padding:10px;">${i+1}</td><td style="border:1px solid #000; padding:10px;">${x.date}</td><td style="border:1px solid #000; padding:10px; text-transform:uppercase;">${x.name}</td><td style="border:1px solid #000; padding:10px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
         ).join('');
 
         document.getElementById('printArea').innerHTML = `
             <div style="padding:50px; background:white; color:black; font-family:'Outfit';">
                 <center>
-                    <h1 style="font-family:'Cinzel'; margin:0; font-size:40px;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; margin:5px 0; font-size:24px;">B.B.C MARANG BUNDU</h2>
-                    <p style="font-weight:bold; font-size:16px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                    <div style="background:black; color:white; padding:15px; margin-top:20px; font-size:24px; font-weight:900; letter-spacing:3px;">${title} (${fy})</div>
+                    <h1 style="font-family:'Cinzel'; font-size:40px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0;">B.B.C MARANG BUNDU</h2>
+                    <p style="font-weight:bold; font-size:15px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <div style="background:black; color:white; padding:18px; margin-top:20px; font-size:26px; font-weight:900; letter-spacing:4px; text-transform:uppercase; -webkit-print-color-adjust: exact;">${title} (${fy})</div>
                 </center>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin:30px 0; border:3px solid #000; background:#f2f2f2; padding:20px; text-align:center;">
-                    <div><b style="font-size:14px;">TOTAL COLLECTIONS</b><br><span style="font-size:24px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
-                    <div><b style="font-size:14px;">TOTAL EXPENDITURES</b><br><span style="font-size:24px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin:30px 0; border:3px solid #000; background:#f2f2f2; padding:20px; text-align:center; -webkit-print-color-adjust: exact;">
+                    <div><b style="font-size:14px;">COLLECTIONS</b><br><span style="font-size:24px; font-weight:bold; color:green;">₹ ${tin.toLocaleString()}</span></div>
+                    <div><b style="font-size:14px;">EXPENDITURES</b><br><span style="font-size:24px; font-weight:bold; color:red;">₹ ${tout.toLocaleString()}</span></div>
                     <div><b style="font-size:14px;">NET BALANCE</b><br><span style="font-size:24px; font-weight:bold; color:blue;">₹ ${(tin-tout).toLocaleString()}</span></div>
                 </div>
                 <table style="width:100%; border-collapse:collapse; font-size:16px;">
-                    <thead><tr style="background:#ddd;"><th style="border:1px solid #000; padding:12px;">S.N</th><th style="border:1px solid #000; padding:12px;">DATE</th><th style="border:1px solid #000; padding:12px;">PARTICULARS</th><th style="border:1px solid #000; padding:12px;">AMOUNT (₹)</th></tr></thead>
+                    <thead><tr style="background:#ddd; -webkit-print-color-adjust: exact;"><th style="border:1px solid #000; padding:12px;">S.N</th><th style="border:1px solid #000; padding:12px;">DATE</th><th style="border:1px solid #000; padding:12px;">PARTICULARS</th><th style="border:1px solid #000; padding:12px;">AMOUNT (₹)</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
                 <div style="display:flex; justify-content:space-between; margin-top:100px;">
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:28px;">${localData.config.atName}</span><div style="border-top:2px solid #000; width:220px; padding-top:5px; font-weight:bold;">ASSISTANT TREASURER</div></div>
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:28px;">${localData.config.tName}</span><div style="border-top:2px solid #000; width:220px; padding-top:5px; font-weight:bold;">PRINCIPAL TREASURER</div></div>
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:30px;">${localData.config.atName}</span><div style="border-top:2.5px solid #000; width:220px; padding-top:5px; font-weight:bold;">ASSISTANT TREASURER</div></div>
+                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:30px;">${localData.config.tName}</span><div style="border-top:2.5px solid #000; width:220px; padding-top:5px; font-weight:bold;">PRINCIPAL TREASURER</div></div>
                 </div>
             </div>`;
         window.print();
