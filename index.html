@@ -291,7 +291,7 @@
     (function init() {
         const s = document.getElementById('yearFilter');
         for (let y = 2026; y <= 2050; y++) {
-            let o = document.createElement('option'); o.value = y; o.text = "Session " + y;
+            let o = document.createElement('option'); o.value = y;
             if(y === 2026) o.selected = true; s.appendChild(o);
         }
         document.getElementById('eDate').valueAsDate = new Date();
@@ -299,4 +299,5 @@
 </script>
 </body>
 </html>
+
 
