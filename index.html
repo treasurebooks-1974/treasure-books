@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREASURE BOOKS | BBC MARANG BUNDU</title>
+    <title>TREASURE BOOKS ELITE | BBC MARANG BUNDU</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -19,6 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
+        /* Dashboard UI Elements */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -253,20 +254,28 @@
         document.getElementById('printArea').innerHTML = `
             <div style="width:210mm; height:297mm; padding:30px; background:#fff; position:relative; box-sizing:border-box; font-family:'Outfit';">
                 <div style="border: 15px solid transparent; border-image: url('https://img.freepik.com/free-vector/vintage-ornamental-frame-design_52683-39835.jpg') 30 stretch; height: 100%; padding: 40px; box-sizing: border-box; text-align: center; border-style: solid;">
+                    
                     <h2 style="font-family:'Cinzel'; font-size:35px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h2>
                     <h3 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h3>
                     <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+
                     <div style="margin-top:50px;">
                         <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
                         <h4 style="font-family:'Outfit'; font-size:24px; letter-spacing:4px; margin:10px 0; font-weight:300;">OF APPRECIATION</h4>
                     </div>
+
                     <p style="font-size:20px; font-family:'Crimson Text'; font-style:italic; margin-top:40px;">This certificate is proudly presented to</p>
+                    
                     <h2 style="font-family:'Dancing Script'; font-size:55px; border-bottom:2px solid #b45309; display:inline-block; padding:0 40px; margin:15px 0; color:#1e293b;">${item.name}</h2>
-                    <p style="font-size:19px; line-height:1.8; max-width:650px; margin:40px auto; color:#444;">
-                        For their generous contribution towards the <b>52nd SAHID DIWAS 2026</b>. 
-                        Your support plays a vital role in honoring our <b>Martyrs</b> and <b>Strengthening</b> our community.
+
+                    <p style="font-size:21px; line-height:1.9; max-width:680px; margin:40px auto; color:#333; font-family:'Crimson Text'; font-style: italic;">
+                        "Heroes never die as long as there are hearts like yours to remember them. <br>
+                        Your noble contribution towards the <b>52nd SAHID DIWAS 2026</b> is more than a gift; 
+                        it is a salute to our <b>Martyrs</b>. By standing with <b>B.B.C MARANG BUNDU</b>, 
+                        you have helped us keep their sacred flame alive and <b>Strengthened</b> the soul of our community."
                     </p>
-                    <div style="display:flex; justify-content:space-between; margin-top:100px; padding: 0 50px;">
+
+                    <div style="display:flex; justify-content:space-between; margin-top:80px; padding: 0 50px;">
                         <div style="text-align:center;">
                             <div style="height:40px;"></div>
                             <div style="border-top:2px solid #000; width:220px; padding-top:10px; font-weight:900; font-size:14px; text-transform:uppercase;">Secretary</div>
@@ -276,7 +285,10 @@
                             <div style="border-top:2px solid #000; width:220px; padding-top:10px; font-weight:900; font-size:14px; text-transform:uppercase;">Principal Treasurer</div>
                         </div>
                     </div>
-                    <div style="position:absolute; bottom:60px; width:100%; left:0; font-size:11px; opacity:0.6; letter-spacing:2px; font-weight:bold;">B.B.C MARANG BUNDU | TREASURE BOOKS ELITE</div>
+
+                    <div style="position:absolute; bottom:60px; width:100%; left:0; font-size:11px; opacity:0.6; letter-spacing:2px; font-weight:bold;">
+                        B.B.C MARANG BUNDU | TREASURE BOOKS ELITE
+                    </div>
                 </div>
             </div>`;
         window.print();
