@@ -104,12 +104,12 @@
     <div class="ledger-box">
         <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Full Report</button></h3>
         <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
-        <table><thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
+        <table><thead><tr><th>ID</th><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
         <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
         <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
-        <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
+        <table><thead><tr><th>ID</th><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
 
@@ -176,18 +176,25 @@
         const sD = document.getElementById('searchDon').value.toLowerCase();
         const sE = document.getElementById('searchExp').value.toLowerCase();
         let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
-        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+        
+        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
             tin += Number(x.amt);
-            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
-                <button class="btn-mini" onclick="printReceipt('${k}')">Receipt</button> 
+            const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+            bD.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
+                <button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button> 
                 <button class="btn-mini" style="background:#fff8e1; border-color:#b45309;" onclick="printCertificate('${k}')">📜 Cert</button>
                 <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button> 
                 <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
         });
-        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
+        
+        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
             tout += Number(x.amt);
-            bE.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button> <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`;
+            const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+            bE.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
+                <button class="btn-mini" onclick="openEditModal('expense','${k}')">✏️</button> 
+                <button class="btn-mini" onclick="deleteEntry('expenses','${k}')">🗑️</button></td></tr>`;
         });
+        
         document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
         document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
@@ -214,7 +221,7 @@
     }
     function deleteEntry(p, k) { if(confirm("Delete?")) db.ref(p + '/' + k).remove(); }
 
-    function printReceipt(key) {
+    function printReceipt(key, serialID) {
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
@@ -228,7 +235,7 @@
                         <div style="background:#1e293b; color:white; padding:12px 60px; font-size:24px; font-weight:900; margin-top:25px; letter-spacing:3px; display:inline-block; -webkit-print-color-adjust: exact; border-radius:50px;">DONATION RECEIPT</div>
                     </center>
                     <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:35px; border-bottom:1px solid #ddd; padding-bottom:10px;">
-                        <span>Receipt No: <b style="color:#b45309;">#${key.substr(-5).toUpperCase()}</b></span>
+                        <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
                         <span>Date: <b>${item.date}</b></span>
                     </div>
                     <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px; color:#333;">
@@ -247,7 +254,7 @@
                     <div style="display:flex; justify-content:flex-end; margin-top:30px;">
                         <div style="text-align:center;">
                             <span style="font-family:'Dancing Script'; font-size:32px; display:block; height:35px; color:#000;">${localData.config.tName}</span>
-                            <div style="border-top:2px solid #000; font-weight:900; width:260px; font-size:13px; padding-top:5px; text-transform:uppercase; letter-spacing:1px;">Principal Treasurer</div>
+                            <div style="border-top:2.5px solid #000; font-weight:900; width:260px; font-size:13px; padding-top:5px; text-transform:uppercase; letter-spacing:1px;">Principal Treasurer</div>
                         </div>
                     </div>
                 </div>
@@ -267,7 +274,7 @@
                     <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
                     <div style="margin:40px auto 10px; width:80px; height:80px; background:url('https://cdn-icons-png.flaticon.com/512/785/785116.png') no-repeat center; background-size:contain; opacity:0.8;"></div>
                     <div style="margin-top:20px;">
-                        <h1 style="font-family:'Cinzel'; font-size:55px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
+                        <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
                         <h4 style="font-family:'Outfit'; font-size:24px; letter-spacing:4px; margin:10px 0; font-weight:300;">OF APPRECIATION</h4>
                     </div>
                     <p style="font-size:20px; font-family:'Crimson Text'; font-style:italic; margin-top:35px;">This certificate is proudly presented to</p>
@@ -302,9 +309,10 @@
         let tin = 0, tout = 0;
         Object.values(localData.donations).filter(x => x.year == fy).forEach(x => tin += Number(x.amt));
         Object.values(localData.expenses).filter(x => x.year == fy).forEach(x => tout += Number(x.amt));
-        let rows = Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).map((x, i) => 
-            `<tr><td style="border:1px solid #000; padding:10px;">${i+1}</td><td style="border:1px solid #000; padding:10px;">${x.date}</td><td style="border:1px solid #000; padding:10px; text-transform:uppercase;">${x.name}</td><td style="border:1px solid #000; padding:10px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`
-        ).join('');
+        let rows = Object.entries(data).filter(([_, x]) => x.year == fy).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).map(([k, x], i) => {
+            const serialID = (type === 'don' ? 'TBE-' : 'EXP-') + fy + '-' + (i + 1).toString().padStart(4, '0');
+            return `<tr><td style="border:1px solid #000; padding:10px;">${serialID}</td><td style="border:1px solid #000; padding:10px;">${x.date}</td><td style="border:1px solid #000; padding:10px; text-transform:uppercase;">${x.name}</td><td style="border:1px solid #000; padding:10px;">₹ ${Number(x.amt).toLocaleString()}</td></tr>`;
+        }).join('');
         document.getElementById('printArea').innerHTML = `
             <div style="padding:50px; background:white; color:black; font-family:'Outfit';">
                 <center>
@@ -319,7 +327,7 @@
                     <div><b>BALANCE</b><br><span style="font-size:22px; color:blue;">₹ ${(tin-tout).toLocaleString()}</span></div>
                 </div>
                 <table style="width:100%; border-collapse:collapse; font-size:16px;">
-                    <thead><tr style="background:#ddd; -webkit-print-color-adjust: exact;"><th style="border:1px solid #000; padding:12px;">S.N</th><th style="border:1px solid #000; padding:12px;">DATE</th><th style="border:1px solid #000; padding:12px;">PARTICULARS</th><th style="border:1px solid #000; padding:12px;">AMOUNT (₹)</th></tr></thead>
+                    <thead><tr style="background:#ddd; -webkit-print-color-adjust: exact;"><th style="border:1px solid #000; padding:12px;">ID</th><th style="border:1px solid #000; padding:12px;">DATE</th><th style="border:1px solid #000; padding:12px;">PARTICULARS</th><th style="border:1px solid #000; padding:12px;">AMOUNT (₹)</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
                 <div style="display:flex; justify-content:space-between; margin-top:100px;">
