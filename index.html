@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* Dashboard UI */
+        /* Dashboard UI Elements */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -225,40 +225,40 @@
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; padding:45px; border:15px double #b45309; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative; overflow:hidden;">
-                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:400px; height:400px; opacity:0.04; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
-                <div style="position:relative; z-index:1;">
-                    <center>
-                        <h1 style="font-family:'Cinzel'; font-size:42px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h2>
-                        <p style="font-weight:bold; font-size:14px; margin:0; opacity:0.8;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                        <div style="background:#1e293b; color:white; padding:12px 60px; font-size:24px; font-weight:900; margin-top:25px; letter-spacing:3px; display:inline-block; -webkit-print-color-adjust: exact; border-radius:50px;">DONATION RECEIPT</div>
-                    </center>
-                    <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:35px; border-bottom:1px solid #ddd; padding-bottom:10px;">
-                        <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
-                        <span>Date: <b>${item.date}</b></span>
-                    </div>
-                    <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px; color:#333;">
-                        Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
-                        the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
-                        towards <b style="font-family:'Cinzel'; font-size:16px;">52nd Sahid Diwas Celebration Fund</b>.
-                    </div>
-                    <div style="font-size:55px; font-weight:900; border:10px double #b45309; padding:15px 65px; width:fit-content; margin:45px auto; background:#fffcf5; letter-spacing:2px; -webkit-print-color-adjust: exact; color:#1e293b;">₹ ${Number(item.amt).toLocaleString()} /-</div>
-                    <div style="text-align:center; margin-top:10px;">
-                        <p style="font-family:'Dancing Script'; font-size:38px; font-weight:bold; margin:0; color:#b45309;">Thank You!</p>
-                        <p style="font-style:italic; font-size:18px; color:#444; line-height:1.4; margin-top:5px; font-family:'Crimson Text';">
-                            "Your contribution is a noble pillar for this sacred event. <br> 
-                            We deeply honor your spirit of giving and support."
-                        </p>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-top:40px; padding: 0 40px;">
-                        <div style="text-align:center;">
-                            <div style="height:40px; border-bottom: 2px solid #000; width: 220px;"></div>
-                            <div style="font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Secretary</div>
+            <div style="width:210mm; padding:40px; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative; border: 5px solid #b45309;">
+                <div style="border: 2px solid #b45309; padding: 25px; outline: 12px double #1e293b; outline-offset: 4px; height: 100%; position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:350px; height:350px; opacity:0.04; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
+                    <div style="position:relative; z-index:1;">
+                        <center>
+                            <h1 style="font-family:'Cinzel'; font-size:40px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                            <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h2>
+                            <p style="font-weight:bold; font-size:13px; margin:0; opacity:0.8;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                            <div style="background:#1e293b; color:white; padding:10px 50px; font-size:22px; font-weight:900; margin-top:20px; letter-spacing:3px; display:inline-block; border-radius:50px; -webkit-print-color-adjust: exact;">DONATION RECEIPT</div>
+                        </center>
+                        <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:30px; border-bottom:1px solid #ddd; padding-bottom:10px;">
+                            <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
+                            <span>Date: <b>${item.date}</b></span>
                         </div>
+                        <div style="font-size:22px; line-height:2.4; font-family:'Crimson Text'; margin-top:35px; color:#333;">
+                            Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
+                            the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
+                            towards <b style="font-family:'Cinzel'; font-size:16px;">52nd Sahid Diwas Celebration Fund</b>.
+                        </div>
+                        <div style="font-size:50px; font-weight:900; border:10px double #b45309; padding:12px 60px; width:fit-content; margin:35px auto; background:#fffcf5; letter-spacing:2px; color:#1e293b; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
                         <div style="text-align:center;">
-                            <div style="font-family:'Dancing Script'; font-size:32px; height:40px; color:#000; border-bottom: 2px solid #000; width: 220px;">${localData.config.tName}</div>
-                            <div style="font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Principal Treasurer</div>
+                            <p style="font-family:'Dancing Script'; font-size:35px; font-weight:bold; margin:0; color:#b45309;">Thank You!</p>
+                            <p style="font-style:italic; font-size:17px; color:#444; font-family:'Crimson Text';">"Your contribution is a noble pillar for this sacred event. We deeply honor your spirit."</p>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; margin-top:50px; padding: 0 40px; align-items: flex-end;">
+                            <div style="text-align:center;">
+                                <div style="height:35px; border-bottom:2px solid #1e293b; width:180px;"></div>
+                                <div style="font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Secretary</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000;">${localData.config.tName}</div>
+                                <div style="border-top:2px solid #1e293b; width:180px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -299,14 +299,14 @@
 
                         <div style="position:absolute; bottom:55px; left:25px; width:100px; height:100px; background:url('https://cdn-icons-png.flaticon.com/512/4733/4733355.png') no-repeat center; background-size:contain; -webkit-print-color-adjust: exact;"></div>
 
-                        <div style="display:flex; justify-content:space-between; margin-top:65px; padding: 0 60px;">
+                        <div style="display:flex; justify-content:space-between; margin-top:65px; padding: 0 60px; align-items: flex-end;">
                             <div style="text-align:center;">
-                                <div style="height:35px; border-bottom:2px solid #1e293b; width:200px;"></div>
+                                <div style="height:35px; border-bottom:2px solid #1e293b; width:180px;"></div>
                                 <div style="font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Secretary</div>
                             </div>
                             <div style="text-align:center;">
-                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000; border-bottom:2px solid #1e293b; width:200px;">${localData.config.tName}</div>
-                                <div style="font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Principal Treasurer</div>
+                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000;">${localData.config.tName}</div>
+                                <div style="border-top:2px solid #1e293b; width:180px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
                             </div>
                         </div>
                     </div>
