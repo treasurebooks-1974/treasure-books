@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* --- DASHBOARD UI --- */
+        /* Dashboard UI */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -241,7 +241,7 @@
                     <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px; color:#333;">
                         Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
                         the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
-                        towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
+                        towards <b style="font-family:'Cinzel'; font-size:16px;">52nd Sahid Diwas Celebration Fund</b>.
                     </div>
                     <div style="font-size:55px; font-weight:900; border:10px double #b45309; padding:15px 65px; width:fit-content; margin:45px auto; background:#fffcf5; letter-spacing:2px; -webkit-print-color-adjust: exact; color:#1e293b;">₹ ${Number(item.amt).toLocaleString()} /-</div>
                     <div style="text-align:center; margin-top:10px;">
@@ -253,12 +253,12 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-top:40px; padding: 0 40px;">
                         <div style="text-align:center;">
-                            <div style="height:40px;"></div>
-                            <div style="border-top:2px solid #000; width:220px; padding-top:8px; font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b;">Secretary</div>
+                            <div style="height:40px; border-bottom: 2px solid #000; width: 220px;"></div>
+                            <div style="font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Secretary</div>
                         </div>
                         <div style="text-align:center;">
-                            <div style="font-family:'Dancing Script'; font-size:32px; height:40px; color:#000;">${localData.config.tName}</div>
-                            <div style="border-top:2px solid #000; width:220px; padding-top:8px; font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
+                            <div style="font-family:'Dancing Script'; font-size:32px; height:40px; color:#000; border-bottom: 2px solid #000; width: 220px;">${localData.config.tName}</div>
+                            <div style="font-weight:900; font-size:13px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Principal Treasurer</div>
                         </div>
                     </div>
                 </div>
@@ -301,12 +301,12 @@
 
                         <div style="display:flex; justify-content:space-between; margin-top:65px; padding: 0 60px;">
                             <div style="text-align:center;">
-                                <div style="height:35px;"></div>
-                                <div style="border-top:2px solid #1e293b; width:200px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Secretary</div>
+                                <div style="height:35px; border-bottom:2px solid #1e293b; width:200px;"></div>
+                                <div style="font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Secretary</div>
                             </div>
                             <div style="text-align:center;">
-                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000;">${localData.config.tName}</div>
-                                <div style="border-top:2px solid #1e293b; width:200px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
+                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000; border-bottom:2px solid #1e293b; width:200px;">${localData.config.tName}</div>
+                                <div style="font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b; margin-top: 8px;">Principal Treasurer</div>
                             </div>
                         </div>
                     </div>
@@ -345,7 +345,10 @@
                 </table>
                 <div style="display:flex; justify-content:space-between; margin-top:100px;">
                     <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:30px;">${localData.config.atName}</span><div style="border-top:2.5px solid #000; width:220px; padding-top:5px; font-weight:bold;">ASSISTANT TREASURER</div></div>
-                    <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:30px;">${localData.config.tName}</span><div style="border-top:2.5px solid #000; width:220px; padding-top:5px; font-weight:bold;">PRINCIPAL TREASURER</div></div>
+                    <div style="text-align:center;">
+                        <span style="font-family:'Dancing Script'; font-size:30px;">${localData.config.tName}</span>
+                        <div style="border-top:2.5px solid #000; width:220px; padding-top:5px; font-weight:bold;">PRINCIPAL TREASURER</div>
+                    </div>
                 </div>
             </div>`;
         window.print();
