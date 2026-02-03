@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* --- DASHBOARD UI --- */
+        /* Dashboard UI Elements */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -32,7 +32,7 @@
         .dash-header { text-align: center; padding: 60px 20px 10px; }
         .main-title { font-family: 'Cinzel', serif; font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: 5px; margin: 0; }
         .sub-header { color: var(--gold); font-weight: 700; letter-spacing: 2px; }
-        .reg-no { font-size: 13px; font-weight: 600; opacity: 0.7; }
+        .reg-no-header { font-size: 13px; font-weight: 600; opacity: 0.7; }
 
         .treasurer-config { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px auto; }
         .t-box { background: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 15px; flex: 1; min-width: 200px; max-width: 250px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
@@ -76,7 +76,7 @@
 <div class="dash-header no-print">
     <h1 class="main-title">TREASURE BOOKS</h1>
     <div class="sub-header">B.B.C MARANG BUNDU</div>
-    <div class="reg-no">Reg.no :- MBJ8750 - 13 Of 2022</div>
+    <div class="reg-no-header">Reg.no :- MBJ8750 - 13 Of 2022</div>
 </div>
 
 <div class="treasurer-config no-print">
@@ -225,38 +225,40 @@
         const item = localData.donations[key];
         const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; padding:40px; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative; border: 5px solid #b45309;">
-                <div style="border: 2px solid #b45309; padding: 25px; outline: 12px double #1e293b; outline-offset: 4px; height: 100%; position:relative; overflow:hidden;">
-                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:350px; height:350px; opacity:0.04; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
-                    <div style="position:relative; z-index:1;">
-                        <center>
-                            <h1 style="font-family:'Cinzel'; font-size:40px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                            <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h2>
-                            <p style="font-weight:bold; font-size:13px; margin:0; opacity:0.8;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                            <div style="background:#1e293b; color:white; padding:10px 50px; font-size:22px; font-weight:900; margin-top:20px; letter-spacing:3px; display:inline-block; border-radius:50px; -webkit-print-color-adjust: exact;">DONATION RECEIPT</div>
-                        </center>
-                        <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:30px; border-bottom:1px solid #ddd; padding-bottom:10px;">
-                            <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
-                            <span>Date: <b>${item.date}</b></span>
-                        </div>
-                        <div style="font-size:22px; line-height:2.4; font-family:'Crimson Text'; margin-top:35px; color:#333;">
-                            Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
-                            the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
-                            towards <b style="font-family:'Cinzel'; font-size:16px;">52nd Sahid Diwas Celebration Fund</b>.
-                        </div>
-                        <div style="font-size:50px; font-weight:900; border:10px double #b45309; padding:12px 60px; width:fit-content; margin:35px auto; background:#fffcf5; letter-spacing:2px; color:#1e293b; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+            <div style="width:210mm; padding:45px; border:15px double #b45309; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:400px; height:400px; opacity:0.04; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
+                <div style="position:relative; z-index:1;">
+                    <center>
+                        <h1 style="font-family:'Cinzel'; font-size:42px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h1>
+                        <h2 style="font-family:'Cinzel'; font-size:24px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h2>
+                        <p style="font-weight:bold; font-size:14px; margin:0; opacity:0.8;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                        <div style="background:#1e293b; color:white; padding:12px 60px; font-size:24px; font-weight:900; margin-top:25px; letter-spacing:3px; display:inline-block; -webkit-print-color-adjust: exact; border-radius:50px;">DONATION RECEIPT</div>
+                    </center>
+                    <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:35px; border-bottom:1px solid #ddd; padding-bottom:10px;">
+                        <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
+                        <span>Date: <b>${item.date}</b></span>
+                    </div>
+                    <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px; color:#333;">
+                        Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
+                        the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
+                        towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
+                    </div>
+                    <div style="font-size:55px; font-weight:900; border:10px double #b45309; padding:15px 65px; width:fit-content; margin:45px auto; background:#fffcf5; letter-spacing:2px; -webkit-print-color-adjust: exact; color:#1e293b;">₹ ${Number(item.amt).toLocaleString()} /-</div>
+                    <div style="text-align:center; margin-top:10px;">
+                        <p style="font-family:'Dancing Script'; font-size:38px; font-weight:bold; margin:0; color:#b45309;">Thank You!</p>
+                        <p style="font-style:italic; font-size:18px; color:#444; line-height:1.4; margin-top:5px; font-family:'Crimson Text';">
+                            "Your contribution is a noble pillar for this sacred event. <br> 
+                            We deeply honor your spirit of giving and support."
+                        </p>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; margin-top:30px;">
                         <div style="text-align:center;">
-                            <p style="font-family:'Dancing Script'; font-size:35px; font-weight:bold; margin:0; color:#b45309;">Thank You!</p>
-                            <p style="font-style:italic; font-size:17px; color:#444; font-family:'Crimson Text';">"Your contribution is a noble pillar for this sacred event. We deeply honor your spirit."</p>
-                        </div>
-                        <div style="display:flex; justify-content:flex-end; margin-top:25px;">
-                            <div style="text-align:center;">
-                                <span style="font-family:'Dancing Script'; font-size:30px; display:block; height:35px; color:#000;">${localData.config.tName}</span>
-                                <div style="border-top:2px solid #000; font-weight:900; width:250px; font-size:12px; padding-top:5px; text-transform:uppercase;">Principal Treasurer</div>
-                            </div>
+                            <span style="font-family:'Dancing Script'; font-size:32px; display:block; height:35px; color:#000;">${localData.config.tName}</span>
+                            <div style="border-top:2.5px solid #000; font-weight:900; width:260px; font-size:13px; padding-top:5px; text-transform:uppercase; letter-spacing:1px;">Principal Treasurer</div>
                         </div>
                     </div>
                 </div>
+                <div style="position:absolute; bottom:15px; width:100%; text-align:center; left:0; font-size:10px; opacity:0.5; letter-spacing:2px;">B.B.C MARANG BUNDU | TREASURE BOOKS ELITE</div>
             </div>`;
         window.print();
     }
@@ -264,32 +266,49 @@
     function printCertificate(key) {
         const item = localData.donations[key];
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; height:297mm; padding:20px; background:#fff; position:relative; box-sizing:border-box; font-family:'Outfit'; border: 25px solid #b45309;">
-                <div style="height: 100%; border: 8px solid #1e293b; padding: 40px; box-sizing: border-box; outline: 4px solid #b45309; outline-offset: -20px; text-align: center; position:relative;">
-                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:500px; height:500px; opacity:0.06; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
+            <div style="width:297mm; height:210mm; padding:20px; background:#fff; position:relative; box-sizing:border-box; font-family:'Outfit'; border: 20px solid #b45309;">
+                <div style="height: 100%; border: 6px solid #1e293b; padding: 40px; box-sizing: border-box; outline: 3px solid #b45309; outline-offset: -18px; text-align: center; position:relative;">
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:450px; height:450px; opacity:0.05; background:url('https://cdn-icons-png.flaticon.com/512/2642/2642444.png') no-repeat center; background-size:contain; z-index:0;"></div>
                     <div style="position:relative; z-index:1;">
-                        <h2 style="font-family:'Cinzel'; font-size:35px; margin:0;">52nd SAHID DIWAS 2026</h2>
-                        <h3 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h3>
-                        <div style="margin:40px auto 10px; width:70px; height:70px; background:url('https://cdn-icons-png.flaticon.com/512/785/785116.png') no-repeat center; background-size:contain; opacity:0.8;"></div>
-                        <div style="margin-top:20px;">
-                            <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
-                            <h4 style="font-family:'Outfit'; font-size:24px; letter-spacing:4px; margin:10px 0;">OF APPRECIATION</h4>
+                        <h2 style="font-family:'Cinzel'; font-size:32px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h2>
+                        <h3 style="font-family:'Cinzel'; font-size:20px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h3>
+                        <p style="font-weight:900; font-size:14px; margin:0; color:#1e293b; letter-spacing:1px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+
+                        <div style="margin:25px auto 10px; width:65px; height:65px; background:url('https://cdn-icons-png.flaticon.com/512/785/785116.png') no-repeat center; background-size:contain; opacity:0.8;"></div>
+
+                        <div style="margin-top:15px;">
+                            <h1 style="font-family:'Cinzel'; font-size:55px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
+                            <h4 style="font-family:'Outfit'; font-size:22px; letter-spacing:4px; margin:5px 0; font-weight:400; color:#1e293b;">OF APPRECIATION</h4>
                         </div>
-                        <p style="font-size:20px; font-family:'Crimson Text'; font-style:italic; margin-top:40px;">This certificate is proudly presented to</p>
-                        <h2 style="font-family:'Dancing Script'; font-size:55px; border-bottom:2px solid #b45309; display:inline-block; padding:0 40px; margin:15px 0; color:#1e293b;">${item.name}</h2>
-                        <p style="font-size:21px; line-height:1.9; max-width:680px; margin:40px auto; color:#333; font-family:'Crimson Text'; font-style: italic;">
+
+                        <p style="font-size:18px; font-family:'Crimson Text'; font-style:italic; margin-top:25px; color:#444;">This certificate is proudly presented to</p>
+                        
+                        <div style="margin:10px 0;">
+                            <span style="font-family:'Dancing Script'; font-size:52px; font-weight:900; background: linear-gradient(to bottom, #b45309, #1e293b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding:0 30px; display:inline-block; border-bottom: 2.5px double #b45309;">${item.name}</span>
+                        </div>
+
+                        <p style="font-size:18px; line-height:1.7; max-width:750px; margin:25px auto; color:#333; font-family:'Crimson Text'; font-style: italic;">
                             "Heroes never die as long as there are hearts like yours to remember them. <br>
                             Your noble contribution towards the <b>52nd SAHID DIWAS 2026</b> is more than a gift; 
                             it is a salute to our <b>Martyrs</b>. By standing with <b>B.B.C MARANG BUNDU</b>, 
                             you have helped us keep their sacred flame alive and <b>Strengthening</b> the soul of our community."
                         </p>
-                        <div style="position:absolute; bottom:80px; left:20px; width:110px; height:110px; background:url('https://cdn-icons-png.flaticon.com/512/4733/4733355.png') no-repeat center; background-size:contain; -webkit-print-color-adjust: exact;"></div>
-                        <div style="display:flex; justify-content:space-between; margin-top:80px; padding: 0 40px;">
-                            <div style="text-align:center;"><div style="border-top:2px solid #000; width:200px; padding-top:5px; font-weight:900;">Secretary</div></div>
+
+                        <div style="position:absolute; bottom:55px; left:25px; width:100px; height:100px; background:url('https://cdn-icons-png.flaticon.com/512/4733/4733355.png') no-repeat center; background-size:contain; -webkit-print-color-adjust: exact;"></div>
+
+                        <div style="display:flex; justify-content:space-between; margin-top:55px; padding: 0 40px;">
                             <div style="text-align:center;">
-                                <div style="font-family:'Dancing Script'; font-size:30px; height:40px;">${localData.config.tName}</div>
-                                <div style="border-top:2px solid #000; width:200px; padding-top:5px; font-weight:900;">Principal Treasurer</div>
+                                <div style="height:35px;"></div>
+                                <div style="border-top:2px solid #1e293b; width:180px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Secretary</div>
                             </div>
+                            <div style="text-align:center;">
+                                <div style="font-family:'Dancing Script'; font-size:28px; height:35px; color:#000;">${localData.config.tName}</div>
+                                <div style="border-top:2px solid #1e293b; width:180px; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
+                            </div>
+                        </div>
+
+                        <div style="position:absolute; bottom:25px; width:100%; left:0; font-size:10px; opacity:0.6; letter-spacing:2px; font-weight:bold; color:#1e293b;">
+                            B.B.C MARANG BUNDU | TREASURE BOOKS ELITE
                         </div>
                     </div>
                 </div>
