@@ -54,7 +54,9 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin-left: 5px; }
+        
+        .export-btn { background: #047857 !important; color: white !important; border: none; }
 
         .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index: 2000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
         .modal-content { background:#fff; padding:30px; border-radius:25px; border: 2px solid var(--gold); width:350px; }
@@ -103,12 +105,24 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Full Report</button></h3>
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">
+            Collections 
+            <div>
+                <button class="btn-mini export-btn" onclick="exportCSV('donations')">CSV</button>
+                <button class="btn-mini" onclick="printReport('don')">Full Report</button>
+            </div>
+        </h3>
         <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">
+            Expenditures 
+            <div>
+                <button class="btn-mini export-btn" onclick="exportCSV('expenses')">CSV</button>
+                <button class="btn-mini" onclick="printReport('exp')">Full Report</button>
+            </div>
+        </h3>
         <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
@@ -197,6 +211,21 @@
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
+    function exportCSV(type) {
+        const fy = document.getElementById('yearFilter').value;
+        const data = localData[type];
+        let csv = "Date,Name/Purpose,Amount,Year\n";
+        Object.values(data).filter(x => x.year == fy).forEach(x => {
+            csv += `${x.date},"${x.name}",${x.amt},${x.year}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `${type}_${fy}.csv`);
+        a.click();
+    }
+
     function openEditModal(t, k) {
         const d = t === 'donation' ? localData.donations[k] : localData.expenses[k];
         document.getElementById('editKey').value = k; document.getElementById('editType').value = t;
@@ -228,9 +257,9 @@
                     <span>Date: <b>${item.date}</b></span>
                 </div>
 
-                <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px;">
-                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px;">${item.name}</span> <br>
-                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px;">${words}</span> <br>
+                <div style="font-size:24px; line-height:2.4; font-family:'Crimson Text'; margin-top:40px;">
+                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px; display:inline-block; min-width:250px;">${item.name}</span> <br>
+                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px; display:inline-block; min-width:350px;">${words}</span> <br>
                     towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
                 </div>
 
@@ -290,7 +319,7 @@
 
     (function init() {
         const s = document.getElementById('yearFilter');
-        for (let y = 2026; y <= 2050; y++) {
+        for (let y = 2022; y <= 2030; y++) {
             let o = document.createElement('option'); o.value = y; o.text = "" + y;
             if(y === 2026) o.selected = true; s.appendChild(o);
         }
@@ -299,8 +328,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
