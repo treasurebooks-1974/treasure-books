@@ -19,7 +19,6 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* --- FLOATING YEAR SELECTOR --- */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -29,7 +28,6 @@
         }
         .year-floating-box select { border: none; outline: none; font-weight: 900; color: var(--gold); cursor: pointer; background: transparent; font-size: 15px; }
 
-        /* --- DASHBOARD UI --- */
         .dash-header { text-align: center; padding: 60px 20px 10px; }
         .main-title { font-family: 'Cinzel', serif; font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: 5px; margin: 0; }
         .sub-header { color: var(--gold); font-weight: 700; letter-spacing: 2px; }
@@ -54,9 +52,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin-left: 5px; }
-        
-        .export-btn { background: #047857 !important; color: white !important; border: none; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
 
         .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index: 2000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
         .modal-content { background:#fff; padding:30px; border-radius:25px; border: 2px solid var(--gold); width:350px; }
@@ -105,24 +101,12 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">
-            Collections 
-            <div>
-                <button class="btn-mini export-btn" onclick="exportCSV('donations')">CSV</button>
-                <button class="btn-mini" onclick="printReport('don')">Full Report</button>
-            </div>
-        </h3>
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Full Report</button></h3>
         <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">
-            Expenditures 
-            <div>
-                <button class="btn-mini export-btn" onclick="exportCSV('expenses')">CSV</button>
-                <button class="btn-mini" onclick="printReport('exp')">Full Report</button>
-            </div>
-        </h3>
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
         <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
@@ -193,7 +177,11 @@
         let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
         Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tin += Number(x.amt);
-            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button> <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
+            bD.innerHTML += `<tr><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>
+                <button class="btn-mini" onclick="printReceipt('${k}')">Bill</button> 
+                <button class="btn-mini" style="background:#fff8e1; border-color:#b45309;" onclick="printCertificate('${k}')">📜 Cert</button>
+                <button class="btn-mini" onclick="openEditModal('donation','${k}')">✏️</button> 
+                <button class="btn-mini" onclick="deleteEntry('donations','${k}')">🗑️</button></td></tr>`;
         });
         Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).forEach(([k, x]) => {
             tout += Number(x.amt);
@@ -209,21 +197,6 @@
         if(!d || !n || !a) return alert("Fill data!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
-    }
-
-    function exportCSV(type) {
-        const fy = document.getElementById('yearFilter').value;
-        const data = localData[type];
-        let csv = "Date,Name/Purpose,Amount,Year\n";
-        Object.values(data).filter(x => x.year == fy).forEach(x => {
-            csv += `${x.date},"${x.name}",${x.amt},${x.year}\n`;
-        });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `${type}_${fy}.csv`);
-        a.click();
     }
 
     function openEditModal(t, k) {
@@ -251,33 +224,60 @@
                     <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
                     <div style="background:black; color:white; padding:15px 80px; font-size:26px; font-weight:900; margin-top:20px; letter-spacing:4px; display:inline-block; -webkit-print-color-adjust: exact;">DONATION RECEIPT</div>
                 </center>
-
                 <div style="display:flex; justify-content:space-between; font-size:20px; margin-top:35px; border-bottom:1px solid #ddd; padding-bottom:10px;">
                     <span>Receipt No: <b>#${key.substr(-5).toUpperCase()}</b></span>
                     <span>Date: <b>${item.date}</b></span>
                 </div>
-
-                <div style="font-size:24px; line-height:2.4; font-family:'Crimson Text'; margin-top:40px;">
-                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px; display:inline-block; min-width:250px;">${item.name}</span> <br>
-                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px; display:inline-block; min-width:350px;">${words}</span> <br>
+                <div style="font-size:24px; line-height:2.6; font-family:'Crimson Text'; margin-top:40px;">
+                    Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #000; text-transform:uppercase; padding:0 10px;">${item.name}</span> <br>
+                    the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #000; text-transform:capitalize; padding:0 10px;">${words}</span> <br>
                     towards <b style="font-family:'Cinzel'; font-size:18px;">52nd Sahid Diwas Celebration Fund</b>.
                 </div>
-
                 <div style="font-size:55px; font-weight:900; border:10px double #000; padding:15px 65px; width:fit-content; margin:45px auto; background:#f5f5f5; letter-spacing:2px; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
-
                 <div style="text-align:center; margin-top:20px; border-top:1px dashed #777; padding-top:20px;">
                     <p style="font-style:italic; font-size:20px; color:#333; line-height:1.4;">"Your generous contribution serves as a noble pillar for the 52nd Sahid Diwas. <br> We honor your spirit of giving."</p>
                     <p style="font-family:'Dancing Script'; font-size:38px; font-weight:bold; margin-top:15px; color:#000;">Thank You!</p>
                 </div>
-
                 <div style="display:flex; justify-content:flex-end; margin-top:40px;">
                     <div style="text-align:center;">
                         <span style="font-family:'Dancing Script'; font-size:32px; display:block; height:35px;">${localData.config.tName}</span>
                         <div style="border-top:2.5px solid #000; font-weight:900; width:260px; font-size:13px; padding-top:5px; text-transform:uppercase; letter-spacing:1px;">Principal Treasurer</div>
                     </div>
                 </div>
-                
-                <div style="position:absolute; bottom:15px; width:100%; text-align:center; left:0; font-size:10px; opacity:0.5; letter-spacing:2px;">B.B.C MARANG BUNDU | TREASURE BOOKS ELITE</div>
+            </div>`;
+        window.print();
+    }
+
+    function printCertificate(key) {
+        const item = localData.donations[key];
+        document.getElementById('printArea').innerHTML = `
+            <div style="width:210mm; height:297mm; padding:30px; background:#fff; position:relative; box-sizing:border-box; font-family:'Outfit';">
+                <div style="border: 15px solid transparent; border-image: url('https://img.freepik.com/free-vector/vintage-ornamental-frame-design_52683-39835.jpg') 30 stretch; height: 100%; padding: 40px; box-sizing: border-box; text-align: center; border-style: solid;">
+                    <h2 style="font-family:'Cinzel'; font-size:35px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h2>
+                    <h3 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h3>
+                    <p style="font-weight:bold; font-size:14px; margin:0;">Reg.no :- MBJ8750 - 13 Of 2022</p>
+                    <div style="margin-top:50px;">
+                        <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
+                        <h4 style="font-family:'Outfit'; font-size:24px; letter-spacing:4px; margin:10px 0; font-weight:300;">OF APPRECIATION</h4>
+                    </div>
+                    <p style="font-size:20px; font-family:'Crimson Text'; font-style:italic; margin-top:40px;">This certificate is proudly presented to</p>
+                    <h2 style="font-family:'Dancing Script'; font-size:55px; border-bottom:2px solid #b45309; display:inline-block; padding:0 40px; margin:15px 0; color:#1e293b;">${item.name}</h2>
+                    <p style="font-size:19px; line-height:1.8; max-width:650px; margin:40px auto; color:#444;">
+                        For their generous contribution towards the <b>52nd SAHID DIWAS 2026</b>. 
+                        Your support plays a vital role in honoring our <b>Martyrs</b> and <b>Strengthening</b> our community.
+                    </p>
+                    <div style="display:flex; justify-content:space-between; margin-top:100px; padding: 0 50px;">
+                        <div style="text-align:center;">
+                            <div style="height:40px;"></div>
+                            <div style="border-top:2px solid #000; width:220px; padding-top:10px; font-weight:900; font-size:14px; text-transform:uppercase;">Secretary</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-family:'Dancing Script'; font-size:30px; height:40px;">${localData.config.tName}</div>
+                            <div style="border-top:2px solid #000; width:220px; padding-top:10px; font-weight:900; font-size:14px; text-transform:uppercase;">Principal Treasurer</div>
+                        </div>
+                    </div>
+                    <div style="position:absolute; bottom:60px; width:100%; left:0; font-size:11px; opacity:0.6; letter-spacing:2px; font-weight:bold;">B.B.C MARANG BUNDU | TREASURE BOOKS ELITE</div>
+                </div>
             </div>`;
         window.print();
     }
@@ -319,7 +319,7 @@
 
     (function init() {
         const s = document.getElementById('yearFilter');
-        for (let y = 2022; y <= 2030; y++) {
+        for (let y = 2026; y <= 2050; y++) {
             let o = document.createElement('option'); o.value = y; o.text = "" + y;
             if(y === 2026) o.selected = true; s.appendChild(o);
         }
