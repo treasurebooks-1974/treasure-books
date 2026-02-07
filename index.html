@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* Dash UI */
+        /* Dash UI Controls */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -53,7 +53,8 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; transition: 0.2s; }
+        .btn-mini:hover { background: #f1f5f9; }
 
         #printArea { display: none; }
         @media print {
@@ -99,12 +100,12 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('donation')">Full Report</button></h3>
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printFullReport('donation')">Full Report</button></h3>
         <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('expense')">Full Report</button></h3>
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printFullReport('expense')">Full Report</button></h3>
         <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
@@ -113,6 +114,7 @@
 <div id="printArea"></div>
 
 <script>
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -124,8 +126,10 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    
     let localData = { donations: {}, expenses: {}, config: { tName: "", atName: "" } };
 
+    // Real-time Update
     db.ref().on('value', snap => {
         const v = snap.val() || {};
         localData.donations = v.donations || {};
@@ -138,25 +142,29 @@
         loadView();
     });
 
-    function updateCfg() { db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); }
+    function updateCfg() { 
+        db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); 
+    }
 
     function loadView() {
         const fy = document.getElementById('yearFilter').value;
         const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
         const sD = document.getElementById('searchDon').value.toLowerCase();
         const sE = document.getElementById('searchExp').value.toLowerCase();
-        let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
+        
+        let tin = 0, tout = 0; 
+        bD.innerHTML = ''; bE.innerHTML = '';
 
         Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
             tin += Number(x.amt);
-            const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-            bD.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button> <button class="btn-mini" style="background:#fff8e1;" onclick="printCertificate('${k}')">📜</button> <button class="btn-mini" style="color:red" onclick="deleteEntry('donations','${k}')">DEL</button></td></tr>`;
+            bD.innerHTML += `<tr><td>TBE-${fy}-${(index + 1).toString().padStart(4, '0')}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}')">Receipt</button> <button class="btn-mini" style="color:red" onclick="deleteEntry('donations','${k}')">DEL</button></td></tr>`;
         });
+
         Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
             tout += Number(x.amt);
-            const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-            bE.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" style="color:red" onclick="deleteEntry('expenses','${k}')">DEL</button></td></tr>`;
+            bE.innerHTML += `<tr><td>EXP-${fy}-${(index + 1).toString().padStart(4, '0')}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" style="color:red" onclick="deleteEntry('expenses','${k}')">DEL</button></td></tr>`;
         });
+
         document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
         document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
@@ -165,57 +173,64 @@
     function saveEntry() {
         const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
         const fy = document.getElementById('yearFilter').value;
-        if(!d || !n || !a) return alert("Fill data!");
+        if(!d || !n || !a) return alert("All fields are required!");
         db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: fy });
         document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function deleteEntry(path, key) { if(confirm("Delete this?")) db.ref(path+'/'+key).remove(); }
+    function deleteEntry(path, key) { if(confirm("Confirm Delete?")) db.ref(path+'/'+key).remove(); }
 
-    function printReport(type) {
+    // Enhanced Report Printing
+    function printFullReport(type) {
         const fy = document.getElementById('yearFilter').value;
-        const data = type === 'donation' ? localData.donations : localData.expenses;
+        const mainData = type === 'donation' ? localData.donations : localData.expenses;
         const title = type === 'donation' ? "COLLECTION REPORT" : "EXPENDITURE REPORT";
+        
         let rows = "";
-        let total = 0;
+        let sessionIn = 0;
+        let sessionOut = 0;
 
-        // Corrected Filtering Logic
-        Object.values(data).forEach((x, i) => {
-            if(x.year == fy) {
-                total += Number(x.amt);
-                rows += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td></tr>`;
-            }
+        // Calculate Totals for Session
+        Object.values(localData.donations).forEach(x => { if(x.year == fy) sessionIn += Number(x.amt); });
+        Object.values(localData.expenses).forEach(x => { if(x.year == fy) sessionOut += Number(x.amt); });
+
+        // Generate Table Rows for specific type
+        Object.values(mainData).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((x, i) => {
+            rows += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td></tr>`;
         });
 
-        if(rows === "") return alert("No data found for this session!");
+        if(rows === "") return alert("No data available for this session.");
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:30px; font-family:sans-serif; background:white; color:black;">
-                <h2 style="text-align:center; margin:0;">B.B.C MARANG BUNDU</h2>
-                <h3 style="text-align:center; margin:5px 0; border-bottom:2px solid #000; padding-bottom:10px;">${title} - SESSION ${fy}</h3>
+            <div style="padding:40px; background:white; color:black; font-family:sans-serif;">
+                <h2 style="text-align:center; margin:0; font-family:'Cinzel';">B.B.C MARANG BUNDU</h2>
+                <h3 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">${title} - SESSION ${fy}</h3>
+                
                 <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px;">
-                    <thead style="background:#eee;"><tr><th>Sl.</th><th>Date</th><th>Name / Purpose</th><th>Amount</th></tr></thead>
+                    <thead style="background:#f2f2f2;"><tr><th>Sl.</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
                     <tbody>${rows}</tbody>
-                    <tr style="font-weight:bold;"><td colspan="3" style="text-align:right; padding:8px;">TOTAL AMOUNT:</td><td>₹${total.toLocaleString()}</td></tr>
                 </table>
-                <div style="margin-top:50px; display:flex; justify-content:space-between;">
-                    <div>Date: ${new Date().toLocaleDateString()}</div>
-                    <div style="text-align:center;">___________________<br>Treasurer Signature</div>
+
+                <div style="margin-top:30px; border:2px solid #000; padding:15px; width:300px; margin-left:auto; background:#f9f9f9;">
+                    <h4 style="margin:0 0 10px 0; border-bottom:1px solid #ddd; text-align:center;">SESSION SUMMARY</h4>
+                    <div style="display:flex; justify-content:space-between;"><span>Total Collections:</span> <b>₹${sessionIn.toLocaleString()}</b></div>
+                    <div style="display:flex; justify-content:space-between; color:red;"><span>Total Expenditures:</span> <b>- ₹${sessionOut.toLocaleString()}</b></div>
+                    <hr>
+                    <div style="display:flex; justify-content:space-between; font-size:1.1em;"><span>Net Balance:</span> <b>₹${(sessionIn - sessionOut).toLocaleString()}</b></div>
+                </div>
+
+                <div style="margin-top:60px; display:flex; justify-content:space-between;">
+                    <div>Generated: ${new Date().toLocaleDateString()}</div>
+                    <div style="text-align:center;">_______________________<br>Treasurer Signature</div>
                 </div>
             </div>`;
         window.print();
     }
 
-    // Receipt & Certificate functions simplified...
-    function printReceipt(k, s) {
+    // Receipt logic
+    function printReceipt(k) {
         const item = localData.donations[k];
-        document.getElementById('printArea').innerHTML = `<div style="padding:50px; border:10px double #b45309; text-align:center; background:white;"><h1>DONATION RECEIPT</h1><hr><h3>ID: ${s}</h3><h2>Name: ${item.name}</h2><h1>Amount: ₹${item.amt}</h1></div>`;
-        window.print();
-    }
-
-    function printCertificate(k) {
-        const item = localData.donations[k];
-        document.getElementById('printArea').innerHTML = `<div style="padding:50px; border:15px solid #b45309; text-align:center; background:white;"><h1>CERTIFICATE OF APPRECIATION</h1><br><h2>Presented to ${item.name}</h2></div>`;
+        document.getElementById('printArea').innerHTML = `<div style="padding:50px; border:10px solid #b45309; background:white; text-align:center;"><h1>DONATION RECEIPT</h1><hr><h2>${item.name}</h2><h1>₹${item.amt}</h1></div>`;
         window.print();
     }
 
