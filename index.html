@@ -19,8 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* Dashboard Styling */
-        .no-print { display: block; }
+        /* Dashboard UI */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -56,7 +55,7 @@
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
         .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
 
-        /* Report Printing Style */
+        /* Report Style - Borders Removed */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
@@ -181,62 +180,60 @@
         let totalIn = 0;
         let totalOut = 0;
 
-        // Session Totals
         Object.values(localData.donations).forEach(x => { if(x.year == fy) totalIn += Number(x.amt); });
         Object.values(localData.expenses).forEach(x => { if(x.year == fy) totalOut += Number(x.amt); });
 
-        // Filter and Sort Rows
         Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((x, i) => {
             rows += `<tr>
-                <td style="padding:10px; border:1px solid #ddd; text-align:center;">${i+1}</td>
-                <td style="padding:10px; border:1px solid #ddd;">${x.date}</td>
-                <td style="padding:10px; border:1px solid #ddd; text-transform:uppercase;">${x.name}</td>
-                <td style="padding:10px; border:1px solid #ddd; text-align:right;">₹${Number(x.amt).toLocaleString()}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">${i+1}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee;">${x.date}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-transform:uppercase;">${x.name}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">₹${Number(x.amt).toLocaleString()}</td>
             </tr>`;
         });
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; background:white; position:relative; min-height:1000px; border:10px double #1e293b;">
+            <div style="padding:40px; background:white; position:relative; min-height:1000px;">
                 <center>
-                    <h1 style="font-family:'Cinzel'; margin:0; font-size:32px;">B.B.C MARANG BUNDU</h1>
-                    <p style="margin:5px 0; font-weight:bold; letter-spacing:1px;">Regd No: MBJ8750 - 13 Of 2022</p>
-                    <h3 style="background:#1e293b; color:white; display:inline-block; padding:10px 40px; margin-top:20px; font-family:'Cinzel';">${title}</h3>
-                    <p style="font-weight:900; color:var(--gold);">SESSION: ${fy}</p>
+                    <h1 style="font-family:'Cinzel'; margin:0; font-size:32px; color:#1e293b;">B.B.C MARANG BUNDU</h1>
+                    <p style="margin:5px 0; font-weight:bold; font-size:14px;">Regd No: MBJ8750 - 13 Of 2022</p>
+                    <h3 style="border-bottom:2px solid #1e293b; display:inline-block; padding:5px 40px; margin-top:20px; font-family:'Outfit'; text-transform:uppercase; letter-spacing:2px;">${title}</h3>
+                    <p style="font-weight:900; color:#b45309;">SESSION: ${fy}</p>
                 </center>
 
                 <table style="width:100%; border-collapse:collapse; margin-top:30px;">
                     <thead>
-                        <tr style="background:#f2f2f2;">
-                            <th style="padding:12px; border:1px solid #000;">SL</th>
-                            <th style="padding:12px; border:1px solid #000;">DATE</th>
-                            <th style="padding:12px; border:1px solid #000;">DESCRIPTION</th>
-                            <th style="padding:12px; border:1px solid #000;">AMOUNT</th>
+                        <tr style="border-bottom:2px solid #1e293b; background:#f9fafb;">
+                            <th style="padding:12px; text-align:center;">SL</th>
+                            <th style="padding:12px; text-align:left;">DATE</th>
+                            <th style="padding:12px; text-align:left;">DESCRIPTION</th>
+                            <th style="padding:12px; text-align:right;">AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
                 </table>
 
-                <div style="margin-top:40px; border:2px solid #1e293b; padding:20px; width:350px; margin-left:auto; background:#fafafa;">
-                    <h4 style="margin:0 0 10px 0; text-align:center; border-bottom:1px solid #000; font-family:'Cinzel';">FINANCIAL SUMMARY (${fy})</h4>
+                <div style="margin-top:40px; padding:20px; width:350px; margin-left:auto; border-top:2px solid #1e293b;">
+                    <h4 style="margin:0 0 10px 0; text-align:center; font-family:'Outfit'; color:#b45309; letter-spacing:1px;">SESSION SUMMARY</h4>
                     <div style="display:flex; justify-content:space-between; padding:5px 0;"><span>Total Collections:</span> <b>₹${totalIn.toLocaleString()}</b></div>
-                    <div style="display:flex; justify-content:space-between; padding:5px 0; color:red;"><span>Total Expenditures:</span> <b>- ₹${totalOut.toLocaleString()}</b></div>
-                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1.5px solid #000; font-size:1.2em; font-weight:900;">
+                    <div style="display:flex; justify-content:space-between; padding:5px 0; color:#be123c;"><span>Total Expenditures:</span> <b>- ₹${totalOut.toLocaleString()}</b></div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid #eee; font-size:1.2em; font-weight:900;">
                         <span>Closing Balance:</span> <span>₹${(totalIn - totalOut).toLocaleString()}</span>
                     </div>
                 </div>
 
                 <div style="margin-top:100px; display:flex; justify-content:space-between; padding: 0 40px;">
                     <div style="text-align:center;">
-                        <div style="width:180px; border-top:2px solid #000; padding-top:5px; font-weight:bold;">Secretary</div>
+                        <div style="width:200px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:13px;">SECRETARY</div>
                     </div>
                     <div style="text-align:center;">
-                        <span style="font-family:'Dancing Script'; font-size:24px;">${localData.config.tName}</span>
-                        <div style="width:180px; border-top:2px solid #000; padding-top:5px; font-weight:bold;">Principal Treasurer</div>
+                        <span style="font-family:'Dancing Script'; font-size:24px; color:#1e293b;">${localData.config.tName}</span>
+                        <div style="width:200px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:13px;">PRINCIPAL TREASURER</div>
                     </div>
                 </div>
 
-                <div style="position:absolute; bottom:20px; left:40px; font-size:12px; opacity:0.6;">
-                    Report Generated: ${new Date().toLocaleString()} | System Powered by RJ TECH Ltd
+                <div style="position:absolute; bottom:20px; left:40px; font-size:11px; opacity:0.5; font-family:sans-serif;">
+                    Report Generated: ${new Date().toLocaleString()} | Management System
                 </div>
             </div>`;
         window.print();
