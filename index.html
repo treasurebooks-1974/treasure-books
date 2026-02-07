@@ -139,7 +139,12 @@
         loadView();
     });
 
-    function updateCfg() { db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); }
+    function updateCfg() { 
+        db.ref('config').update({ 
+            tName: document.getElementById('cfgT').value, 
+            atName: document.getElementById('cfgAT').value 
+        }); 
+    }
 
     function loadView() {
         const fy = document.getElementById('yearFilter').value;
@@ -222,10 +227,14 @@
                     </div>
                 </div>
 
-                <div style="margin-top:100px; display:flex; justify-content:flex-end; padding: 0 40px;">
+                <div style="margin-top:100px; display:flex; justify-content:space-between; padding: 0 40px;">
+                    <div style="text-align:center;">
+                        <span style="font-family:'Dancing Script'; font-size:24px; color:#1e293b;">${localData.config.atName}</span>
+                        <div style="width:220px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:12px; text-transform:uppercase;">Assistant Treasurer</div>
+                    </div>
                     <div style="text-align:center;">
                         <span style="font-family:'Dancing Script'; font-size:24px; color:#1e293b;">${localData.config.tName}</span>
-                        <div style="width:200px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:13px;">PRINCIPAL TREASURER</div>
+                        <div style="width:220px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:12px; text-transform:uppercase;">Principal Treasurer</div>
                     </div>
                 </div>
             </div>`;
