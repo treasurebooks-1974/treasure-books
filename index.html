@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* UI Components */
+        /* Dash UI */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -53,14 +53,13 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; transition: 0.2s; }
-        .btn-mini:hover { background: #f1f5f9; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
 
         #printArea { display: none; }
         @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            body * { display: none !important; }
+            #printArea, #printArea * { display: block !important; visibility: visible !important; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
         }
     </style>
 </head>
@@ -90,10 +89,7 @@
 
 <div class="form-box no-print">
     <div class="form-grid">
-        <select id="eType" style="grid-column: 1 / -1; font-weight: bold;">
-            <option value="donation">✨ CREDIT (Collection)</option>
-            <option value="expense">🛡️ DEBIT (Expenditure)</option>
-        </select>
+        <select id="eType" style="grid-column: 1 / -1; font-weight: bold;"><option value="donation">✨ CREDIT (Collection)</option><option value="expense">🛡️ DEBIT (Expenditure)</option></select>
         <input type="date" id="eDate">
         <input type="number" id="eAmount" placeholder="Amount ₹">
         <input type="text" id="eName" placeholder="Name / Purpose">
@@ -103,18 +99,13 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">
-            Collections <button class="btn-mini" onclick="printFullReport('donation')">Full Report</button>
-        </h3>
-        <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search Donor..." onkeyup="loadView()">
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('donation')">Full Report</button></h3>
+        <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
-    
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">
-            Expenditures <button class="btn-mini" onclick="printFullReport('expense')">Full Report</button>
-        </h3>
-        <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search Purpose..." onkeyup="loadView()">
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('expense')">Full Report</button></h3>
+        <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
@@ -122,7 +113,6 @@
 <div id="printArea"></div>
 
 <script>
-    // Firebase Setup
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -134,10 +124,8 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    
     let localData = { donations: {}, expenses: {}, config: { tName: "", atName: "" } };
 
-    // Real-time Data Sync
     db.ref().on('value', snap => {
         const v = snap.val() || {};
         localData.donations = v.donations || {};
@@ -150,193 +138,87 @@
         loadView();
     });
 
-    function updateCfg() { 
-        db.ref('config').update({ 
-            tName: document.getElementById('cfgT').value, 
-            atName: document.getElementById('cfgAT').value 
-        }); 
-    }
+    function updateCfg() { db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); }
 
-    // Load and Filter Data
     function loadView() {
         const fy = document.getElementById('yearFilter').value;
         const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
         const sD = document.getElementById('searchDon').value.toLowerCase();
         const sE = document.getElementById('searchExp').value.toLowerCase();
-        
-        let tin = 0, tout = 0; 
-        bD.innerHTML = ''; bE.innerHTML = '';
+        let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
 
-        // Render Donations
-        Object.entries(localData.donations)
-            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD))
-            .sort((a,b)=>new Date(a[1].date)-new Date(b[1].date))
-            .forEach(([k, x], index) => {
-                tin += Number(x.amt);
-                const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-                bD.innerHTML += `<tr>
-                    <td>${serialID}</td>
-                    <td>${x.date}</td>
-                    <td>${x.name}</td>
-                    <td>₹${Number(x.amt).toLocaleString()}</td>
-                    <td>
-                        <button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button>
-                        <button class="btn-mini" style="background:#fff8e1;" onclick="printCertificate('${k}')">📜</button>
-                        <button class="btn-mini" style="color:red;" onclick="deleteEntry('donations', '${k}')">DEL</button>
-                    </td>
-                </tr>`;
-            });
-
-        // Render Expenses
-        Object.entries(localData.expenses)
-            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE))
-            .sort((a,b)=>new Date(a[1].date)-new Date(b[1].date))
-            .forEach(([k, x], index) => {
-                tout += Number(x.amt);
-                const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-                bE.innerHTML += `<tr>
-                    <td>${serialID}</td>
-                    <td>${x.date}</td>
-                    <td>${x.name}</td>
-                    <td>₹${Number(x.amt).toLocaleString()}</td>
-                    <td><button class="btn-mini" style="color:red;" onclick="deleteEntry('expenses', '${k}')">DEL</button></td>
-                </tr>`;
-            });
-
+        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
+            tin += Number(x.amt);
+            const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+            bD.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button> <button class="btn-mini" style="background:#fff8e1;" onclick="printCertificate('${k}')">📜</button> <button class="btn-mini" style="color:red" onclick="deleteEntry('donations','${k}')">DEL</button></td></tr>`;
+        });
+        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
+            tout += Number(x.amt);
+            const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+            bE.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" style="color:red" onclick="deleteEntry('expenses','${k}')">DEL</button></td></tr>`;
+        });
         document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
         document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
         document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
     }
 
     function saveEntry() {
-        const t = document.getElementById('eType').value;
-        const d = document.getElementById('eDate').value;
-        const n = document.getElementById('eName').value;
-        const a = document.getElementById('eAmount').value;
-        const selectedYear = document.getElementById('yearFilter').value;
-
-        if(!d || !n || !a) return alert("Fill all details!");
-        
-        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ 
-            date: d, 
-            name: n, 
-            amt: Number(a), 
-            year: selectedYear 
-        });
-        document.getElementById('eName').value = ''; 
-        document.getElementById('eAmount').value = '';
+        const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
+        const fy = document.getElementById('yearFilter').value;
+        if(!d || !n || !a) return alert("Fill data!");
+        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: fy });
+        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
     }
 
-    function deleteEntry(path, key) {
-        if(confirm("Are you sure you want to delete this?")) {
-            db.ref(`${path}/${key}`).remove();
-        }
-    }
+    function deleteEntry(path, key) { if(confirm("Delete this?")) db.ref(path+'/'+key).remove(); }
 
-    function numToWords(n) {
-        const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
-        const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-        const format = (num) => {
-            if (num == 0) return '';
-            if (num < 20) return a[num];
-            if (num < 100) return b[Math.floor(num / 10)] + (num % 10 !== 0 ? ' ' + a[num % 10] : '');
-            if (num < 1000) return a[Math.floor(num / 100)] + ' Hundred ' + (num % 100 !== 0 ? 'and ' + format(num % 100) : '');
-            if (num < 100000) return format(Math.floor(num / 1000)) + ' Thousand ' + (num % 1000 !== 0 ? format(num % 1000) : '');
-            if (num < 10000000) return format(Math.floor(num / 100000)) + ' Lakh ' + (num % 100000 !== 0 ? format(num % 100000) : '');
-            return format(Math.floor(num / 10000000)) + ' Crore ' + (num % 10000000 !== 0 ? format(num % 10000000) : '');
-        }
-        return n == 0 ? 'Zero Only' : format(n) + 'Only';
-    }
-
-    // Print Functions
-    function printReceipt(key, serialID) {
-        const item = localData.donations[key];
-        document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; padding:40px; background:white; color:black; font-family:'Outfit'; margin:auto; border: 5px solid #b45309; min-height:140mm;">
-                <div style="border: 2px solid #b45309; padding: 25px; outline: 10px double #1e293b; outline-offset: 4px; text-align:center;">
-                    <h1 style="font-family:'Cinzel'; font-size:35px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                    <h2 style="font-family:'Cinzel'; font-size:20px; color:#b45309;">B.B.C MARANG BUNDU</h2>
-                    <div style="background:#1e293b; color:white; padding:8px 30px; font-size:20px; margin-top:15px; display:inline-block; border-radius:50px;">DONATION RECEIPT</div>
-                    
-                    <div style="display:flex; justify-content:space-between; margin-top:30px; border-bottom:1px solid #ddd;">
-                        <span>Receipt ID: <b>${serialID}</b></span>
-                        <span>Date: <b>${item.date}</b></span>
-                    </div>
-
-                    <div style="font-size:20px; line-height:2; text-align:left; margin-top:30px; font-family:'Crimson Text';">
-                        Received with thanks from Mr./Ms. <span style="font-weight:900; border-bottom:1px solid #000;">${item.name.toUpperCase()}</span> <br>
-                        the sum of Rupees <span style="font-weight:900; border-bottom:1px solid #000;">${numToWords(item.amt)}</span> <br>
-                        towards 52nd Sahid Diwas Celebration Fund.
-                    </div>
-
-                    <div style="font-size:35px; font-weight:900; border:5px double #b45309; width:fit-content; margin:30px auto; padding:10px 40px;">₹ ${item.amt.toLocaleString()} /-</div>
-
-                    <div style="display:flex; justify-content:space-between; margin-top:40px;">
-                        <div style="text-align:center;"><br>________________<br>Secretary</div>
-                        <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:20px;">${localData.config.tName}</span><br>________________<br>Treasurer</div>
-                    </div>
-                </div>
-            </div>`;
-        window.print();
-    }
-
-    function printCertificate(key) {
-        const item = localData.donations[key];
-        document.getElementById('printArea').innerHTML = `
-            <div style="width:297mm; height:210mm; padding:20px; background:#fff; font-family:'Outfit'; border: 15px solid #b45309; box-sizing:border-box;">
-                <div style="height: 100%; border: 5px solid #1e293b; padding: 40px; text-align: center; display:flex; flex-direction:column; justify-content:space-between;">
-                    <div>
-                        <h2 style="font-family:'Cinzel'; font-size:28px; margin:0;">52nd SAHID DIWAS 2026</h2>
-                        <h3 style="font-family:'Cinzel'; color:#b45309;">B.B.C MARANG BUNDU</h3>
-                        <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:20px 0;">CERTIFICATE</h1>
-                        <h4 style="letter-spacing:5px;">OF APPRECIATION</h4>
-                    </div>
-                    <div>
-                        <p style="font-style:italic; font-size:20px;">This certificate is presented to</p>
-                        <div style="font-family:'Dancing Script'; font-size:55px; border-bottom: 2px solid #b45309; display:inline-block; padding:0 40px;">${item.name}</div>
-                        <p style="max-width:800px; margin:30px auto; font-size:18px; font-family:'Crimson Text'; font-style:italic;">
-                            "Thank you for your noble contribution towards the 52nd SAHID DIWAS. Your support helps us honor our martyrs and keep their legacy alive."
-                        </p>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; padding:0 60px;">
-                        <div>________________<br>Secretary</div>
-                        <div><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span><br>________________<br>Treasurer</div>
-                    </div>
-                </div>
-            </div>`;
-        window.print();
-    }
-
-    function printFullReport(type) {
+    function printReport(type) {
         const fy = document.getElementById('yearFilter').value;
         const data = type === 'donation' ? localData.donations : localData.expenses;
         const title = type === 'donation' ? "COLLECTION REPORT" : "EXPENDITURE REPORT";
         let rows = "";
         let total = 0;
 
-        Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((x, i) => {
-            total += x.amt;
-            rows += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+        // Corrected Filtering Logic
+        Object.values(data).forEach((x, i) => {
+            if(x.year == fy) {
+                total += Number(x.amt);
+                rows += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td></tr>`;
+            }
         });
 
+        if(rows === "") return alert("No data found for this session!");
+
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; font-family:sans-serif;">
-                <h2 style="text-align:center; margin-bottom:5px;">B.B.C MARANG BUNDU</h2>
-                <h3 style="text-align:center; margin-top:0; border-bottom:2px solid #000; padding-bottom:10px;">${title} (${fy})</h3>
-                <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px; text-align:left;">
-                    <thead><tr style="background:#f2f2f2;"><th>Sl.</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+            <div style="padding:30px; font-family:sans-serif; background:white; color:black;">
+                <h2 style="text-align:center; margin:0;">B.B.C MARANG BUNDU</h2>
+                <h3 style="text-align:center; margin:5px 0; border-bottom:2px solid #000; padding-bottom:10px;">${title} - SESSION ${fy}</h3>
+                <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px;">
+                    <thead style="background:#eee;"><tr><th>Sl.</th><th>Date</th><th>Name / Purpose</th><th>Amount</th></tr></thead>
                     <tbody>${rows}</tbody>
-                    <tfoot><tr style="font-weight:bold;"><td colspan="3" style="text-align:right; padding:10px;">TOTAL:</td><td>₹${total.toLocaleString()}</td></tr></tfoot>
+                    <tr style="font-weight:bold;"><td colspan="3" style="text-align:right; padding:8px;">TOTAL AMOUNT:</td><td>₹${total.toLocaleString()}</td></tr>
                 </table>
                 <div style="margin-top:50px; display:flex; justify-content:space-between;">
-                    <span>Report Generated on: ${new Date().toLocaleDateString()}</span>
-                    <span>Treasurer Signature: ________________</span>
+                    <div>Date: ${new Date().toLocaleDateString()}</div>
+                    <div style="text-align:center;">___________________<br>Treasurer Signature</div>
                 </div>
             </div>`;
         window.print();
     }
 
-    // Init Session Select
+    // Receipt & Certificate functions simplified...
+    function printReceipt(k, s) {
+        const item = localData.donations[k];
+        document.getElementById('printArea').innerHTML = `<div style="padding:50px; border:10px double #b45309; text-align:center; background:white;"><h1>DONATION RECEIPT</h1><hr><h3>ID: ${s}</h3><h2>Name: ${item.name}</h2><h1>Amount: ₹${item.amt}</h1></div>`;
+        window.print();
+    }
+
+    function printCertificate(k) {
+        const item = localData.donations[k];
+        document.getElementById('printArea').innerHTML = `<div style="padding:50px; border:15px solid #b45309; text-align:center; background:white;"><h1>CERTIFICATE OF APPRECIATION</h1><br><h2>Presented to ${item.name}</h2></div>`;
+        window.print();
+    }
+
     (function init() {
         const s = document.getElementById('yearFilter');
         for (let y = 2024; y <= 2030; y++) {
