@@ -19,7 +19,7 @@
             color: var(--text); min-height: 100vh; 
         }
 
-        /* Dashboard UI */
+        /* UI Components */
         .year-floating-box {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: #fff; border: 2.5px solid var(--gold);
@@ -53,7 +53,8 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th { text-align: left; color: var(--gold); padding: 12px; border-bottom: 2px solid #f1f5f9; }
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
-        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
+        .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; transition: 0.2s; }
+        .btn-mini:hover { background: #f1f5f9; }
 
         #printArea { display: none; }
         @media print {
@@ -89,7 +90,10 @@
 
 <div class="form-box no-print">
     <div class="form-grid">
-        <select id="eType" style="grid-column: 1 / -1; font-weight: bold;"><option value="donation">✨ CREDIT (Collection)</option><option value="expense">🛡️ DEBIT (Expenditure)</option></select>
+        <select id="eType" style="grid-column: 1 / -1; font-weight: bold;">
+            <option value="donation">✨ CREDIT (Collection)</option>
+            <option value="expense">🛡️ DEBIT (Expenditure)</option>
+        </select>
         <input type="date" id="eDate">
         <input type="number" id="eAmount" placeholder="Amount ₹">
         <input type="text" id="eName" placeholder="Name / Purpose">
@@ -99,13 +103,18 @@
 
 <div class="lists-container no-print">
     <div class="ledger-box">
-        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">Collections <button class="btn-mini" onclick="printReport('don')">Full Report</button></h3>
-        <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
+        <h3 style="color:var(--green); display:flex; justify-content:space-between; align-items:center;">
+            Collections <button class="btn-mini" onclick="printFullReport('donation')">Full Report</button>
+        </h3>
+        <input type="text" id="searchDon" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search Donor..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Donor</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyDon"></tbody></table>
     </div>
+    
     <div class="ledger-box">
-        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">Expenditures <button class="btn-mini" onclick="printReport('exp')">Full Report</button></h3>
-        <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search..." onkeyup="loadView()">
+        <h3 style="color:var(--red); display:flex; justify-content:space-between; align-items:center;">
+            Expenditures <button class="btn-mini" onclick="printFullReport('expense')">Full Report</button>
+        </h3>
+        <input type="text" id="searchExp" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Search Purpose..." onkeyup="loadView()">
         <table><thead><tr><th>ID</th><th>Date</th><th>Purpose</th><th>Amount</th><th>Action</th></tr></thead><tbody id="bodyExp"></tbody></table>
     </div>
 </div>
@@ -113,6 +122,7 @@
 <div id="printArea"></div>
 
 <script>
+    // Firebase Setup
     const firebaseConfig = {
         apiKey: "AIzaSyA_xB865cARTIZI5XFj7SMaA3c_xPfaDpc",
         authDomain: "treasure-books-a655d.firebaseapp.com",
@@ -124,8 +134,10 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    
     let localData = { donations: {}, expenses: {}, config: { tName: "", atName: "" } };
 
+    // Real-time Data Sync
     db.ref().on('value', snap => {
         const v = snap.val() || {};
         localData.donations = v.donations || {};
@@ -138,7 +150,88 @@
         loadView();
     });
 
-    function updateCfg() { db.ref('config').update({ tName: document.getElementById('cfgT').value, atName: document.getElementById('cfgAT').value }); }
+    function updateCfg() { 
+        db.ref('config').update({ 
+            tName: document.getElementById('cfgT').value, 
+            atName: document.getElementById('cfgAT').value 
+        }); 
+    }
+
+    // Load and Filter Data
+    function loadView() {
+        const fy = document.getElementById('yearFilter').value;
+        const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
+        const sD = document.getElementById('searchDon').value.toLowerCase();
+        const sE = document.getElementById('searchExp').value.toLowerCase();
+        
+        let tin = 0, tout = 0; 
+        bD.innerHTML = ''; bE.innerHTML = '';
+
+        // Render Donations
+        Object.entries(localData.donations)
+            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD))
+            .sort((a,b)=>new Date(a[1].date)-new Date(b[1].date))
+            .forEach(([k, x], index) => {
+                tin += Number(x.amt);
+                const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+                bD.innerHTML += `<tr>
+                    <td>${serialID}</td>
+                    <td>${x.date}</td>
+                    <td>${x.name}</td>
+                    <td>₹${Number(x.amt).toLocaleString()}</td>
+                    <td>
+                        <button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button>
+                        <button class="btn-mini" style="background:#fff8e1;" onclick="printCertificate('${k}')">📜</button>
+                        <button class="btn-mini" style="color:red;" onclick="deleteEntry('donations', '${k}')">DEL</button>
+                    </td>
+                </tr>`;
+            });
+
+        // Render Expenses
+        Object.entries(localData.expenses)
+            .filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE))
+            .sort((a,b)=>new Date(a[1].date)-new Date(b[1].date))
+            .forEach(([k, x], index) => {
+                tout += Number(x.amt);
+                const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
+                bE.innerHTML += `<tr>
+                    <td>${serialID}</td>
+                    <td>${x.date}</td>
+                    <td>${x.name}</td>
+                    <td>₹${Number(x.amt).toLocaleString()}</td>
+                    <td><button class="btn-mini" style="color:red;" onclick="deleteEntry('expenses', '${k}')">DEL</button></td>
+                </tr>`;
+            });
+
+        document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
+        document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
+        document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
+    }
+
+    function saveEntry() {
+        const t = document.getElementById('eType').value;
+        const d = document.getElementById('eDate').value;
+        const n = document.getElementById('eName').value;
+        const a = document.getElementById('eAmount').value;
+        const selectedYear = document.getElementById('yearFilter').value;
+
+        if(!d || !n || !a) return alert("Fill all details!");
+        
+        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ 
+            date: d, 
+            name: n, 
+            amt: Number(a), 
+            year: selectedYear 
+        });
+        document.getElementById('eName').value = ''; 
+        document.getElementById('eAmount').value = '';
+    }
+
+    function deleteEntry(path, key) {
+        if(confirm("Are you sure you want to delete this?")) {
+            db.ref(`${path}/${key}`).remove();
+        }
+    }
 
     function numToWords(n) {
         const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
@@ -155,62 +248,32 @@
         return n == 0 ? 'Zero Only' : format(n) + 'Only';
     }
 
-    function loadView() {
-        const fy = document.getElementById('yearFilter').value;
-        const bD = document.getElementById('bodyDon'), bE = document.getElementById('bodyExp');
-        const sD = document.getElementById('searchDon').value.toLowerCase();
-        const sE = document.getElementById('searchExp').value.toLowerCase();
-        let tin = 0, tout = 0; bD.innerHTML = ''; bE.innerHTML = '';
-        Object.entries(localData.donations).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sD)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
-            tin += Number(x.amt);
-            const serialID = `TBE-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-            bD.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td><button class="btn-mini" onclick="printReceipt('${k}', '${serialID}')">Receipt</button> <button class="btn-mini" style="background:#fff8e1; border-color:#b45309;" onclick="printCertificate('${k}')">📜 Cert</button></td></tr>`;
-        });
-        Object.entries(localData.expenses).filter(([_, x]) => x.year == fy && x.name.toLowerCase().includes(sE)).sort((a,b)=>new Date(a[1].date)-new Date(b[1].date)).forEach(([k, x], index) => {
-            tout += Number(x.amt);
-            const serialID = `EXP-${fy}-${(index + 1).toString().padStart(4, '0')}`;
-            bE.innerHTML += `<tr><td>${serialID}</td><td>${x.date}</td><td>${x.name}</td><td>₹${Number(x.amt).toLocaleString()}</td><td>Action</td></tr>`;
-        });
-        document.getElementById('sumIn').innerText = '₹ ' + tin.toLocaleString();
-        document.getElementById('sumOut').innerText = '₹ ' + tout.toLocaleString();
-        document.getElementById('sumBal').innerText = '₹ ' + (tin - tout).toLocaleString();
-    }
-
-    function saveEntry() {
-        const t = document.getElementById('eType').value, d = document.getElementById('eDate').value, n = document.getElementById('eName').value, a = document.getElementById('eAmount').value;
-        if(!d || !n || !a) return alert("Fill data!");
-        db.ref(t === 'donation' ? 'donations/' : 'expenses/').push({ date: d, name: n, amt: Number(a), year: new Date(d).getFullYear() });
-        document.getElementById('eName').value = ''; document.getElementById('eAmount').value = '';
-    }
-
+    // Print Functions
     function printReceipt(key, serialID) {
         const item = localData.donations[key];
-        const words = numToWords(item.amt);
         document.getElementById('printArea').innerHTML = `
-            <div style="width:210mm; padding:40px; background:white; color:black; font-family:'Outfit'; margin:auto; box-sizing:border-box; position:relative; border: 5px solid #b45309; min-height:148mm; display:flex; flex-direction:column; justify-content:space-between;">
-                <div style="border: 2px solid #b45309; padding: 25px; outline: 12px double #1e293b; outline-offset: 4px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
-                    <center>
-                        <h1 style="font-family:'Cinzel'; font-size:40px; margin:0;">52nd SAHID DIWAS 2026</h1>
-                        <h2 style="font-family:'Cinzel'; font-size:22px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h2>
-                        <p style="font-weight:bold; font-size:13px; margin:0; opacity:0.8;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                        <div style="background:#1e293b; color:white; padding:10px 50px; font-size:22px; font-weight:900; margin-top:20px; letter-spacing:3px; display:inline-block; border-radius:50px; -webkit-print-color-adjust: exact;">DONATION RECEIPT</div>
-                    </center>
-                    <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:30px; border-bottom:1px solid #ddd; padding-bottom:10px;">
-                        <span>Receipt ID: <b style="color:#b45309;">${serialID}</b></span>
+            <div style="width:210mm; padding:40px; background:white; color:black; font-family:'Outfit'; margin:auto; border: 5px solid #b45309; min-height:140mm;">
+                <div style="border: 2px solid #b45309; padding: 25px; outline: 10px double #1e293b; outline-offset: 4px; text-align:center;">
+                    <h1 style="font-family:'Cinzel'; font-size:35px; margin:0;">52nd SAHID DIWAS 2026</h1>
+                    <h2 style="font-family:'Cinzel'; font-size:20px; color:#b45309;">B.B.C MARANG BUNDU</h2>
+                    <div style="background:#1e293b; color:white; padding:8px 30px; font-size:20px; margin-top:15px; display:inline-block; border-radius:50px;">DONATION RECEIPT</div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-top:30px; border-bottom:1px solid #ddd;">
+                        <span>Receipt ID: <b>${serialID}</b></span>
                         <span>Date: <b>${item.date}</b></span>
                     </div>
-                    <div style="font-size:22px; line-height:2.4; font-family:'Crimson Text'; margin-top:35px; color:#333;">
-                        Received with heartful thanks from Mr./Ms. <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:uppercase; padding:0 10px; color:#000;">${item.name}</span> <br>
-                        the sum of Rupees <span style="font-weight:900; border-bottom:2px solid #b45309; text-transform:capitalize; padding:0 10px; color:#000;">${words}</span> <br>
-                        towards <b style="font-family:'Cinzel'; font-size:16px;">52nd Sahid Diwas Celebration Fund</b>.
+
+                    <div style="font-size:20px; line-height:2; text-align:left; margin-top:30px; font-family:'Crimson Text';">
+                        Received with thanks from Mr./Ms. <span style="font-weight:900; border-bottom:1px solid #000;">${item.name.toUpperCase()}</span> <br>
+                        the sum of Rupees <span style="font-weight:900; border-bottom:1px solid #000;">${numToWords(item.amt)}</span> <br>
+                        towards 52nd Sahid Diwas Celebration Fund.
                     </div>
-                    <div style="font-size:50px; font-weight:900; border:10px double #b45309; padding:12px 60px; width:fit-content; margin:35px auto; background:#fffcf5; letter-spacing:2px; color:#1e293b; -webkit-print-color-adjust: exact;">₹ ${Number(item.amt).toLocaleString()} /-</div>
-                    <div style="display:flex; justify-content:space-between; align-items:flex-end; padding: 0 40px; margin-top:40px;">
-                        <div style="text-align:center;"><div style="width:180px; border-top:2px solid #000; padding-top:5px; font-weight:900; font-size:12px; text-transform:uppercase;">Secretary</div></div>
-                        <div style="text-align:center;">
-                            <span style="font-family:'Dancing Script'; font-size:28px; color:#000; display:block;">${localData.config.tName}</span>
-                            <div style="width:180px; border-top:2px solid #000; padding-top:5px; font-weight:900; font-size:12px; text-transform:uppercase;">Principal Treasurer</div>
-                        </div>
+
+                    <div style="font-size:35px; font-weight:900; border:5px double #b45309; width:fit-content; margin:30px auto; padding:10px 40px;">₹ ${item.amt.toLocaleString()} /-</div>
+
+                    <div style="display:flex; justify-content:space-between; margin-top:40px;">
+                        <div style="text-align:center;"><br>________________<br>Secretary</div>
+                        <div style="text-align:center;"><span style="font-family:'Dancing Script'; font-size:20px;">${localData.config.tName}</span><br>________________<br>Treasurer</div>
                     </div>
                 </div>
             </div>`;
@@ -220,40 +283,64 @@
     function printCertificate(key) {
         const item = localData.donations[key];
         document.getElementById('printArea').innerHTML = `
-            <div style="width:297mm; height:210mm; padding:20px; background:#fff; position:relative; box-sizing:border-box; font-family:'Outfit'; border: 20px solid #b45309;">
-                <div style="height: 100%; border: 6px solid #1e293b; padding: 40px; box-sizing: border-box; outline: 3px solid #b45309; outline-offset: -18px; text-align: center; position:relative; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="width:297mm; height:210mm; padding:20px; background:#fff; font-family:'Outfit'; border: 15px solid #b45309; box-sizing:border-box;">
+                <div style="height: 100%; border: 5px solid #1e293b; padding: 40px; text-align: center; display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
-                        <h2 style="font-family:'Cinzel'; font-size:32px; margin:0; color:#000;">52nd SAHID DIWAS 2026</h2>
-                        <h3 style="font-family:'Cinzel'; font-size:20px; margin:5px 0; color:#b45309;">B.B.C MARANG BUNDU</h3>
-                        <p style="font-weight:900; font-size:14px; margin:0; color:#1e293b; letter-spacing:1px;">Reg.no :- MBJ8750 - 13 Of 2022</p>
-                        <div style="margin-top:20px;">
-                            <h1 style="font-family:'Cinzel'; font-size:55px; color:#b45309; margin:0; letter-spacing:8px;">CERTIFICATE</h1>
-                            <h4 style="font-family:'Outfit'; font-size:24px; letter-spacing:4px; margin:5px 0; font-weight:400; color:#1e293b;">OF APPRECIATION</h4>
-                        </div>
+                        <h2 style="font-family:'Cinzel'; font-size:28px; margin:0;">52nd SAHID DIWAS 2026</h2>
+                        <h3 style="font-family:'Cinzel'; color:#b45309;">B.B.C MARANG BUNDU</h3>
+                        <h1 style="font-family:'Cinzel'; font-size:60px; color:#b45309; margin:20px 0;">CERTIFICATE</h1>
+                        <h4 style="letter-spacing:5px;">OF APPRECIATION</h4>
                     </div>
                     <div>
-                        <p style="font-size:18px; font-family:'Crimson Text'; font-style:italic; margin-top:25px; color:#444;">This certificate is proudly presented to</p>
-                        <div style="margin:10px 0;"><span style="font-family:'Dancing Script'; font-size:52px; font-weight:900; background: linear-gradient(to bottom, #b45309, #1e293b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding:0 30px; display:inline-block; border-bottom: 2.5px double #b45309;">${item.name}</span></div>
-                        <p style="font-size:18px; line-height:1.7; max-width:750px; margin:25px auto; color:#333; font-family:'Crimson Text'; font-style: italic;">
-                            "Heroes never die as long as there are hearts like yours to remember them. Your noble contribution towards the 52nd SAHID DIWAS 2026 is more than a gift; it is a salute to our Martyrs. You have helped us keep their sacred flame alive and Strengthening the soul of our community."
+                        <p style="font-style:italic; font-size:20px;">This certificate is presented to</p>
+                        <div style="font-family:'Dancing Script'; font-size:55px; border-bottom: 2px solid #b45309; display:inline-block; padding:0 40px;">${item.name}</div>
+                        <p style="max-width:800px; margin:30px auto; font-size:18px; font-family:'Crimson Text'; font-style:italic;">
+                            "Thank you for your noble contribution towards the 52nd SAHID DIWAS. Your support helps us honor our martyrs and keep their legacy alive."
                         </p>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:flex-end; padding: 0 60px; margin-bottom:20px;">
-                        <div style="text-align:center;"><div style="width:200px; border-top:2px solid #1e293b; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Secretary</div></div>
-                        <div style="text-align:center;">
-                            <span style="font-family:'Dancing Script'; font-size:28px; color:#000; display:block;">${localData.config.tName}</span>
-                            <div style="width:200px; border-top:2.5px solid #1e293b; padding-top:8px; font-weight:900; font-size:12px; text-transform:uppercase; color:#1e293b;">Principal Treasurer</div>
-                        </div>
+                    <div style="display:flex; justify-content:space-between; padding:0 60px;">
+                        <div>________________<br>Secretary</div>
+                        <div><span style="font-family:'Dancing Script'; font-size:22px;">${localData.config.tName}</span><br>________________<br>Treasurer</div>
                     </div>
                 </div>
             </div>`;
         window.print();
     }
 
+    function printFullReport(type) {
+        const fy = document.getElementById('yearFilter').value;
+        const data = type === 'donation' ? localData.donations : localData.expenses;
+        const title = type === 'donation' ? "COLLECTION REPORT" : "EXPENDITURE REPORT";
+        let rows = "";
+        let total = 0;
+
+        Object.values(data).filter(x => x.year == fy).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((x, i) => {
+            total += x.amt;
+            rows += `<tr><td>${i+1}</td><td>${x.date}</td><td>${x.name}</td><td>₹${x.amt.toLocaleString()}</td></tr>`;
+        });
+
+        document.getElementById('printArea').innerHTML = `
+            <div style="padding:40px; font-family:sans-serif;">
+                <h2 style="text-align:center; margin-bottom:5px;">B.B.C MARANG BUNDU</h2>
+                <h3 style="text-align:center; margin-top:0; border-bottom:2px solid #000; padding-bottom:10px;">${title} (${fy})</h3>
+                <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px; text-align:left;">
+                    <thead><tr style="background:#f2f2f2;"><th>Sl.</th><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                    <tfoot><tr style="font-weight:bold;"><td colspan="3" style="text-align:right; padding:10px;">TOTAL:</td><td>₹${total.toLocaleString()}</td></tr></tfoot>
+                </table>
+                <div style="margin-top:50px; display:flex; justify-content:space-between;">
+                    <span>Report Generated on: ${new Date().toLocaleDateString()}</span>
+                    <span>Treasurer Signature: ________________</span>
+                </div>
+            </div>`;
+        window.print();
+    }
+
+    // Init Session Select
     (function init() {
         const s = document.getElementById('yearFilter');
-        for (let y = 2026; y <= 2050; y++) {
-            let o = document.createElement('option'); o.value = y; o.text = "" + y;
+        for (let y = 2024; y <= 2030; y++) {
+            let o = document.createElement('option'); o.value = y; o.text = "Session " + y;
             if(y === 2026) o.selected = true; s.appendChild(o);
         }
         document.getElementById('eDate').valueAsDate = new Date();
