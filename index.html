@@ -55,7 +55,7 @@
         td { padding: 12px; border-bottom: 1px solid #f8fafc; }
         .btn-mini { padding: 6px 12px; border-radius: 8px; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; font-size: 11px; margin: 2px; }
 
-        /* Report Style - Borders Removed */
+        /* Report Style */
         #printArea { display: none; }
         @media print {
             .no-print { display: none !important; }
@@ -193,7 +193,7 @@
         });
 
         document.getElementById('printArea').innerHTML = `
-            <div style="padding:40px; background:white; position:relative; min-height:1000px;">
+            <div style="padding:40px; background:white; position:relative; min-height:800px;">
                 <center>
                     <h1 style="font-family:'Cinzel'; margin:0; font-size:32px; color:#1e293b;">B.B.C MARANG BUNDU</h1>
                     <p style="margin:5px 0; font-weight:bold; font-size:14px;">Regd No: MBJ8750 - 13 Of 2022</p>
@@ -222,18 +222,11 @@
                     </div>
                 </div>
 
-                <div style="margin-top:100px; display:flex; justify-content:space-between; padding: 0 40px;">
-                    <div style="text-align:center;">
-                        <div style="width:200px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:13px;">SECRETARY</div>
-                    </div>
+                <div style="margin-top:100px; display:flex; justify-content:flex-end; padding: 0 40px;">
                     <div style="text-align:center;">
                         <span style="font-family:'Dancing Script'; font-size:24px; color:#1e293b;">${localData.config.tName}</span>
                         <div style="width:200px; border-top:1.5px solid #1e293b; padding-top:5px; font-weight:bold; font-size:13px;">PRINCIPAL TREASURER</div>
                     </div>
-                </div>
-
-                <div style="position:absolute; bottom:20px; left:40px; font-size:11px; opacity:0.5; font-family:sans-serif;">
-                    Report Generated: ${new Date().toLocaleString()} | Management System
                 </div>
             </div>`;
         window.print();
